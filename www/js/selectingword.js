@@ -5,16 +5,24 @@
 EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, renderer){
 
 
-    document.getElementById("robot").ondblclick = function() {showmeaning()};
-    showmeaning();
+    console.log(renderer);
+
+    //document.getElementById("robot").ondblclick = function() {showmeaning()};
+
+    showmeaning(renderer);
+
 
 
     if(callback) callback();
 
 };
+$(renderer.element).contents().find('body').bind('mouseup', function(){
+    alert("Hi");
+});
 
 
-function showmeaning() {
+function showmeaning(renderer) {
 
-    console.log("mr robot");
+
 }
+
