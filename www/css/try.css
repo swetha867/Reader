@@ -1,0 +1,79 @@
+
+
+.pope {
+
+    display: none;
+    position: relative;
+    z-index: 2;
+    top: -250px;
+    left: 5%;
+    padding-right: 5%;
+    width: 85%;
+    height: 85%;
+    background: #ffffff;
+    border-radius: 2px;
+    outline: 3px solid rgba(0, 0, 0, 1);
+}
+.pope > h1 {
+    padding: 5px 15px 5px 15px;
+    color: #2a3644;
+    font-size: 100%;
+}
+.pope > p {
+    padding-left: 15px;
+    font-size: 70%;
+    color: #777777;
+}
+.pope > span {
+    cursor: pointer;
+    position: absolute;
+    top: 4%;
+    right: 4%;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+    background: white;
+    color: black;
+    padding: 6px 0px 0px 9px;
+    width: 30px;
+    height: 30px;
+}
+
+#popes {
+
+    display: none;
+    position: fixed;
+    z-index: 2;
+    top: 5%;
+    left: 5%;
+    padding-right: 5%;
+    width: 85%;
+    height: 85%;
+    background: #ffffff;
+    border-radius: 2px;
+    outline: 3px solid rgba(0, 0, 0, 1);
+}
+#popes > h1 {
+    padding: 5px 15px 5px 15px;
+    color: #2a3644;
+    font-size: 100%;
+}
+#popes > p {
+    padding-left: 15px;
+    font-size: 70%;
+    color: #777777;
+}
+#popes > span {
+    cursor: pointer;
+    position: absolute;
+    top: 4%;
+    right: 4%;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+    background: white;
+    color: black;
+    padding: 6px 0px 0px 9px;
+    width: 30px;
+    height: 30px;
+}
