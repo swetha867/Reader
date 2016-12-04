@@ -1,234 +1,256 @@
 /**
  * Created by Mahesh on 10/15/16.
  */
+// List of words searched for
+var arr = [];
 
+var a = 0;
+
+
+
+//Hook to perform task after everytime user turns page
 EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, renderer){
 
-
+    //Display Dom structure of book in iframe
     console.log(renderer);
+    var toc =Book.getToc();
+    console.log(toc);
 
 
+    //Add css to chapter head
     //EPUBJS.core.addCss("../www/css/try.css", false, renderer.doc.head);
 
-
-    var range = $(renderer.render.window).height();
-    var wrap = $(renderer.render.window.frameElement).parent().parent().parent().contents()[0].nextSibling;
-    var elements = renderer.doc.querySelectorAll('p'),
-        items = Array.prototype.slice.call(elements);
-
-    items.forEach(function(item){
-
-
-        $(item).on('dblclick',function(){
-            console.log(item);
+    //access iframe info
+    //var range = $(renderer.render.window).height();
 
 
 
 
 
-            var t = '';
-            if (window.getSelection && (sel = window.getSelection()).modify) {
-                // Webkit, Gecko
-                var s = renderer.render.window.getSelection();
-                if (s.isCollapsed) {
-                    s.modify('move', 'forward', 'character');
-                    s.modify('move', 'backward', 'word');
-                    s.modify('extend', 'forward', 'word');
-                    t = s.toString();
-                    s.modify('move', 'forward', 'character'); //clear selection
-                }
-                else {
-                    t = s.toString();
-                }
-            } else if ((sel = document.selection) && sel.type != "Control") {
-                // IE 4+
-                var textRange = sel.createRange();
-                if (!textRange.text) {
-                    textRange.expand("word");
-                }
-                // Remove trailing spaces
-                while (/\s$/.test(textRange.text)) {
-                    textRange.moveEnd("character", -1);
-                }
-                t = textRange.text;
-            }
+    function successFunction()
+    {
+        console.info("It worked!");
+    }
 
-            //var orginal_width = item.parent.getAttribute("width");
-               //var orginal_height = renderer.render.window.getAttribute("height");
+    function errorFunction(error)
+    {
+        console.error(error);
+    }
 
-            wrap.style.display = "block";
-            //wrap.innerHTML = "hi";
-            console.log(wrap);
-            //console.log(orginal_height);
-            //console.log(orginal_width);
+    function trace(value)
+    {
+        console.log(value);
+    }
 
-            console.log(range);
-            //var division = parent.createElement("div");
-            //$(renderer.render.window.frameElement).parent().parent().parent().parent().parent().parent().parent().parent().parent().appendChild(division);
-            //console.log(division);
-            //division.setAttribute("class","pope");
-            //EPUBJS.core.addCss("../www/css/try.css", false, renderer.render.document.head);
-             //renderer.render.document.body.appendChild(division);
-            //parent.appendChild(division);
-            //item.appendChild(division);
+    var hammertime= document.getElementById('fullscreen');
+    var hammertimes= document.getElementById('screener');
 
-            //division.parentNode.innerHTML="<iframe height='300px' width='100%' src='../www/test.html'></iframe>";
+    var fullscreener = new Hammer(hammertime);
+    var smallscreener = new Hammer(hammertimes);
+
+    var mc = new Hammer(renderer.doc);
+    mc.get('pinch').set({ enable: true });
+    mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
 
-            var outputs = $.ajax({
-                url:'https://api.cognitive.microsoft.com/bing/v5.0/images/search?q='+t+'', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
-                //url: 'https://api.cognitive.microsoft.com/bing/v5.0/images/search?q='+damn+'', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
-                type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
-                data: {}, // Additional parameters here
-                dataType: 'json',
-                success: function(data) {
-                    //
-                    //Change data.source to data.something , where something is whichever part of the object you want returned.
-                    //To see the whole object you can output it to your browser console using:
-                    //console.log(data);
+    fullscreener.on("tap", function(){
+        $('#readerhead').css('visibility', 'hidden');
+        $('#readerfoot').css('visibility', 'hidden');
+        $('#screener').css('display', 'block');
+        AndroidFullScreen.immersiveMode(successFunction, errorFunction);
+        Book.nextPage();
+    });
 
-                    //division.innerHTML=" <img src ='"+data.value[0].thumbnailUrl+"&w=200&h=200'/><div id='opop></div>'";
+    smallscreener.on("tap", function(){
+        $('#readerhead').css('visibility', 'visible');
+        $('#readerfoot').css('visibility', 'visible');
+        $('#screener').css('display', 'none');
+        AndroidFullScreen.showSystemUI(successFunction, errorFunction);
 
-                    //document.getElementById("output5").innerHTML = "<img src ='"+data.value[0].thumbnailUrl+"&w=200&h=200'/>";
+    });
 
-                    var output = $.ajax({
-                        url: 'https://wordsapiv1.p.mashape.com/words/'+t+'/definitions', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
-                        type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
-                        data: {}, // Additional parameters here
-                        dataType: 'json',
-                        success: function(r) {
+    mc.on("panup",function(){
+        $('#readerhead').css('visibility', 'hidden');
+        $('#readerfoot').css('visibility', 'hidden');
 
-                            //Change data.source to data.something , where something is whichever part of the object you want returned.
-                            //To see the whole object you can output it to your browser console using:
-                            //console.log(data);
-                            console.log(r.word+" : "+r.definitions[0].definition);
+        AndroidFullScreen.immersiveMode(successFunction, errorFunction);
+    });
 
-                            var ogword = r.word;
-                            var meaning1 = "[1] "+ r.definitions[0].definition;
-                            //var meaning2 = r.definitions[1].definition;
+    mc.on("pandown",function(){
+        $('#readerhead').css('visibility', 'visible');
+        $('#readerfoot').css('visibility', 'visible');
+        AndroidFullScreen.showSystemUI(successFunction, errorFunction);
+    });
 
+    $(renderer.doc).on("swipeleft",function(){
+        Book.nextPage();
+    });
 
-
-                            wrap.innerHTML="<span>✖</span><div><center><img src ='"+data.value[0].thumbnailUrl+"&w=200&h=200'/></center></div><h1>"+ogword+"</h1> <p>"+meaning1+"</p>";
-                            //parent.$("#popes").innerHTML="<span>✖</span><div><center><img src ='"+data.value[0].thumbnailUrl+"&w=200&h=200'/></center></div><h1>"+ogword+"</h1> <p>"+meaning1+"</p>";
-                            //division.parentNode.innerHTML="<iframe height='300px' width='100%'></iframe>";
-                            //var amaze = $('<link rel="stylesheet" href = "../www/css/pop.css"><div style="height: 100px;">are you seeing this</div>');
-
-                            //renderer.render.document.getElementById("opop").innerHTML = data.word;
-
-                            //mydef = data.defintinitons;
-                            //console.log(mydef);
-                            //document.getElementById("output1").innerHTML = data.definitions[0].partOfSpeech;
-                            //document.getElementById("output2").innerHTML = data.definitions[0].definition;
-
-
-                        },
-                        error: function(err) { alert(err); },
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader("X-Mashape-Authorization", ""); // Enter here your Mashape key
-                        }
-                    });
-
-
-
-                },
-                error: function(err) { alert(err); },
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Ocp-Apim-Subscription-Key", ""); // Enter here your Mashape key
-                }
-            });
-
-
-            //alert(t);
-
-
-
-
-
-            //division.style.display = "block";
-
-
-            var hidepope = function () {
-
-                wrap.innerHTML="";
-                wrap.style.display = "none";
-                //wrap.parentNode.removeChild(wrap);
-            }
-            wrap.addEventListener("click", hidepope, false);
-
-
-
-
-
-
-
-        });
-
-
+    $(renderer.doc).on("swiperight",function(){
+        Book.prevPage();
     });
 
 
 
 
-    //
-    // var trans = renderer.contents.querySelectorAll('[transclusion]'),
-    //     items = Array.prototype.slice.call(trans);
-    //
-    // items.forEach(function(item){
-    //     var src = item.getAttribute("ref"),
-    //         iframe = document.createElement('iframe'),
-    //         orginal_width = item.getAttribute("width"),
-    //         orginal_height = item.getAttribute("height"),
-    //         parent = item.parentNode,
-    //         width = orginal_width,
-    //         height = orginal_height,
-    //         ratio;
-    //
-    //
-    //     function size() {
-    //         width = orginal_width;
-    //         height = orginal_height;
-    //
-    //         if(width > chapter.colWidth){
-    //             ratio = chapter.colWidth / width;
-    //
-    //             width = chapter.colWidth;
-    //             height = height * ratio;
-    //         }
-    //
-    //         iframe.width = width;
-    //         iframe.height = height;
-    //     }
-    //
-    //
-    //     size();
-    //
-    //     //-- resize event
-    //
-    //
-    //     renderer.listenUntil("renderer:resized", "renderer:chapterUnloaded", size);
-    //
-    //     iframe.src = src;
-    //
-    //     //<iframe width="560" height="315" src="http://www.youtube.com/embed/DUL6MBVKVLI" frameborder="0" allowfullscreen="true"></iframe>
-    //     parent.replaceChild(iframe, item);
-    //
-    //
+
+    // $(renderer.render.window).on("swiperight",function(){
+    //     Book.prevPage();
     // });
 
+    //Get an element on parent html from iframe. The following is for wrapper div.
+
+    var wrap = $(renderer.render.window.frameElement).parent().parent().parent().contents()[0].nextSibling;
+
+    //Select all elements in iframe dom with p
+    var elements = renderer.doc.querySelectorAll('p'),
+
+        //Perform actions on each of the elements. Each item is paragraph in book html
+        items = Array.prototype.slice.call(elements);
+
+            items.forEach(function(item){
+
+                // Get the word from book and store in variable t on double-click
+
+
+                $(item).on('dblclick',function(){
+                    //console.log(item);
+
+                    //get the word from screen
+                    var t = '';
+                    if (window.getSelection && (sel = window.getSelection()).modify) {
+                        // Webkit, Gecko
+                        var s = renderer.render.window.getSelection();
+                        if (s.isCollapsed) {
+                            s.modify('move', 'forward', 'character');
+                            s.modify('move', 'backward', 'word');
+                            s.modify('extend', 'forward', 'word');
+                            t = s.toString();
+                            s.modify('move', 'forward', 'character'); //clear selection
+                        }
+                        else {
+                            t = s.toString();
+                        }
+                    } else if ((sel = document.selection) && sel.type != "Control") {
+                        // IE 4+
+                        var textRange = sel.createRange();
+                        if (!textRange.text) {
+                            textRange.expand("word");
+                        }
+                        // Remove trailing spaces
+                        while (/\s$/.test(textRange.text)) {
+                            textRange.moveEnd("character", -1);
+                        }
+                        t = textRange.text;
+                    }
+
+                    // Store word in array for future use
+                    arr.push(t);
+                    for (var i = 0; i < arr.length; i++) {
+                        //console.log(arr[i]);
+                    }
 
 
 
+                    // Display the hidden div
+                    wrap.style.display = "block";
+
+                    // Different alternatives to add elements to dom
+                    //var division = parent.createElement("div");
+                    //renderer.render.document.body.appendChild(division);
+                    //item.appendChild(division);
+                    //division.parentNode.innerHTML="<iframe height='300px' width='100%' src='../www/test.html'></iframe>";
+
+
+                    // // Api calls to get word meaning and image
+                    var outputs = $.ajax({
+                        url:'https://api.cognitive.microsoft.com/bing/v5.0/images/search?q='+t+'', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
+                        //url: 'https://api.cognitive.microsoft.com/bing/v5.0/images/search?q='+damn+'', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
+                        type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
+                        data: {}, // Additional parameters here
+                        dataType: 'json',
+                        success: function(data) {
+                            //console.log(data);
+
+                            var output = $.ajax({
+                                url: 'https://api.pearson.com/v2/dictionaries/ldoce5/entries?headword='+t+'', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
+                                //url: 'https://wordsapiv1.p.mashape.com/words/'+t+'/definitions',
+                                type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
+                                data: {}, // Additional parameters here
+                                dataType: 'json',
+                                success: function(r) {
+                                    //Change data.source to data.something , where something is whichever part of the object you want returned.
+                                    //To see the whole object you can output it to your browser console using:
+                                    //console.log(data);
+                                    //console.log(r.word+" : "+r.definitions[0].definition);
+
+                                    console.log(r);
+
+                                    //console.log(r.results[0].senses[0].definition[0]);
+
+                                    var meanings = [];
+                                    meanings[0] = "Definition not found";
+                                    meanings[1] = "";
+                                    meanings[2] = "";
+                                    var ogword = t;
+                                    var partOfSpeech;
+
+
+
+
+
+                                    // if (r.results[0].partOfSpeech){
+                                    //     partOfSpeech=r.results[0].part_of_speech;
+                                    // }
+
+                                    try{
+                                    for (var i=0; i<r.count;i++) {
+                                        if (r.results[i].senses[0].definition) {
+                                            meanings[i] = '[' + (i + 1) + '] ' + r.results[i].senses[0].definition[0];
+                                            console.log(meanings[i]);
+                                        }
+                                    }
+
+                                    }catch(err){
+                                            meanings[0] = "Definition not found";
+                                        }
+
+
+
+                                    //var ogword = r.word;
+                                    //var meaning1 = "[1] "+ r.definitions[0].definition;
+                                    //var meaning2 = r.definitions[1].definition;
+
+                                    wrap.innerHTML="<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='"+data.value[0].thumbnailUrl+"&w=200&h=200'/><img class='photo' src ='"+data.value[1].thumbnailUrl+"&w=200&h=200'/><img class='photo' src ='"+data.value[2].thumbnailUrl+"&w=200&h=200'/><img class='photo' src ='"+data.value[3].thumbnailUrl+"&w=200&h=200'/></div><h1>"+ogword+"</h1><div id='meaningspara'>"+meanings[0]+"<br>"+meanings[1]+"</div>";
+                                    // console.log(wrap.firstChild.nextSibling.firstChild);
+
+                                    //wrap.innerHTML="<span id='cross'>✖</span><div id='imagecontainer'><center><img src ='"+data.value[0].thumbnailUrl+"&w=200&h=200'/></center></div><h1>"+ogword+"</h1><div id='meaningspara'>"+meanings[0]+"<br>"+meanings[1]+"</div>";
+                                    //mydef = data.defintinitons;
+                                    //console.log(mydef);
+                                    //document.getElementById("output1").innerHTML = data.definitions[0].partOfSpeech;
+                                },
+                                //beforeSend: function(){console.log("hey");},
+                                error: function(err) { alert(err); }
+
+                            });
+                        },
+                        error: function(err) { alert(err); },
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "e0e79469ea954e32a7578e19dbce617e");
+                            //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");// Enter here your Mashape key
+                        }
+                    });
+
+                    // Clear and hide the popup div
+                    var hidepope = function () {
+                        wrap.innerHTML="";
+                        wrap.style.display = "none";
+                        //wrap.parentNode.removeChild(wrap);
+                    }
+                    // Add click event to popup.
+                    wrap.addEventListener("click", hidepope, false);
+                });
+            });
     if(callback) callback();
-
 };
-
-
-
-function showmeaning(renderer) {
-
-    alert("Hi");
-    console.log("Hi");
-
-}
 
