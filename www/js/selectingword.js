@@ -6,15 +6,17 @@ var arr = [];
 
 var a = 0;
 
+var storage= window.localStorage;
+
 
 
 //Hook to perform task after everytime user turns page
 EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, renderer){
 
     //Display Dom structure of book in iframe
-    console.log(renderer);
+    console.log(renderer.doc);
     var toc =Book.getToc();
-    console.log(toc);
+    // console.log(toc);
 
 
     //Add css to chapter head
@@ -48,39 +50,64 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
     var fullscreener = new Hammer(hammertime);
     var smallscreener = new Hammer(hammertimes);
 
-    var mc = new Hammer(renderer.doc);
-    mc.get('pinch').set({ enable: true });
-    mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+    // var mc = new Hammer(renderer.doc);
+    // mc.get('pinch').set({ enable: true });
+    // mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
+       $(document).on('click', '#fullscreen', function(){
+               $('#readerheader').css('visibility', 'hidden');
+               $('#readerfooter').css('visibility', 'hidden');
+                // $("body").css('background-color','white');
+                 $('body').css({
+                    'background-color' : 'white',
+                    'background' : 'none'
+       });
+               $('#screener').css('display', 'block');
+               AndroidFullScreen.immersiveMode();
+       });
 
-    fullscreener.on("tap", function(){
-        $('#readerhead').css('visibility', 'hidden');
-        $('#readerfoot').css('visibility', 'hidden');
-        $('#screener').css('display', 'block');
-        AndroidFullScreen.immersiveMode(successFunction, errorFunction);
-        Book.nextPage();
-    });
+           $(document).on('click', '#screener', function(){
 
-    smallscreener.on("tap", function(){
-        $('#readerhead').css('visibility', 'visible');
-        $('#readerfoot').css('visibility', 'visible');
-        $('#screener').css('display', 'none');
-        AndroidFullScreen.showSystemUI(successFunction, errorFunction);
+               $('body').css({
 
-    });
+                   'background' : "radial-gradient(circle, transparent 20%, slategray 20%, slategray 80%, transparent 80%, transparent),radial-gradient(circle, transparent 20%, slategray 20%, slategray 80%, transparent 80%, transparent) 50px 50px,linear-gradient(#A8B1BB 8px, transparent 8px) 0 -4px,linear-gradient(90deg, #A8B1BB 8px, transparent 8px) -4px 0;",
+                   'background-color' : 'slategray'
+               });
+                    $('#readerheader').css('visibility', 'visible');
+                   $('#readerfooter').css('visibility', 'visible');
+                   // $('#screener').css('display', 'none');
+                   AndroidFullScreen.showSystemUI();
+               $.mobile.changePage("home.html", {transition: "none"});
 
-    mc.on("panup",function(){
-        $('#readerhead').css('visibility', 'hidden');
-        $('#readerfoot').css('visibility', 'hidden');
+       });
 
-        AndroidFullScreen.immersiveMode(successFunction, errorFunction);
-    });
+    // fullscreener.on("tap", function(){
+    //     $('#readerhead').css('visibility', 'hidden');
+    //     $('#readerfoot').css('visibility', 'hidden');
+    //     $('#screener').css('display', 'block');
+    //     AndroidFullScreen.immersiveMode();
+    // });
+    //
+    // smallscreener.on("tap", function(){
+    //     $('#readerhead').css('visibility', 'visible');
+    //     $('#readerfoot').css('visibility', 'visible');
+    //     $('#screener').css('display', 'none');
+    //     AndroidFullScreen.showSystemUI();
+    //
+    // });
 
-    mc.on("pandown",function(){
-        $('#readerhead').css('visibility', 'visible');
-        $('#readerfoot').css('visibility', 'visible');
-        AndroidFullScreen.showSystemUI(successFunction, errorFunction);
-    });
+    // mc.on("panup",function(){
+    //     $('#readerhead').css('visibility', 'hidden');
+    //     $('#readerfoot').css('visibility', 'hidden');
+    //
+    //     AndroidFullScreen.immersiveMode(successFunction, errorFunction);
+    // });
+    //
+    // mc.on("pandown",function(){
+    //     $('#readerhead').css('visibility', 'visible');
+    //     $('#readerfoot').css('visibility', 'visible');
+    //     AndroidFullScreen.showSystemUI(successFunction, errorFunction);
+    // });
 
     $(renderer.doc).on("swipeleft",function(){
         Book.nextPage();
@@ -146,6 +173,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
 
                     // Store word in array for future use
                     arr.push(t);
+
                     for (var i = 0; i < arr.length; i++) {
                         //console.log(arr[i]);
                     }
@@ -215,7 +243,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                                             meanings[0] = "Definition not found";
                                         }
 
-
+                                    storage.setItem(ogword,meanings[0]);
 
                                     //var ogword = r.word;
                                     //var meaning1 = "[1] "+ r.definitions[0].definition;
