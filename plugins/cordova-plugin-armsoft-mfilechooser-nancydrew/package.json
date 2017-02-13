@@ -1,0 +1,36 @@
+{
+  "name": "cordova-plugin-armsoft-mfilechooser-nancydrew",
+  "version": "1.0.5",
+  "description": "File Chooser for Cordova/Phonegap",
+  "cordova": {
+    "id": "cordova-plugin-armsoft-mfilechooser-nancydrew",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nancydrew123/MFileChooser.git"
+  },
+  "keywords": [
+    "cordova",
+    "filechooser",
+    "android",
+    "filepicker",
+    "phonegap",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nancydrew123/MFileChooser/issues"
+  },
+  "homepage": "https://github.com/nancydrew123/MFileChooser#readme"
+}
