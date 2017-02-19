@@ -39,6 +39,20 @@
                         {
                             "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"FilePath\"><param name=\"android-package\" value=\"com.hiddentao.cordova.filepath.FilePath\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Permissions\"><param name=\"android-package\" value=\"com.android.plugins.Permissions\" /></feature>",
+                            "count": 1
+                        }
+                    ],
+                    "/widget": [
+                        {
+                            "xml": "<feature name=\"FileChooser\"><param name=\"android-package\" value=\"com.megster.cordova.FileChooser\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -48,7 +62,11 @@
                     "/*": [
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
-                            "count": 2
+                            "count": 3
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />",
+                            "count": 1
                         }
                     ],
                     "/manifest": [
@@ -102,6 +120,16 @@
                         }
                     ]
                 }
+            },
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"TTS\"><param name=\"android-package\" value=\"com.wordsbaking.cordova.tts.TTS\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
             }
         }
     },
@@ -131,6 +159,18 @@
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
         "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-tts": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "com.megster.cordova.FileChooser": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-filepath": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-android-permissions": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
@@ -357,6 +397,38 @@
                 "cordova.InAppBrowser.open",
                 "window.open"
             ]
+        },
+        {
+            "id": "cordova-plugin-tts.tts",
+            "file": "plugins/cordova-plugin-tts/www/tts.js",
+            "pluginId": "cordova-plugin-tts",
+            "clobbers": [
+                "TTS"
+            ]
+        },
+        {
+            "id": "com.megster.cordova.FileChooser.FileChooser",
+            "file": "plugins/com.megster.cordova.FileChooser/www/fileChooser.js",
+            "pluginId": "com.megster.cordova.FileChooser",
+            "clobbers": [
+                "fileChooser"
+            ]
+        },
+        {
+            "id": "cordova-plugin-filepath.FilePath",
+            "file": "plugins/cordova-plugin-filepath/www/FilePath.js",
+            "pluginId": "cordova-plugin-filepath",
+            "clobbers": [
+                "window.FilePath"
+            ]
+        },
+        {
+            "id": "cordova-plugin-android-permissions.Permissions",
+            "file": "plugins/cordova-plugin-android-permissions/www/permissions.js",
+            "pluginId": "cordova-plugin-android-permissions",
+            "clobbers": [
+                "cordova.plugins.permissions"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -368,6 +440,10 @@
         "cordova-android-support-v4": "22.2.1",
         "cordova-plugin-armsoft-mfilechooser-nancydrew": "1.0.5",
         "cordova-plugin-file-transfer": "1.6.1",
-        "cordova-plugin-inappbrowser": "1.6.1"
+        "cordova-plugin-inappbrowser": "1.6.1",
+        "cordova-plugin-tts": "0.2.3",
+        "com.megster.cordova.FileChooser": "0.0.0",
+        "cordova-plugin-filepath": "1.0.2",
+        "cordova-plugin-android-permissions": "0.10.0"
     }
 }

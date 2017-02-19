@@ -28,6 +28,9 @@
     <feature name="InAppBrowser">
         <param name="ios-package" value="CDVInAppBrowser" />
     </feature>
+    <feature name="TTS">
+        <param name="ios-package" value="CDVTTS" />
+    </feature>
     <name>Reader</name>
     <description>
        Reader app

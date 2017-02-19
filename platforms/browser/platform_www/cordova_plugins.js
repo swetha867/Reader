@@ -243,6 +243,22 @@ module.exports = [
         "merges": [
             ""
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-tts/www/tts.js",
+        "id": "cordova-plugin-tts.tts",
+        "pluginId": "cordova-plugin-tts",
+        "clobbers": [
+            "TTS"
+        ]
+    },
+    {
+        "file": "plugins/com.megster.cordova.FileChooser/www/fileChooser.js",
+        "id": "com.megster.cordova.FileChooser.FileChooser",
+        "pluginId": "com.megster.cordova.FileChooser",
+        "clobbers": [
+            "fileChooser"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -256,7 +272,11 @@ module.exports.metadata =
     "cordova-plugin-fullscreen": "1.1.0",
     "cordova-plugin-whitelist": "1.3.0",
     "cordova-sqlite-storage": "2.0.2",
-    "cordova-plugin-inappbrowser": "1.6.1"
+    "cordova-plugin-inappbrowser": "1.6.1",
+    "cordova-plugin-tts": "0.2.3",
+    "com.megster.cordova.FileChooser": "0.0.0",
+    "cordova-plugin-filepath": "1.0.2",
+    "cordova-plugin-android-permissions": "0.10.0"
 }
 // BOTTOM OF METADATA
 });

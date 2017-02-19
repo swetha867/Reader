@@ -23,6 +23,10 @@
                         {
                             "xml": "<feature name=\"InAppBrowser\"><param name=\"ios-package\" value=\"CDVInAppBrowser\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"TTS\"><param name=\"ios-package\" value=\"CDVTTS\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -52,6 +56,18 @@
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
         "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-tts": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "com.megster.cordova.FileChooser": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-filepath": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-android-permissions": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
@@ -278,6 +294,22 @@
                 "cordova.InAppBrowser.open",
                 "window.open"
             ]
+        },
+        {
+            "id": "cordova-plugin-tts.tts",
+            "file": "plugins/cordova-plugin-tts/www/tts.js",
+            "pluginId": "cordova-plugin-tts",
+            "clobbers": [
+                "TTS"
+            ]
+        },
+        {
+            "id": "com.megster.cordova.FileChooser.FileChooser",
+            "file": "plugins/com.megster.cordova.FileChooser/www/fileChooser.js",
+            "pluginId": "com.megster.cordova.FileChooser",
+            "clobbers": [
+                "fileChooser"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -288,6 +320,10 @@
         "cordova-sqlite-storage": "2.0.2",
         "cordova-plugin-armsoft-mfilechooser-nancydrew": "1.0.5",
         "cordova-plugin-file-transfer": "1.6.1",
-        "cordova-plugin-inappbrowser": "1.6.1"
+        "cordova-plugin-inappbrowser": "1.6.1",
+        "cordova-plugin-tts": "0.2.3",
+        "com.megster.cordova.FileChooser": "0.0.0",
+        "cordova-plugin-filepath": "1.0.2",
+        "cordova-plugin-android-permissions": "0.10.0"
     }
 }

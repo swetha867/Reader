@@ -5,6 +5,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, height=device-height initial-scale=1, maximum-scale=1,user-scalable=no" />
+
+    <!--<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">-->
+    <!--<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>-->
+    <!--<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>-->
+
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
     <link rel="stylesheet" href="css/basic.css">
     <link rel="stylesheet" href="css/thebook.css">
@@ -19,6 +24,7 @@
     <script src="js/selectingword.js"></script>
     <script src="js/fullsc.js"></script>
     <script src="js/hammer.js"></script>
+    <script src="js/jquery.hammer.js"></script>
     <script src="js/jquery.slides.js"></script>
     <link rel="stylesheet" href="css/game.css">
     <script src="js/game.js"></script>
@@ -35,6 +41,9 @@
 
 </head>
 <body>
+
+<!--<div data-role='popup' id='myPopup' class='godown' ><a class='ui-btn-inline'> </a><a class='ui-btn ui-btn-inline'> hi </a><a class='ui-btn ui-btn-inline'> bi </a></div>-->
+
 
 <div data-role="page" id="book" data-theme="none" style="overflow: hidden">
 
@@ -54,6 +63,7 @@
             <div id="fs"></div>
             <div id="wrapper">
                 <div id="popes"></div>
+
                 <div id="area">
                 </div>
             </div>
@@ -64,12 +74,21 @@
         var Book = ePub(localStorage.bookies, { contained: true });
         Book.renderTo("area");
         Book.getToc().then(function(toc){
-            console.log(toc);
+//            console.log(toc);
         });
     </script>
 
+    <div id="myPopup" class="definepop" >
+        <!--<button class="ui-btn-inline ui-link"> </button>-->
+        <button id="opendefinition" class="ui-btn-inline">Define</button>
+        <!--<button class="ui-btn-inline ui-link">Highlight</button>-->
+    </div>
     <!--the footer bar-->
     <i id="screener" class="fa fa-compress fa-2x"></i>
+    <i id="canceler" class="fa fa-search-minus fa-2x"></i>
+    <i id="speaker" class="fa fa-volume-up fa-2x"></i>
+    <i id="shutter" class="fa fa-volume-off fa-2x"></i>
+
 
     <!--<div id = "readerfooter" data-role="footer" data-position="fixed" data-fullscreen="false">-->
         <!--<div data-role="navbar">-->

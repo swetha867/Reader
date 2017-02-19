@@ -14,6 +14,39 @@
     outline: 3px solid rgba(0, 0, 0, 1);
 
 }
+
+.definepop{
+
+    display: none;
+    position: absolute;
+    bottom: 1vh;
+    left: 36vw;
+}
+
+#canceler{
+
+    display: none;
+    position: absolute;
+    bottom: 2vh;
+    left: 70vw;
+}
+
+#speaker{
+
+    display: block;
+    position: absolute;
+    bottom: 2vh;
+    left: 3vw;
+}
+
+#shutter{
+
+    display: block;
+    position: absolute;
+    bottom: 2vh;
+    left: 18vw;
+}
+
 .pope > h1 {
     padding: 5px 15px 5px 15px;
     color: #2a3644;
@@ -129,3 +162,4 @@ img:nth-child(3) {
 img:nth-child(4) {
     animation-delay: 0s;
 }
+

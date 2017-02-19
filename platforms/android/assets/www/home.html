@@ -22,6 +22,7 @@
     <script src="js/selectingword.js"></script>
     <script src="js/fullsc.js"></script>
     <script src="js/hammer.js"></script>
+    <script src="js/jquery.hammer.js"></script>
     <script src="js/jquery.slides.js"></script>
 
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.3.0/localforage.js"></script>-->
@@ -34,6 +35,7 @@
         function onDeviceReady() {
             console.log(cordova.file);
 
+
             var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
 
             db.transaction(function(tx) {
@@ -42,8 +44,8 @@
 
                     var mydiv = document.getElementById("mydiv");
                     for(var i=0; i<rs.rows.length;i++) {
-                        console.log('name : '+ i+ ' ' + rs.rows.item(i).name);
-                        console.log('link : '+ i+ ' ' + rs.rows.item(i).link);
+//                        console.log('name : '+ i+ ' ' + rs.rows.item(i).name);
+//                        console.log('link : '+ i+ ' ' + rs.rows.item(i).link);
                         var bname = rs.rows.item(i).name;
                         var blink = rs.rows.item(i).link;
 
@@ -61,31 +63,6 @@
                 });
             });
 
-            db.transaction(function (tx) {
-
-                tx.executeSql('SELECT * FROM WordsTable', [], function (tx, rs) {
-
-                    var words_list = document.getElementById("word_list_div");
-                    for (var i = 0; i < rs.rows.length; i++) {
-                        console.log('name : ' + i + ' ' + rs.rows.item(i).word);
-                        console.log('link : ' + i + ' ' + rs.rows.item(i).meaning);
-                        var word_name = rs.rows.item(i).word;
-                        var word_meaning = rs.rows.item(i).meaning;
-
-                        var content = "<div data-role='collapsible'><h3>" + word_name + "</h3><p><b>Definition</b><br/>" + word_meaning + "</p></div>";
-                        $("#set").append(content).collapsibleset('refresh');
-
-//                        var wordTag = document.createElement('div');
-//                        wordTag.className = "ui-collapsible ui-collapsible-inset ui-collapsible-collapsed";
-//                        wordTag.setAttribute('data-role', "collapsible");
-////                bookTag.setAttribute('data-blink', blink);
-//                        wordTag.innerHTML = "<h3 class='ui-collapsible-heading ui-collapsible-heading-collapsed'>" + word_name + "</h3><p>" + word_meaning + "</p>";
-//                        words_list.appendChild(wordTag);
-                    }
-                }, function (tx, error) {
-                    console.log('SELECT error: ' + error.message);
-                });
-            });
 
             function doChange(newPage) {
                 $.mobile.changePage(newPage, {transition: "none", reloadPage: true, allowSamePageTransition: true }, refreshtab);
@@ -95,10 +72,10 @@
                 window.location.href=window.location.href;
             }
 
-            $(document).on('click', '#gotolearning', function(){
-                doChange('learning.html');
-//                window.location.href=window.location.href;
-            });
+//            $(document).on('click', '#gotolearning', function(){
+//                doChange('learning.html');
+////                window.location.href=window.location.href;
+//            });
 
             $(document).on('click', '.frame', function(event){
 //                var m = $(event.target).text();
@@ -146,20 +123,17 @@
 
             });
 
-            function onbookclick(){
-
+            $(document).on('click', '#gotobook', function(){
                 $('#screener').css('display', 'block');
                 $('#readerheader').css('visibility', 'hidden');
                 $('#readerfooter').css('visibility', 'hidden');
-                // $("body").css('background-color','white');
-//                $('body').css({
-//                    'background-color' : 'white',
-//                    'background' : 'none'
-//                });
-
-
                 AndroidFullScreen.immersiveMode();
-            }
+                doChange('theapp.html')
+
+            });
+
+
+
 
             function toTitleCase(str)
             {
@@ -167,32 +141,65 @@
             }
 
             $('#fileinput').click( function() {
-                window.plugins.mfilechooser.open([], function (uri) {
-                    var linkname= 'file://'+uri;
-                    var slash_index = uri.lastIndexOf("/") + 1;
-                    var epubindex = uri.lastIndexOf(".epub");
-                    var onlyname = uri.substring(slash_index,epubindex);
-                    onlyname = onlyname.replace(/-/g , " ");
+                fileChooser.open(function(furi) {
+                    var suri =furi;
+                    console.log(furi);
 
-                    var bname = toTitleCase(onlyname);
-                    console.log(bname);
+                    var permissions = cordova.plugins.permissions;
+                    permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, checkPermissionCallback, null);
 
-                    db.transaction(function(tx) {
+                    function checkPermissionCallback(status) {
+                        if(!status.hasPermission) {
+                            var errorCallback = function() {
+                                console.warn('Camera permission is not turned on');
+                            }
+
+                            permissions.requestPermission(
+                                    permissions.READ_EXTERNAL_STORAGE,
+                                    function(status) {
+                                        if(!status.hasPermission) errorCallback();
+                                    },
+                                    errorCallback);
+                        }
+                    }
+
+
+                    window.FilePath.resolveNativePath(suri, function(uri) {
+                        var linkname = uri;
+                        console.log(linkname);
+
+                        var slash_index = uri.lastIndexOf("/") + 1;
+                        var epubindex = uri.lastIndexOf(".epub");
+                        var onlyname = uri.substring(slash_index, epubindex);
+                        onlyname = onlyname.replace(/-/g, " ");
+
+                        var bname = toTitleCase(onlyname);
+                        console.log(bname);
+
+                        db.transaction(function (tx) {
 
 //                        tx.executeSql('DROP TABLE IF EXISTS DemoTable');
-                        tx.executeSql('CREATE TABLE IF NOT EXISTS DemoTable (name, link)');
-                        tx.executeSql('INSERT INTO DemoTable VALUES (?,?)', [bname, linkname]);
-                    }, function(error) {
-                        console.log('Transaction ERROR: ' + error.message);
-                    }, function() {
-                        console.log('Inserted');
-                    });
+                            tx.executeSql('CREATE TABLE IF NOT EXISTS DemoTable (name, link)');
+                            tx.executeSql('INSERT INTO DemoTable VALUES (?,?)', [bname, linkname]);
+                        }, function (error) {
+                            console.log('Transaction ERROR: ' + error.message);
+                        }, function () {
+                            console.log('Inserted');
+                        });
 
                 }, function (error) {
 
-                    alert(error);
+                    console.log(error);
 
                 });
+                }, function (errs) {
+                    console.log(errs);
+                });
+            });
+
+            $('#gotolearning').click( function() {
+
+                doChange('learning.html');
             });
 
 
@@ -245,6 +252,7 @@
         </div>
 
 
+
     </div>
     <!--the footer bar-->
     <!--<i id="screener" class="fa fa-compress fa-2x"></i>-->
@@ -252,9 +260,9 @@
         <div data-role="navbar">
             <ul>
                 <li><a href="home.html" data-transition="none">Home</a></li>
-                <li><a href="theapp.html" data-transition="none" onclick="onbookclick();">Book</a></li>
+                <li><a id="gotobook" data-transition="none" >Book</a></li>
                 <li><a onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a></li>
-                <li><a  id="gotolearning" data-transition="none">Learning</a></li>
+                <li><a id="gotolearning" data-transition="none">Learning</a></li>
                 <!--<li><a onclick="doChange('learning.html');" id="learning" data-transition="none">Learning</a></li>-->
 
             </ul>

@@ -42,10 +42,12 @@
                     for (var i = 0; i < rs.rows.length; i++) {
                         console.log('name : ' + i + ' ' + rs.rows.item(i).word);
                         console.log('link : ' + i + ' ' + rs.rows.item(i).meaning);
+                        console.log('sentence : ' + i + ' ' + rs.rows.item(i).sentence);
                         var word_name = rs.rows.item(i).word;
                         var word_meaning = rs.rows.item(i).meaning;
+                        var word_sentence = rs.rows.item(i).sentence;
 
-                            var content = "<div data-role='collapsible'><h3>" + word_name + "</h3><p><b>Definition</b><br/>" + word_meaning + "</p></div>";
+                            var content = "<div data-role='collapsible'><h3>" + word_name + "</h3><p><b>Definition: </b><br/>" + word_meaning + "</p><p><b>Sentence: </b><br/>" + word_sentence + "</p></div>";
                             $("#set").append(content).collapsibleset('refresh');
 
 //                        var wordTag = document.createElement('div');
@@ -60,19 +62,36 @@
                 });
             });
 
-            $('#learning').on('click', function(){
+//            $('#learning').on('click', function(){
+//
+//                $('#screener').css('display', 'block');
+//                $('#readerheader').css('visibility', 'hidden');
+//                $('#readerfooter').css('visibility', 'hidden');
+//                // $("body").css('background-color','white');
+////                $('body').css({
+////                    'background-color' : 'white',
+////                    'background' : 'none'
+////                });
+//
+//
+//                AndroidFullScreen.immersiveMode();
+//            });
 
+            function doChange(newPage) {
+                $.mobile.changePage(newPage, {transition: "none", reloadPage: true, allowSamePageTransition: true }, refreshtab);
+            }
+
+            function refreshtab() {
+                window.location.href=window.location.href;
+            }
+
+            $(document).on('click', '#gotobook', function(){
                 $('#screener').css('display', 'block');
                 $('#readerheader').css('visibility', 'hidden');
                 $('#readerfooter').css('visibility', 'hidden');
-                // $("body").css('background-color','white');
-//                $('body').css({
-//                    'background-color' : 'white',
-//                    'background' : 'none'
-//                });
-
-
                 AndroidFullScreen.immersiveMode();
+                doChange('theapp.html')
+
             });
 
 
@@ -137,7 +156,7 @@
         <div data-role="navbar">
             <ul>
                 <li><a href="home.html" data-transition="none">Home</a></li>
-                <li><a href="theapp.html" data-transition="none">Book</a></li>
+                <li><a id="gotobook" data-transition="none">Book</a></li>
                 <li><a onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a></li>
                 <li><a href="learning.html" id="learning" data-transition="none">Learning</a></li>
 

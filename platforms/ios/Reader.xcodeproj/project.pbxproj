@@ -19,6 +19,7 @@
 		DD473365522F41219206EAB8 /* sqlite3.c in Resources */ = {isa = PBXBuildFile; fileRef = 97504F2E3E674EE5B3F1CF57 /* sqlite3.c */; settings = {COMPILER_FLAGS = "-DSQLITE_TEMP_STORE=2 -DSQLITE_THREADSAFE=1 -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_RTREE  -DSQLITE_OMIT_BUILTIN_TEST -DSQLITE_OMIT_LOAD_EXTENSION -DSQLITE_DEFAULT_PAGE_SIZE=1024 -DSQLITE_DEFAULT_CACHE_SIZE=2000"; }; };
 		EFFFBFD6CBA74C4393EF5FF1 /* CDVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = B19D7FEB85484FCD910C93DC /* CDVFileTransfer.m */; };
 		2D9967476F7D4B9FBA6B8A03 /* CDVInAppBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = F9EE588F08B14BA59D483C46 /* CDVInAppBrowser.m */; };
+		BAC4DAA0378D4C8EA9CA7D70 /* CDVTTS.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB1ED3807E944C4AAB481C5 /* CDVTTS.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,8 @@
 		EFA0D12EA5B946599066F697 /* CDVFileTransfer.h */ = {isa = PBXFileReference; name = "CDVFileTransfer.h"; path = "cordova-plugin-file-transfer/CDVFileTransfer.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		F9EE588F08B14BA59D483C46 /* CDVInAppBrowser.m */ = {isa = PBXFileReference; name = "CDVInAppBrowser.m"; path = "cordova-plugin-inappbrowser/CDVInAppBrowser.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		A3787F2E17F14A808230497C /* CDVInAppBrowser.h */ = {isa = PBXFileReference; name = "CDVInAppBrowser.h"; path = "cordova-plugin-inappbrowser/CDVInAppBrowser.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		1CB1ED3807E944C4AAB481C5 /* CDVTTS.m */ = {isa = PBXFileReference; name = "CDVTTS.m"; path = "cordova-plugin-tts/CDVTTS.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		BF8F68E174B348EEAFB31C70 /* CDVTTS.h */ = {isa = PBXFileReference; name = "CDVTTS.h"; path = "cordova-plugin-tts/CDVTTS.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +191,8 @@
 				EFA0D12EA5B946599066F697 /* CDVFileTransfer.h */,
 				F9EE588F08B14BA59D483C46 /* CDVInAppBrowser.m */,
 				A3787F2E17F14A808230497C /* CDVInAppBrowser.h */,
+				1CB1ED3807E944C4AAB481C5 /* CDVTTS.m */,
+				BF8F68E174B348EEAFB31C70 /* CDVTTS.h */,
 			);
 			name = Plugins;
 			path = Reader/Plugins;
@@ -314,6 +319,7 @@
 				DD473365522F41219206EAB8 /* sqlite3.c in Resources */,
 				EFFFBFD6CBA74C4393EF5FF1 /* CDVFileTransfer.m in Sources */,
 				2D9967476F7D4B9FBA6B8A03 /* CDVInAppBrowser.m in Sources */,
+				BAC4DAA0378D4C8EA9CA7D70 /* CDVTTS.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -21,11 +21,13 @@ function refreshPage()
     });
 }
 
+
 //Hook to perform task after everytime user turns page
 EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, renderer){
 
     //Display Dom structure of book in iframe
-    // console.log(renderer.doc);
+
+
     var toc =Book.getToc();
     // console.log(toc);
 
@@ -33,7 +35,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
 
     //Add css to chapter head
     //EPUBJS.core.addCss("../www/css/try.css", false, renderer.doc.head);
-
+    EPUBJS.core.addCss("../css/insidebook.css", false, renderer.doc.head);
     //access iframe info
     //var range = $(renderer.render.window).height();
 
@@ -66,7 +68,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
     // var fullscreener = new Hammer(hammertime);
     // var smallscreener = new Hammer(hammertimes);
 
-    var mc = new Hammer(renderer.doc);
+    // var mc = new Hammer(renderer.doc);
     // mc.get('pinch').set({ enable: true });
     // mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
@@ -101,13 +103,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
        });
 
 
-
-
-
-
-
-
-
     // $(renderer.render.window).on("swiperight",function(){
     //     Book.prevPage();
     // });
@@ -116,23 +111,77 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
 
     var wrap = $(renderer.render.window.frameElement).parent().parent().parent().contents()[0].nextSibling;
 
+    var definer = $(renderer.render.window.frameElement).parent().parent().parent().parent().parent().parent().contents()[22];
+    var cancelus = $(renderer.render.window.frameElement).parent().parent().parent().parent().parent().parent().contents()[28];
+    var speaker = $(renderer.render.window.frameElement).parent().parent().parent().parent().parent().parent().contents()[30];
+    var shutters = $(renderer.render.window.frameElement).parent().parent().parent().parent().parent().parent().contents()[32];
+
+    var speakout = function(){
+
+        var textosay = renderer.contents.innerText;
+
+        TTS.speak(textosay, function () {
+            console.log('success');
+        }, function (reason) {
+            console.log(reason);
+        });
+
+    }
+
+    var speakless = function(){
+
+        TTS.speak('', function () {
+            console.log('success');
+        }, function (reason) {
+            console.log(reason);
+        });
+
+    }
+
+    speaker.addEventListener("click", speakout, false);
+    shutters.addEventListener("click", speakless, false);
+
+    console.log($(renderer.render.window.frameElement).parent().parent().parent().parent().parent().parent().contents());
+
     //Select all elements in iframe dom with p
+
+
+
     var elements = renderer.doc.querySelectorAll('p'),
 
         //Perform actions on each of the elements. Each item is paragraph in book html
         items = Array.prototype.slice.call(elements);
-            console.log(elements);
-            console.log(items);
+            // console.log(elements);
+            // console.log(items);
             items.forEach(function(item){
 
                 // Get the word from book and store in variable t on double-click
                 // console.log(item.innerText.split(/([\.\?!])(?= )/));
 
+                // $(item).hammer().on('tap', function(){
+                //     console.log('single hammertime');
+                // });
 
-                $(item).on('dblclick',function(){
+                // $(item).hammer().on('doubletap', function(){
+                //     console.log('double hammertime');
+                // });
+
+                // $(item).on('taphold', function () {
+                //         console.log('dayum')
+                // });
+
+                var hammertime = new Hammer(item);
+                // hammertime.on('tap', function(ev) {
+                //     console.log(ev);
+                // });
+
+
+                // $(item).on('dblclick',function(){
                     //console.log(item);
-
-                    var array_of_sentences = (item.innerText.split("."));
+                hammertime.on('doubletap', function(){
+                    localStorage.sentence = '';
+                    localStorage.meaning= '';
+                    localStorage.word = '';
 
 
 
@@ -164,6 +213,32 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                         t = textRange.text;
                     }
 
+                    console.log(t);
+
+                    String.prototype.replaceAll = function(target, replacement) {
+                        return this.split(target).join(replacement);
+                    };
+
+                    var replacee = " " + t;
+                    var replacer = " <span class='hilite'>" + t +"</span>";
+
+                    // var replacer = " <div data-role='popup' id='myPopup' class='godown' ><a class='ui-btn-inline'> </a><a class='ui-btn ui-btn-inline'> hi </a><a class='ui-btn ui-btn-inline'> bi </a></div><a href='#myPopup' data-rel='popup' class='makelinkblack'><span class = 'makespanblack hilite'>" + t +"</span></a>";
+                    var temp = item.innerHTML;
+                    var temper = item.innerHTML.replaceAll(replacee, replacer);
+
+
+                    // temp = innerHTML;
+                    // for(var k= 0; k<single_instance.length - 1; k++){
+                    //
+                    //     temp = temp + single_instance[k] + "<span class='hilite'>"+ " " + t+ " " + "</span>" + single_instance[k + 1]  ;
+                    // }
+
+                    // temp = single_instance[0] + "<span class='abc'>" + t + "</span>" + single_instance[1];
+
+                    item.innerHTML = temper;
+                    console.log(item.innerHTML);
+
+                    var array_of_sentences = (item.innerText.split("."));
                     for (var i=0; i<array_of_sentences.length;i++){
 
                         var single = array_of_sentences[i];
@@ -171,17 +246,18 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                             localStorage.sentence = array_of_sentences[i];
                             }
 
-                    // Store word in array for future use
-                    arr.push(t);
 
-                    for (var i = 0; i < arr.length; i++) {
-                        //console.log(arr[i]);
-                    }
+                    // Store word in array for future use
 
 
 
                     // Display the hidden div
-                    wrap.style.display = "block";
+
+                     // wrap.style.display = "block";
+                    definer.style.display = "block";
+                    cancelus.style.display = "block";
+                    // $('#canceler').css('display', 'block');
+
 
                     // Different alternatives to add elements to dom
                     //var division = parent.createElement("div");
@@ -213,7 +289,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                                     //console.log(data);
                                     //console.log(r.word+" : "+r.definitions[0].definition);
 
-                                    console.log(r);
+                                    // console.log(r);
 
                                     //console.log(r.results[0].senses[0].definition[0]);
 
@@ -225,10 +301,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                                     localStorage.word = ogword;
                                     var partOfSpeech;
 
-
-
-
-
                                     // if (r.results[0].partOfSpeech){
                                     //     partOfSpeech=r.results[0].part_of_speech;
                                     // }
@@ -237,7 +309,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                                     for (var i=0; i<r.count;i++) {
                                         if (r.results[i].senses[0].definition) {
                                             meanings[i] = '[' + (i + 1) + '] ' + r.results[i].senses[0].definition[0];
-                                            console.log(meanings[i]);
+                                            // console.log(meanings[i]);
                                         }
                                     }
 
@@ -246,12 +318,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                                         }
 
                                         localStorage.meaning = meanings[0];
-
-                                    // storage.setItem(ogword,meanings[0]);
-
-                                    //var ogword = r.word;
-                                    //var meaning1 = "[1] "+ r.definitions[0].definition;
-                                    //var meaning2 = r.definitions[1].definition;
 
                                     wrap.innerHTML="<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='"+data.value[0].thumbnailUrl+"&w=200&h=200'/><img class='photo' src ='"+data.value[1].thumbnailUrl+"&w=200&h=200'/><img class='photo' src ='"+data.value[2].thumbnailUrl+"&w=200&h=200'/><img class='photo' src ='"+data.value[3].thumbnailUrl+"&w=200&h=200'/></div><h1>"+ogword+"</h1><div id='meaningspara'>"+meanings[0]+"<br>"+meanings[1]+"</div>";
                                     // console.log(wrap.firstChild.nextSibling.firstChild);
@@ -262,42 +328,67 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                                     //document.getElementById("output1").innerHTML = data.definitions[0].partOfSpeech;
                                 },
                                 //beforeSend: function(){console.log("hey");},
-                                error: function(err) { alert(err); }
+                                error: function(err) { console.log(err); }
 
                             });
                         },
-                        error: function(err) { alert(err); },
+                        error: function(err) { console.log(err); },
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "e0e79469ea954e32a7578e19dbce617e");
                             //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");// Enter here your Mashape key
                         }
                     });
 
-                    // Clear and hide the popup div
-                    var hidepope = function () {
-                        wrap.innerHTML="";
-                        wrap.style.display = "none";
-                        //wrap.parentNode.removeChild(wrap);
-                    }
+                    var openwrap = function () {
 
-                    // Add click event to popup.
-                    wrap.addEventListener("click", hidepope, false);
+                        // if(!(localStorage.meaning == "Definition not found"))
 
-                    if(!(localStorage.meaning == "Definition not found")) {
                         var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+
                         db.transaction(function (tx) {
 
-//                        tx.executeSql('DROP TABLE IF EXISTS DemoTable');
-                            tx.executeSql('CREATE TABLE IF NOT EXISTS WordsTable (word, meaning)');
-                            tx.executeSql('INSERT INTO WordsTable VALUES (?,?)', [localStorage.word, localStorage.meaning]);
+                            //tx.executeSql('DROP TABLE IF EXISTS WordsTable');
+                         tx.executeSql('CREATE TABLE IF NOT EXISTS WordsTable (word, meaning, sentence)');
+                         tx.executeSql('INSERT INTO WordsTable VALUES (?,?,?)', [localStorage.word, localStorage.meaning, localStorage.sentence]);
                         }, function (error) {
                             console.log('Transaction ERROR: ' + error.message);
                         }, function () {
                             console.log('Inserted');
                         });
-                    }
+
+
+                        wrap.style.display = "block";
+                        definer.style.display = "none";
+                        item.innerHTML = temp;
+
+
+                    };
+
+                    definer.addEventListener("click", openwrap, false);
+                    // var bruh = $('#canceler');
+
+                    //undefiner.addEventListener("click", hidepope, false);
+
+                    // Clear and hide the popup div
+                    var hidepope = function () {
+                        wrap.innerHTML="";
+                        wrap.style.display = "none";
+                        cancelus.style.display="none";
+                        definer.style.display = "none";
+                        item.innerHTML = temp;
+
+                        //wrap.parentNode.removeChild(wrap);
+                    };
+
+
+                    // Add click event to popup.
+                    wrap.addEventListener("click", hidepope, false);
+                    cancelus.addEventListener("click", hidepope, false);
+
+
                 });
             });
+
     if(callback) callback();
 };
 

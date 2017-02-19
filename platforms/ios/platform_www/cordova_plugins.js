@@ -221,6 +221,22 @@ module.exports = [
             "cordova.InAppBrowser.open",
             "window.open"
         ]
+    },
+    {
+        "id": "cordova-plugin-tts.tts",
+        "file": "plugins/cordova-plugin-tts/www/tts.js",
+        "pluginId": "cordova-plugin-tts",
+        "clobbers": [
+            "TTS"
+        ]
+    },
+    {
+        "id": "com.megster.cordova.FileChooser.FileChooser",
+        "file": "plugins/com.megster.cordova.FileChooser/www/fileChooser.js",
+        "pluginId": "com.megster.cordova.FileChooser",
+        "clobbers": [
+            "fileChooser"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -233,7 +249,11 @@ module.exports.metadata =
     "cordova-sqlite-storage": "2.0.2",
     "cordova-plugin-armsoft-mfilechooser-nancydrew": "1.0.5",
     "cordova-plugin-file-transfer": "1.6.1",
-    "cordova-plugin-inappbrowser": "1.6.1"
+    "cordova-plugin-inappbrowser": "1.6.1",
+    "cordova-plugin-tts": "0.2.3",
+    "com.megster.cordova.FileChooser": "0.0.0",
+    "cordova-plugin-filepath": "1.0.2",
+    "cordova-plugin-android-permissions": "0.10.0"
 };
 // BOTTOM OF METADATA
 });
