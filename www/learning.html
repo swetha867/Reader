@@ -78,7 +78,7 @@
 //            });
 
             function doChange(newPage) {
-                $.mobile.changePage(newPage, {transition: "none", reloadPage: true, allowSamePageTransition: true }, refreshtab);
+                $.mobile.changePage(newPage, {transition: "none", reloadPage: true});
             }
 
             function refreshtab() {
@@ -90,7 +90,21 @@
                 $('#readerheader').css('visibility', 'hidden');
                 $('#readerfooter').css('visibility', 'hidden');
                 AndroidFullScreen.immersiveMode();
-                doChange('theapp.html')
+                doChange('theapp.html');
+
+            });
+
+
+            $('#deleter').click(function deleteDB(){
+
+                db.transaction(function (tx) {
+
+                        tx.executeSql('DROP TABLE IF EXISTS WordsTable');
+                }, function (error) {
+                    console.log('Transaction ERROR: ' + error.message);
+                }, function () {
+                    console.log('Deleted Words Table');
+                });
 
             });
 
@@ -138,7 +152,7 @@
 
         <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
         <a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="refreshme();">Refresh</a>
-
+        <a id="deleter" data-icon="minus" class="ui-btn-right">Delete</a>
 
     </div>
 

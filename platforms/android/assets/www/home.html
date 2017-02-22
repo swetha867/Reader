@@ -40,7 +40,7 @@
 
             db.transaction(function(tx) {
 
-                tx.executeSql('SELECT * FROM DemoTable', [], function(tx, rs) {
+                tx.executeSql('SELECT * FROM BooksTable', [], function(tx, rs) {
 
                     var mydiv = document.getElementById("mydiv");
                     for(var i=0; i<rs.rows.length;i++) {
@@ -65,10 +65,11 @@
 
 
             function doChange(newPage) {
-                $.mobile.changePage(newPage, {transition: "none", reloadPage: true, allowSamePageTransition: true }, refreshtab);
+                $.mobile.changePage(newPage, {transition: "none", reloadPage: true, allowSamePageTransition: true });
             }
 
             function refreshtab() {
+                console.log('supe change');
                 window.location.href=window.location.href;
             }
 
@@ -151,7 +152,7 @@
                     function checkPermissionCallback(status) {
                         if(!status.hasPermission) {
                             var errorCallback = function() {
-                                console.warn('Camera permission is not turned on');
+                                console.warn('File permission is not turned on');
                             }
 
                             permissions.requestPermission(
@@ -179,8 +180,8 @@
                         db.transaction(function (tx) {
 
 //                        tx.executeSql('DROP TABLE IF EXISTS DemoTable');
-                            tx.executeSql('CREATE TABLE IF NOT EXISTS DemoTable (name, link)');
-                            tx.executeSql('INSERT INTO DemoTable VALUES (?,?)', [bname, linkname]);
+                            tx.executeSql('CREATE TABLE IF NOT EXISTS BooksTable (name, link)');
+                            tx.executeSql('INSERT INTO BooksTable VALUES (?,?)', [bname, linkname]);
                         }, function (error) {
                             console.log('Transaction ERROR: ' + error.message);
                         }, function () {
@@ -202,6 +203,18 @@
                 doChange('learning.html');
             });
 
+//            $('#refresh').click(function deleteDB(){
+//
+//                db.transaction(function (tx) {
+//
+//                        tx.executeSql('DROP TABLE IF EXISTS DemoTable');
+//                }, function (error) {
+//                    console.log('Transaction ERROR: ' + error.message);
+//                }, function () {
+//                    console.log('Deleted');
+//                });
+//
+//            });
 
         }
     </script>

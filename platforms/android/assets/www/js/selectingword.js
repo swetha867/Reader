@@ -170,15 +170,14 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                 //         console.log('dayum')
                 // });
 
-                var hammertime = new Hammer(item);
+                // var hammertime = new Hammer(item);
                 // hammertime.on('tap', function(ev) {
                 //     console.log(ev);
                 // });
 
 
-                // $(item).on('dblclick',function(){
+                $(item).on('dblclick',function(){
                     //console.log(item);
-                hammertime.on('doubletap', function(){
                     localStorage.sentence = '';
                     localStorage.meaning= '';
                     localStorage.word = '';
@@ -198,7 +197,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                             s.modify('move', 'forward', 'character'); //clear selection
                         }
                         else {
-                            t = s.toString();
+                            t =  s.toString();
                         }
                     } else if ((sel = document.selection) && sel.type != "Control") {
                         // IE 4+
@@ -210,9 +209,13 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                         while (/\s$/.test(textRange.text)) {
                             textRange.moveEnd("character", -1);
                         }
-                        t = textRange.text;
-                    }
 
+                        t = textRange.text;
+
+                    }
+                    localStorage.word = t;
+                    localStorage.sentence = s.focusNode.data;
+                    console.log(s.focusNode.data);
                     console.log(t);
 
                     String.prototype.replaceAll = function(target, replacement) {
@@ -242,8 +245,8 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                     for (var i=0; i<array_of_sentences.length;i++){
 
                         var single = array_of_sentences[i];
-                        if (single.includes(t))
-                            localStorage.sentence = array_of_sentences[i];
+                        // if (single.includes(t))
+                        //     localStorage.sentence = array_of_sentences[i];
                             }
 
 
@@ -298,7 +301,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
                                     meanings[1] = "";
                                     meanings[2] = "";
                                     var ogword = t;
-                                    localStorage.word = ogword;
+                                    // localStorage.word = ogword;
                                     var partOfSpeech;
 
                                     // if (r.results[0].partOfSpeech){
@@ -379,7 +382,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
 
                         //wrap.parentNode.removeChild(wrap);
                     };
-
 
                     // Add click event to popup.
                     wrap.addEventListener("click", hidepope, false);
