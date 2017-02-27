@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:thr="http://purl.org/syndication/thread/1.0" xmlns:dcterms="http://purl.org/dc/terms/" xmlns="http://www.w3.org/2005/Atom">
+<title>20,000 Leagues Under the Sea</title>
+<id>http://www.feedbooks.com/book/182</id>
+<author>
+  <name>Jules Verne</name>
+  <uri>http://www.feedbooks.com/author/19</uri>
+</author>
+<published>2007-01-12T19:09:05Z</published>
+<updated>2015-06-11T09:49:47Z</updated>
+<dcterms:language>en</dcterms:language>
+<dcterms:issued>1870</dcterms:issued>
+<category term="FBFIC000000" label="Fiction" scheme="http://www.feedbooks.com/categories"/>
+<category term="FBFIC002000" label="Action &amp; Adventure" scheme="http://www.feedbooks.com/categories"/>
+<category term="FBFIC028000" label="Science Fiction" scheme="http://www.feedbooks.com/categories"/>
+<summary>Twenty Thousand Leagues Under the Sea (French: Vingt mille lieues sous les mers) is a classic science fiction novel by French writer Jules Verne, published in 1870. It is about the fictional Captain Nemo and his submarine, Nautilus, as seen by one...</summary>
+<dcterms:extent>135,607 words</dcterms:extent>
+<dcterms:source>http://en.wikisource.org</dcterms:source>
+<link type="text/html" title="View on Feedbooks" rel="alternate" href="http://generation.feedbooks.com/book/182"/>
+<link type="application/epub+zip" rel="http://opds-spec.org/acquisition" href="http://generation.feedbooks.com/book/182.epub"/>
+<link type="application/x-mobipocket-ebook" rel="http://opds-spec.org/acquisition" href="http://generation.feedbooks.com/book/182.mobi"/>
+<link type="application/pdf" rel="http://opds-spec.org/acquisition" href="http://generation.feedbooks.com/book/182.pdf"/>
+<link type="image/jpeg" rel="http://opds-spec.org/image" href="http://covers.feedbooks.net/book/182.jpg?size=large&amp;t=1434016187"/>
+<link type="image/jpeg" rel="http://opds-spec.org/image/thumbnail" href="http://covers.feedbooks.net/book/182.jpg?t=1434016187"/>
+<link type="application/atom+xml;profile=opds-catalog;kind=acquisition" title="From the same author" rel="http://www.feedbooks.com/opds/same_author" href="http://generation.feedbooks.com/author/19/books/top.atom?lang=en"/>
+<link type="application/atom+xml;profile=opds-catalog;kind=navigation" title="Categories for this book" rel="related" href="http://generation.feedbooks.com/book/182/categories.atom"/>
+<link type="application/atom+xml;profile=opds-catalog;kind=navigation" title="Reading lists for this book" rel="related" href="http://generation.feedbooks.com/book/182/lists.atom"/>
+<link type="application/atom+xml" title="Comments for this book (1)" thr:count="1" rel="replies" thr:updated="2010-04-03T00:34:47Z" href="http://generation.feedbooks.com/book/182/comments.atom"/>
+<link type="text/html" title="Comments for this book (1)" thr:count="1" rel="replies" thr:updated="2010-04-03T00:34:47Z" href="http://generation.feedbooks.com/book/182/comments"/>
+<content type="html">&lt;p&gt;Twenty Thousand Leagues Under the Sea (French: Vingt mille lieues sous les mers) is a classic science fiction novel by French writer Jules Verne, published in 1870. It is about the fictional Captain Nemo and his submarine, Nautilus, as seen by one of his passengers, Professor Pierre Aronnax.&lt;/p&gt;</content>
+<link type="application/atom+xml;type=entry;profile=opds-catalog" rel="self" href="http://generation.feedbooks.com/book/182.atom"/>
+  <link type="application/atom+xml" rel="contents" href="http://generation.feedbooks.com/book/182/contents.atom"/>
+</entry>

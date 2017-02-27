@@ -31,6 +31,12 @@
 
     <script>
 
+//        if(localStorage.prevPage=='learning')
+//        {
+//          window.location.href=window.location.href= 'home';
+//          window.location.href=window.location.href;
+//        }
+
         document.addEventListener("deviceready", onDeviceReady, false);
         function onDeviceReady() {
             console.log(cordova.file);
@@ -104,7 +110,7 @@
 //                });
 
 
-                AndroidFullScreen.immersiveMode();
+                    AndroidFullScreen.immersiveMode();
 
             });
 
@@ -141,65 +147,96 @@
                 return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
             }
 
-            $('#fileinput').click( function() {
-                fileChooser.open(function(furi) {
-                    var suri =furi;
-                    console.log(furi);
+          $('#fileinput').click(function () {
+            console.log('hello input');
+            fileChooser.open(function (furi) {
+              var suri = furi;
+//          console.log(furi);
 
-                    var permissions = cordova.plugins.permissions;
-                    permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, checkPermissionCallback, null);
+              var permissions = cordova.plugins.permissions;
+              permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, checkPermissionCallback, null);
 
-                    function checkPermissionCallback(status) {
-                        if(!status.hasPermission) {
-                            var errorCallback = function() {
-                                console.warn('File permission is not turned on');
-                            }
+              function checkPermissionCallback(status) {
+                if (!status.hasPermission) {
+                  var errorCallback = function () {
+                    console.warn('File permission is not turned on');
+                  }
 
-                            permissions.requestPermission(
-                                    permissions.READ_EXTERNAL_STORAGE,
-                                    function(status) {
-                                        if(!status.hasPermission) errorCallback();
-                                    },
-                                    errorCallback);
-                        }
-                    }
+                  permissions.requestPermission(
+                    permissions.READ_EXTERNAL_STORAGE,
+                    function (status) {
+                      if (!status.hasPermission) errorCallback();
+                    },
+                    errorCallback);
+                }
+              }
+
+              window.FilePath.resolveNativePath(suri, function (uri) {
+                var source = uri;
+//                var linkname = uri;
+
+//            var dest = "file:///storage/emulated/0/Android/data/io.cordova.unzipper/files/";
+                var slash_index = uri.lastIndexOf("/") + 1;
+                var epubindex = uri.lastIndexOf(".epub");
+                var onlyname = uri.substring(slash_index, epubindex);
+                onlyname = onlyname.replace(/-/g, " ");
+
+                var bname = toTitleCase(onlyname);
+                console.log(bname);
 
 
-                    window.FilePath.resolveNativePath(suri, function(uri) {
-                        var linkname = uri;
-                        console.log(linkname);
+                window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory,  creatingFolder, function (error) {
+                  console.log(error);
+                });
 
-                        var slash_index = uri.lastIndexOf("/") + 1;
-                        var epubindex = uri.lastIndexOf(".epub");
-                        var onlyname = uri.substring(slash_index, epubindex);
-                        onlyname = onlyname.replace(/-/g, " ");
+                function creatingFolder(fileSystem) {
+                  var entry = fileSystem.filesystem.root;
+//              console.log(entry.toURL());
+                  entry.getDirectory(bname, {create: true, exclusive: false}, win, function (error) {
+                    console.log(error);
+                  });
+                }
 
-                        var bname = toTitleCase(onlyname);
-                        console.log(bname);
+                function win(dir) {
+                  console.log("Created dir "+dir.name);
+                  console.log("Created dir "+dir.fullPath);
+                  console.log("Created dir NativePath" + dir.nativeURL);
+                  var dest = dir.nativeURL;
+                  var linkname = dest + '/';
+                  zip.unzip(source, dest, zipCallback);
 
-                        db.transaction(function (tx) {
+                  function zipCallback(zipEvent) {
+                    if(zipEvent==0){
+                      console.log("unzipped");
+                      db.transaction(function (tx) {
 
 //                        tx.executeSql('DROP TABLE IF EXISTS DemoTable');
-                            tx.executeSql('CREATE TABLE IF NOT EXISTS BooksTable (name, link)');
-                            tx.executeSql('INSERT INTO BooksTable VALUES (?,?)', [bname, linkname]);
-                        }, function (error) {
-                            console.log('Transaction ERROR: ' + error.message);
-                        }, function () {
-                            console.log('Inserted');
-                        });
+                        tx.executeSql('CREATE TABLE IF NOT EXISTS BooksTable (name, link)');
+                        tx.executeSql('INSERT INTO BooksTable VALUES (?,?)', [bname, linkname]);
+                      }, function (error) {
+                        console.log('Transaction ERROR: ' + error.message);
+                      }, function () {
+                        console.log('Inserted');
+                      });
 
-                }, function (error) {
 
-                    console.log(error);
+                    }
+                    else{
+                      console.log("you are a failure");
+                    }
+                  }
+                }
 
-                });
-                }, function (errs) {
-                    console.log(errs);
-                });
+              }, function (error) {
+                console.log(error);
+              });
+            }, function (errs) {
+              console.log(errs);
             });
+          });
 
             $('#gotolearning').click( function() {
-
+                localStorage.fromPage = 'home';
                 doChange('learning.html');
             });
 

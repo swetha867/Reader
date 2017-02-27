@@ -253,6 +253,14 @@ module.exports = [
         "clobbers": [
             "cordova.plugins.permissions"
         ]
+    },
+    {
+        "id": "cordova-plugin-zip.Zip",
+        "file": "plugins/cordova-plugin-zip/zip.js",
+        "pluginId": "cordova-plugin-zip",
+        "clobbers": [
+            "zip"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -270,7 +278,8 @@ module.exports.metadata =
     "cordova-plugin-tts": "0.2.3",
     "com.megster.cordova.FileChooser": "0.0.0",
     "cordova-plugin-filepath": "1.0.2",
-    "cordova-plugin-android-permissions": "0.10.0"
+    "cordova-plugin-android-permissions": "0.10.0",
+    "cordova-plugin-zip": "3.1.0"
 };
 // BOTTOM OF METADATA
 });

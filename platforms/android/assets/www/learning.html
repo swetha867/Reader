@@ -29,6 +29,12 @@
     <script type="text/javascript" src="cordova.js"></script>
 
     <script>
+
+      if(localStorage.fromPage == 'home')
+      {
+        localStorage.fromPage = 'learning';
+        window.location.href=window.location.href;
+      }
         document.addEventListener("deviceready", onDeviceReady, false);
 
         function onDeviceReady() {
