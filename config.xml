@@ -36,4 +36,8 @@
     <plugin name="cordova-plugin-filepath" spec="~1.0.2" />
     <plugin name="cordova-plugin-android-permissions" spec="~0.10.0" />
     <plugin name="cordova-plugin-zip" spec="~3.1.0" />
+    <plugin name="org.apache.cordova.speech.speechrecognition" spec="https://github.com/macdonst/SpeechRecognitionPlugin">
+        <variable name="MICROPHONE_USAGE_DESCRIPTION" value=" " />
+        <variable name="SPEECH_RECOGNITION_USAGE_DESCRIPTION" value=" " />
+    </plugin>
 </widget>

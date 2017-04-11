@@ -36,6 +36,14 @@
 		1765516FAEED4C518CC6ACED /* mztools.c in Resources */ = {isa = PBXBuildFile; fileRef = A6C8174A062E4318B4626F14 /* mztools.c */; };
 		0575A533DEB9488E8FCCCB15 /* ioapi.c in Resources */ = {isa = PBXBuildFile; fileRef = 83244DADAFF64C46A1E82553 /* ioapi.c */; };
 		FD15DA3AA2154A7F97AF0B16 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EC7DCF454B64D509AF41DEB /* libz.dylib */; };
+		F61F0EF81004411F8814E0C5 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC3AA76C4BAA432CA710A7F1 /* AudioToolbox.framework */; };
+		305AD54E66564CE4BF24B6C4 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADC08FB904614D05A183EF68 /* SystemConfiguration.framework */; };
+		368A1C83480B4C7C92CD2A5C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90013B360D414864851CC6B1 /* Security.framework */; };
+		94ABDFFC46164584B0F46F49 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AB241BDB4824B7AB0D2C3BA /* CFNetwork.framework */; };
+		92B42A99529B4351851458CB /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA8779DD673C4CA0A545C0C7 /* Speech.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		2AE37D23595048B3A51DDA65 /* SpeechRecognition.m in Sources */ = {isa = PBXBuildFile; fileRef = 71C2D994C92D449BA6FA7531 /* SpeechRecognition.m */; };
+		4FD50863323C48D980D91889 /* libiSpeechSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 610E9363463C4B6A972BAFC6 /* libiSpeechSDK.a */; };
+		0B79F9D91410405B87A4F17E /* iSpeechSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 03C6F82A91F748309073DB45 /* iSpeechSDK.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +135,21 @@
 		89EE33A88E7B4BB1866DC47D /* ioapi.h */ = {isa = PBXFileReference; name = "ioapi.h"; path = "cordova-plugin-zip/Plugins/minizip/ioapi.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		6DD86F4929C848CCB3A626F6 /* crypt.h */ = {isa = PBXFileReference; name = "crypt.h"; path = "cordova-plugin-zip/Plugins/minizip/crypt.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		3EC7DCF454B64D509AF41DEB /* libz.dylib */ = {isa = PBXFileReference; name = "libz.dylib"; path = "usr/lib/libz.dylib"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = compiled.mach-o.dylib; explicitFileType = undefined; includeInIndex = 0; };
+		DC3AA76C4BAA432CA710A7F1 /* AudioToolbox.framework */ = {isa = PBXFileReference; name = "AudioToolbox.framework"; path = "System/Library/Frameworks/AudioToolbox.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		ADC08FB904614D05A183EF68 /* SystemConfiguration.framework */ = {isa = PBXFileReference; name = "SystemConfiguration.framework"; path = "System/Library/Frameworks/SystemConfiguration.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		90013B360D414864851CC6B1 /* Security.framework */ = {isa = PBXFileReference; name = "Security.framework"; path = "System/Library/Frameworks/Security.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		6AB241BDB4824B7AB0D2C3BA /* CFNetwork.framework */ = {isa = PBXFileReference; name = "CFNetwork.framework"; path = "System/Library/Frameworks/CFNetwork.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		EA8779DD673C4CA0A545C0C7 /* Speech.framework */ = {isa = PBXFileReference; name = "Speech.framework"; path = "System/Library/Frameworks/Speech.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		71C2D994C92D449BA6FA7531 /* SpeechRecognition.m */ = {isa = PBXFileReference; name = "SpeechRecognition.m"; path = "org.apache.cordova.speech.speechrecognition/SpeechRecognition.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		610E9363463C4B6A972BAFC6 /* libiSpeechSDK.a */ = {isa = PBXFileReference; name = "libiSpeechSDK.a"; path = "Reader/Plugins/org.apache.cordova.speech.speechrecognition/libiSpeechSDK.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		9175B60E73414F7688518117 /* SpeechRecognition.h */ = {isa = PBXFileReference; name = "SpeechRecognition.h"; path = "org.apache.cordova.speech.speechrecognition/SpeechRecognition.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		BF767AC880464D22B3A4C679 /* iSpeechSDK.h */ = {isa = PBXFileReference; name = "iSpeechSDK.h"; path = "org.apache.cordova.speech.speechrecognition/iSpeechSDK.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		CBF2D333354A4452BBCB0476 /* ISSpeechRecognition.h */ = {isa = PBXFileReference; name = "ISSpeechRecognition.h"; path = "org.apache.cordova.speech.speechrecognition/ISSpeechRecognition.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		5AB4774EFFFA4C70BFD5E24E /* ISSpeechRecognitionLocales.h */ = {isa = PBXFileReference; name = "ISSpeechRecognitionLocales.h"; path = "org.apache.cordova.speech.speechrecognition/ISSpeechRecognitionLocales.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		4F60E4BAD6FD42D6AA8A17C8 /* ISSpeechRecognitionResult.h */ = {isa = PBXFileReference; name = "ISSpeechRecognitionResult.h"; path = "org.apache.cordova.speech.speechrecognition/ISSpeechRecognitionResult.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		EE4EC808986840368BA31AE7 /* ISSpeechSynthesis.h */ = {isa = PBXFileReference; name = "ISSpeechSynthesis.h"; path = "org.apache.cordova.speech.speechrecognition/ISSpeechSynthesis.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		851EE219B21046798BDCD700 /* ISSpeechSynthesisVoices.h */ = {isa = PBXFileReference; name = "ISSpeechSynthesisVoices.h"; path = "org.apache.cordova.speech.speechrecognition/ISSpeechSynthesisVoices.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		03C6F82A91F748309073DB45 /* iSpeechSDK.bundle */ = {isa = PBXFileReference; name = "iSpeechSDK.bundle"; path = "iSpeechSDK.bundle"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.plug-in; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +159,12 @@
 			files = (
 				301BF552109A68D80062928A /* libCordova.a in Frameworks */,
 				FD15DA3AA2154A7F97AF0B16 /* libz.dylib in Frameworks */,
+				F61F0EF81004411F8814E0C5 /* AudioToolbox.framework in Frameworks */,
+				305AD54E66564CE4BF24B6C4 /* SystemConfiguration.framework in Frameworks */,
+				368A1C83480B4C7C92CD2A5C /* Security.framework in Frameworks */,
+				94ABDFFC46164584B0F46F49 /* CFNetwork.framework in Frameworks */,
+				92B42A99529B4351851458CB /* Speech.framework in Frameworks */,
+				4FD50863323C48D980D91889 /* libiSpeechSDK.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,6 +226,7 @@
 				0207DA571B56EA530066E2B4 /* Images.xcassets */,
 				3047A50E1AB8057F00498E2A /* config */,
 				8D1107310486CEB800E47090 /* Reader-Info.plist */,
+				03C6F82A91F748309073DB45 /* iSpeechSDK.bundle */,
 			);
 			name = Resources;
 			path = Reader/Resources;
@@ -206,6 +236,12 @@
 			isa = PBXGroup;
 			children = (
 				3EC7DCF454B64D509AF41DEB /* libz.dylib */,
+				DC3AA76C4BAA432CA710A7F1 /* AudioToolbox.framework */,
+				ADC08FB904614D05A183EF68 /* SystemConfiguration.framework */,
+				90013B360D414864851CC6B1 /* Security.framework */,
+				6AB241BDB4824B7AB0D2C3BA /* CFNetwork.framework */,
+				EA8779DD673C4CA0A545C0C7 /* Speech.framework */,
+				610E9363463C4B6A972BAFC6 /* libiSpeechSDK.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -282,6 +318,14 @@
 				41838C33FF6D4D89AEA11EF0 /* mztools.h */,
 				89EE33A88E7B4BB1866DC47D /* ioapi.h */,
 				6DD86F4929C848CCB3A626F6 /* crypt.h */,
+				71C2D994C92D449BA6FA7531 /* SpeechRecognition.m */,
+				9175B60E73414F7688518117 /* SpeechRecognition.h */,
+				BF767AC880464D22B3A4C679 /* iSpeechSDK.h */,
+				CBF2D333354A4452BBCB0476 /* ISSpeechRecognition.h */,
+				5AB4774EFFFA4C70BFD5E24E /* ISSpeechRecognitionLocales.h */,
+				4F60E4BAD6FD42D6AA8A17C8 /* ISSpeechRecognitionResult.h */,
+				EE4EC808986840368BA31AE7 /* ISSpeechSynthesis.h */,
+				851EE219B21046798BDCD700 /* ISSpeechSynthesisVoices.h */,
 			);
 			name = Plugins;
 			path = Reader/Plugins;
@@ -370,6 +414,7 @@
 			files = (
 				302D95F214D2391D003F00A1 /* MainViewController.xib in Resources */,
 				0207DA581B56EA530066E2B4 /* Images.xcassets in Resources */,
+				0B79F9D91410405B87A4F17E /* iSpeechSDK.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +469,7 @@
 				99414FC21FA1481089714269 /* unzip.c in Resources */,
 				1765516FAEED4C518CC6ACED /* mztools.c in Resources */,
 				0575A533DEB9488E8FCCCB15 /* ioapi.c in Resources */,
+				2AE37D23595048B3A51DDA65 /* SpeechRecognition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,6 +507,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.cordova.maheshsingh;
 				PRODUCT_NAME = Reader;
 				PROVISIONING_PROFILE = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Reader/Plugins/org.apache.cordova.speech.speechrecognition\"",
+				);
 			};
 			name = Debug;
 		};
@@ -484,6 +534,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.cordova.maheshsingh;
 				PRODUCT_NAME = Reader;
 				PROVISIONING_PROFILE = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Reader/Plugins/org.apache.cordova.speech.speechrecognition\"",
+				);
 			};
 			name = Release;
 		};
@@ -511,6 +565,10 @@
 				PRODUCT_NAME = Reader;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Reader/Plugins/org.apache.cordova.speech.speechrecognition\"",
+				);
 			};
 			name = Debug;
 		};
@@ -537,6 +595,10 @@
 				PRODUCT_NAME = Reader;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Reader/Plugins/org.apache.cordova.speech.speechrecognition\"",
+				);
 			};
 			name = Release;
 		};

@@ -52,5 +52,9 @@
       <string>UIInterfaceOrientationPortraitUpsideDown</string>
       <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
+    <key>NSMicrophoneUsageDescription</key>
+    <string/>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string/>
   </dict>
 </plist>

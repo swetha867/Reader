@@ -94,3 +94,7 @@
 .popup.show, .popup.on {
   display: block;
 }
+
+.hilite{
+    background-color: lightblue;
+}

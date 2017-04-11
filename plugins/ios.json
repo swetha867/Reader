@@ -42,6 +42,11 @@
         },
         "cordova-plugin-zip": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "org.apache.cordova.speech.speechrecognition": {
+            "MICROPHONE_USAGE_DESCRIPTION": " ",
+            "SPEECH_RECOGNITION_USAGE_DESCRIPTION": " ",
+            "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
     "dependent_plugins": {

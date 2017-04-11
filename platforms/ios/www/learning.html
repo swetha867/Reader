@@ -1,188 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Reader</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, height=device-height initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
-    <link rel="stylesheet" href="css/grid.css">
-    <link rel="stylesheet" href="css/basic.css">
-    <link rel="stylesheet" href="css/thebook.css">
-    <link rel="stylesheet" href="font/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/try.css">
-    <link rel="stylesheet" href="css/main.css">
-    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-    <!--<script src="js/jquery.mobile-1.4.5.js"></script>-->
-    <script src="js/zip.min.js"></script>
-    <script src="js/epub.js"></script>
-    <script src="js/apicalls.js"></script>
-    <script src="js/selectingword.js"></script>
-    <script src="js/fullsc.js"></script>
-    <script src="js/hammer.js"></script>
-    <script src="js/jquery.slides.js"></script>
+  <title>Reader</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport"
+        content="width=device-width, height=device-height initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css"/>
+  <link rel="stylesheet" href="css/grid.css">
+  <link rel="stylesheet" href="css/basic.css">
+  <link rel="stylesheet" href="css/thebook.css">
+  <link rel="stylesheet" href="font/font-awesome-4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/try.css">
+  <link rel="stylesheet" href="css/mainst.css">
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+  <!--<script src="js/jquery.mobile-1.4.5.js"></script>-->
+  <script src="js/zip.min.js"></script>
+  <script src="js/epub.js"></script>
+  <script src="js/apicalls.js"></script>
+  <script src="js/selectingword.js"></script>
+  <script src="js/fullsc.js"></script>
+  <script src="js/hammer.js"></script>
+  <script src="js/jquery.slides.js"></script>
 
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.3.0/localforage.js"></script>-->
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.3.0/localforage.js"></script>-->
 
-    <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="cordova.js"></script>
 
-    <script>
+  <script>
 
-      if(localStorage.fromPage == 'home')
-      {
-        localStorage.fromPage = 'learning';
-        window.location.href=window.location.href;
+    //      if(localStorage.fromPage == 'home')
+    //      {
+    //        localStorage.fromPage = 'learning';
+    //        window.location.href=window.location.href;
+    //      }
+
+
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+      AndroidFullScreen.showSystemUI();
+
+      if(typeof localStorage.sortWords == 'undefined'){
+        $('#recent').addClass('ui-btn-active');
+        $('#alpha').removeClass('ui-btn-active');
+        $('#frequency').removeClass('ui-btn-active');
       }
-        document.addEventListener("deviceready", onDeviceReady, false);
 
-        function onDeviceReady() {
-            var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+      if(localStorage.sortWords == 'recent'){
+        $('#recent').addClass('ui-btn-active');
+        $('#alpha').removeClass('ui-btn-active');
+        $('#frequency').removeClass('ui-btn-active');
+      }
 
-            db.transaction(function (tx) {
+      if(localStorage.sortWords == 'word'){
+        $('#recent').removeClass('ui-btn-active');
+        $('#alpha').addClass('ui-btn-active');
+        $('#frequency').removeClass('ui-btn-active');
+      }
 
-                tx.executeSql('SELECT * FROM WordsTable', [], function (tx, rs) {
+      if(localStorage.sortWords == 'frequency'){
+        $('#recent').removeClass('ui-btn-active');
+        $('#alpha').removeClass('ui-btn-active');
+        $('#frequency').addClass('ui-btn-active');
+      }
 
-                    var words_list = document.getElementById("word_list_div");
-                    for (var i = 0; i < rs.rows.length; i++) {
-                        console.log('name : ' + i + ' ' + rs.rows.item(i).word);
-                        console.log('link : ' + i + ' ' + rs.rows.item(i).meaning);
-                        console.log('sentence : ' + i + ' ' + rs.rows.item(i).sentence);
-                        var word_name = rs.rows.item(i).word;
-                        var word_meaning = rs.rows.item(i).meaning;
-                        var word_sentence = rs.rows.item(i).sentence;
+      var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
 
-                            var content = "<div data-role='collapsible'><h3>" + word_name + "</h3><p><b>Definition: </b><br/>" + word_meaning + "</p><p><b>Sentence: </b><br/>" + word_sentence + "</p></div>";
-                            $("#set").append(content).collapsibleset('refresh');
-
-//                        var wordTag = document.createElement('div');
-//                        wordTag.className = "ui-collapsible ui-collapsible-inset ui-collapsible-collapsed";
-//                        wordTag.setAttribute('data-role', "collapsible");
-////                bookTag.setAttribute('data-blink', blink);
-//                        wordTag.innerHTML = "<h3 class='ui-collapsible-heading ui-collapsible-heading-collapsed'>" + word_name + "</h3><p>" + word_meaning + "</p>";
-//                        words_list.appendChild(wordTag);
-                    }
-                }, function (tx, error) {
-                    console.log('SELECT error: ' + error.message);
-                });
-            });
-
-//            $('#learning').on('click', function(){
-//
-//                $('#screener').css('display', 'block');
-//                $('#readerheader').css('visibility', 'hidden');
-//                $('#readerfooter').css('visibility', 'hidden');
-//                // $("body").css('background-color','white');
-////                $('body').css({
-////                    'background-color' : 'white',
-////                    'background' : 'none'
-////                });
-//
-//
-//                AndroidFullScreen.immersiveMode();
-//            });
-
-            function doChange(newPage) {
-                $.mobile.changePage(newPage, {transition: "none", reloadPage: true});
-            }
-
-            function refreshtab() {
-                window.location.href=window.location.href;
-            }
-
-            $(document).on('click', '#gotobook', function(){
-                $('#screener').css('display', 'block');
-                $('#readerheader').css('visibility', 'hidden');
-                $('#readerfooter').css('visibility', 'hidden');
-                AndroidFullScreen.immersiveMode();
-                doChange('theapp.html');
-
-            });
-
-
-            $('#deleter').click(function deleteDB(){
-
-                db.transaction(function (tx) {
-
-                        tx.executeSql('DROP TABLE IF EXISTS WordsTable');
-                }, function (error) {
-                    console.log('Transaction ERROR: ' + error.message);
-                }, function () {
-                    console.log('Deleted Words Table');
-                });
-
-            });
-
-
-            function refreshPage()
-            {
-                $.mobile.changePage(window.location.href, {
-                    allowSamePageTransition: true,
-                    transition: 'none',
-                    reloadPage: true
-                });
-            }
+      db.transaction(function (tx) {
+        var statementToExecute = "SELECT * FROM WordsTable";
+        if(typeof localStorage.sortWords == 'undefined'){
+          localStorage.sortWords = 'word';
         }
-    </script>
+        if(localStorage.sortWords=='word'){
+          statementToExecute = "SELECT * FROM WordsTable Order By " + localStorage.sortWords;
+        }
+
+        if(localStorage.sortWords=='frequency'){
+          statementToExecute = "SELECT * FROM WordsTable Order By " + localStorage.sortWords + "DESC";
+        }
+
+        if(localStorage.sortWords=='recent'){
+          statementToExecute = "SELECT * FROM WordsTable";
+        }
+        tx.executeSql(statementToExecute, [], function (tx, rs) {
+
+          var words_list = document.getElementById("word_list_div");
+          for (var i = 0; i < rs.rows.length; i++) {
+            console.log('name : ' +  ' ' + rs.rows.item(i).word);
+            console.log('meaning : ' +  ' ' + rs.rows.item(i).meaning);
+            console.log('sentence : ' + ' ' + rs.rows.item(i).sentence);
+            console.log('frequency : ' +  ' ' + rs.rows.item(i).frequency);
+            console.log('book : ' +  ' ' + rs.rows.item(i).book);
+            var word_name = rs.rows.item(i).word;
+            var word_meaning = rs.rows.item(i).meaning;
+            var word_sentence = rs.rows.item(i).sentence + '.';
+            var word_frequency = rs.rows.item(i).frequency;
+            var word_book = rs.rows.item(i).book;
+
+            var content = "<div data-role='collapsible'><h3>" + word_name + "</h3><p><b>Definition: </b><br/>" +
+              word_meaning + "</p><p><b>Sentence: </b><br/>" + word_sentence + "</p><p><b>Book: </b> " +
+              word_book + "</p><p><b>Frequency: </b> " + word_frequency + "</p></div>";
+            $("#set").append(content).collapsibleset('refresh');
+
+          }
+        }, function (tx, error) {
+          console.log('SELECT error: ' + error.message);
+        });
+      });
+
+      function doChange(newPage) {
+//                $.mobile.changePage(newPage, {transition: "none", reloadPage: true, allowSamePageTransition: true });
+        window.location.href = newPage;
+      }
+
+      $(document).on('click', '#gotobook', function () {
+        $('#screener').css('display', 'block');
+        $('#readerheader').css('visibility', 'hidden');
+        $('#readerfooter').css('visibility', 'hidden');
+        AndroidFullScreen.immersiveMode();
+        doChange('reader.html');
+
+      });
+
+      $(document).on('click', '#gotohome', function () {
+        doChange('home.html');
+      });
+
+      $('#deleter').click(function deleteDB() {
+
+        db.transaction(function (tx) {
+
+          tx.executeSql('DROP TABLE IF EXISTS WordsTable');
+        }, function (error) {
+          console.log('Transaction ERROR: ' + error.message);
+        }, function () {
+          console.log('Deleted Words Table');
+        });
+
+      });
+
+      $(document).on('click', '#recent', function () {
+        localStorage.sortWords = 'recent';
+        doChange('learning.html');
+      });
+
+      $(document).on('click', '#alpha', function () {
+        localStorage.sortWords = 'word';
+        doChange('learning.html');
+      });
+
+      $(document).on('click', '#frequency', function () {
+        localStorage.sortWords = 'frequency';
+        doChange('learning.html');
+      });
+    }
+  </script>
 
 
 </head>
 <style>
-    body {
-        background:
-                radial-gradient(circle, transparent 20%, slategray 20%, slategray 80%, transparent 80%, transparent),
-                radial-gradient(circle, transparent 20%, slategray 20%, slategray 80%, transparent 80%, transparent) 50px 50px,
-                linear-gradient(#A8B1BB 8px, transparent 8px) 0 -4px,
-                linear-gradient(90deg, #A8B1BB 8px, transparent 8px) -4px 0;
-        background-color: slategray;
-        background-size:100px 100px, 100px 100px, 50px 50px, 50px 50px;
-
-        /*background: #e9dfc4;*/
-        /*background: -moz-linear-gradient(left, #e9dfc4 0%, #e9dfc4 1%, #ede3c8 2%, #ede3c8 24%, #ebddc3 25%, #e9dfc4 48%, #ebddc3 49%, #e6d8bd 52%, #e6d8bd 53%, #e9dbc0 54%, #e6d8bd 55%, #e6d8bd 56%, #e9dbc0 57%, #e6d8bd 58%, #e6d8bd 73%, #e9dbc0 74%, #e9dbc0 98%, #ebddc3 100%);*/
-        /*background: -webkit-gradient(linear, left top, right top, color-stop(0%, #e9dfc4), color-stop(1%, #e9dfc4), color-stop(2%, #ede3c8), color-stop(24%, #ede3c8), color-stop(25%, #ebddc3), color-stop(48%, #e9dfc4), color-stop(49%, #ebddc3), color-stop(52%, #e6d8bd), color-stop(53%, #e6d8bd), color-stop(54%, #e9dbc0), color-stop(55%, #e6d8bd), color-stop(56%, #e6d8bd), color-stop(57%, #e9dbc0), color-stop(58%, #e6d8bd), color-stop(73%, #e6d8bd), color-stop(74%, #e9dbc0), color-stop(98%, #e9dbc0), color-stop(100%, #ebddc3));*/
-        /*background: -webkit-linear-gradient(left, #e9dfc4 0%, #e9dfc4 1%, #ede3c8 2%, #ede3c8 24%, #ebddc3 25%, #e9dfc4 48%, #ebddc3 49%, #e6d8bd 52%, #e6d8bd 53%, #e9dbc0 54%, #e6d8bd 55%, #e6d8bd 56%, #e9dbc0 57%, #e6d8bd 58%, #e6d8bd 73%, #e9dbc0 74%, #e9dbc0 98%, #ebddc3 100%);*/
-        /*background: -o-linear-gradient(left, #e9dfc4 0%, #e9dfc4 1%, #ede3c8 2%, #ede3c8 24%, #ebddc3 25%, #e9dfc4 48%, #ebddc3 49%, #e6d8bd 52%, #e6d8bd 53%, #e9dbc0 54%, #e6d8bd 55%, #e6d8bd 56%, #e9dbc0 57%, #e6d8bd 58%, #e6d8bd 73%, #e9dbc0 74%, #e9dbc0 98%, #ebddc3 100%);*/
-        /*background: -ms-linear-gradient(left, #e9dfc4 0%, #e9dfc4 1%, #ede3c8 2%, #ede3c8 24%, #ebddc3 25%, #e9dfc4 48%, #ebddc3 49%, #e6d8bd 52%, #e6d8bd 53%, #e9dbc0 54%, #e6d8bd 55%, #e6d8bd 56%, #e9dbc0 57%, #e6d8bd 58%, #e6d8bd 73%, #e9dbc0 74%, #e9dbc0 98%, #ebddc3 100%);*/
-        /*background: linear-gradient(to right, #e9dfc4 0%, #e9dfc4 1%, #ede3c8 2%, #ede3c8 24%, #ebddc3 25%, #e9dfc4 48%, #ebddc3 49%, #e6d8bd 52%, #e6d8bd 53%, #e9dbc0 54%, #e6d8bd 55%, #e6d8bd 56%, #e9dbc0 57%, #e6d8bd 58%, #e6d8bd 73%, #e9dbc0 74%, #e9dbc0 98%, #ebddc3 100%);*/
-    }
+  body {
+    background: radial-gradient(circle, transparent 20%, slategray 20%, slategray 80%, transparent 80%, transparent),
+    radial-gradient(circle, transparent 20%, slategray 20%, slategray 80%, transparent 80%, transparent) 50px 50px,
+    linear-gradient(#A8B1BB 8px, transparent 8px) 0 -4px,
+    linear-gradient(90deg, #A8B1BB 8px, transparent 8px) -4px 0;
+    background-color: slategray;
+    background-size: 100px 100px, 100px 100px, 50px 50px, 50px 50px;
+  }
 </style>
-
 
 <body>
 
-<div data-role="page" id="home" data-theme="none" style="overflow: hidden">
+<div data-role="page" id="learningpage" data-theme="none" style="overflow: hidden">
 
-    <div id = "readerhead" data-role="header" data-position="fixed" data-tap-toggle="false">
-        <h1>Reader</h1>
+  <div id="readerhead" data-role="header" data-position="fixed" data-tap-toggle="false">
+    <h1>Reader</h1>
 
-        <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
-        <a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="refreshme();">Refresh</a>
-        <a id="deleter" data-icon="minus" class="ui-btn-right">Delete</a>
+    <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
+    <a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>
+    <a id="deleter" data-icon="minus" class="ui-btn-right">Delete</a>
+
+  </div>
+  <div class="wrapperForBut">
+    <div class="inliners" style="text-align: center">
+  <a id="recent" href="" data-role="button" data-inline="true" data-mini="true">Recent</a>
+  <a id="alpha" href="" data-role="button" data-inline="true" data-mini="true">Alphabetical</a>
+  <a id="frequency" href="" data-role="button" data-inline="true" data-mini="true">Frequency</a>
+  </div>
+  </div>
+
+  <div data-role="content">
+
+    <div id="set" data-role="collapsible-set" data-theme="c" data-content-theme="d" data-iconpos="right">
 
     </div>
 
-    <div data-role="content">
+  </div>
 
-            <div id="set" data-role="collapsible-set" data-theme="c" data-content-theme="d" data-iconpos="right" >
+  <div id="readerfoot" data-role="footer" data-position="fixed" data-tap-toggle="false">
+    <div data-role="navbar">
+      <ul>
+        <li><a id="gotohome" data-transition="none">Home</a></li>
+        <li><a id="gotobook" data-transition="none">Book</a></li>
+        <li><a onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>
+        </li>
+        <li><a href="learning.html" id="learning" data-transition="none">Learning</a></li>
 
-
-            </div>
-
-
+      </ul>
     </div>
-
-    <div id = "readerfoot" data-role="footer" data-position="fixed" data-tap-toggle="false">
-        <div data-role="navbar">
-            <ul>
-                <li><a href="home.html" data-transition="none">Home</a></li>
-                <li><a id="gotobook" data-transition="none">Book</a></li>
-                <li><a onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a></li>
-                <li><a href="learning.html" id="learning" data-transition="none">Learning</a></li>
-
-            </ul>
-        </div>
-    </div>
+  </div>
 
 </div> <!--page1 ends-->
 

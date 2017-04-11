@@ -27,7 +27,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
 
 	//Display Dom structure of book in iframe
 
-
+	console.log(renderer)
 	var toc =Book.getToc();
 	// console.log(toc);
 
@@ -142,6 +142,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
 	// shutters.addEventListener("click", speakless, false);
 
 	console.log($(renderer.render.window.frameElement).parent().parent().parent().parent().parent().parent().contents());
+	console.log($(renderer.render.window.frameElement).parent().parent().parent().parent().parent().parent().contents());
 
 	//Select all elements in iframe dom with p
 
@@ -155,33 +156,11 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function(callback, re
 	// console.log(items);
 	items.forEach(function(item){
 
-		// Get the word from book and store in variable t on double-click
-		// console.log(item.innerText.split(/([\.\?!])(?= )/));
-
-		// $(item).hammer().on('tap', function(){
-		//     console.log('single hammertime');
-		// });
-
-		// $(item).hammer().on('doubletap', function(){
-		//     console.log('double hammertime');
-		// });
-
-		// $(item).on('taphold', function () {
-		//         console.log('dayum')
-		// });
-
-		// var hammertime = new Hammer(item);
-		// hammertime.on('tap', function(ev) {
-		//     console.log(ev);
-		// });
-
-
 		$(item).on('dblclick',function(){
 			//console.log(item);
 			localStorage.sentence = '';
 			localStorage.meaning= '';
 			localStorage.word = '';
-
 
 
 			//get the word from screen

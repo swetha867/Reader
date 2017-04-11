@@ -30,6 +30,9 @@
         },
         "cordova-plugin-zip": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "org.apache.cordova.speech.speechrecognition": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
     "dependent_plugins": {
