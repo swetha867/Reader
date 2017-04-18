@@ -110,6 +110,24 @@
     outline: 1px solid lightgray;
     overflow-y: auto;
 }
+
+#loadingscreen {
+
+    display: none;
+    position: fixed;
+    z-index: 2;
+    top: 30%;
+    left: 10%;
+    padding-right: 5%;
+    width: 75%;
+    height: 35%;
+    background: #ffffff;
+    border-radius: 1px;
+    outline: 1px solid lightgray;
+    overflow-y: auto;
+}
+
+
 #popes > h1 {
     padding: 5px 15px 5px 15px;
     color: #2a3644;
@@ -181,3 +199,9 @@ img:nth-child(4) {
     animation-delay: 0s;
 }
 
+#loadingscreen img{
+    animation-delay: 0s;
+    margin-left: 40%;
+    margin-top: 5%;
+
+}

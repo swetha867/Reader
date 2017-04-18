@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!DOCTYPE ncx PUBLIC '-//NISO//DTD ncx 2005-1//EN' 'http://www.daisy.org/z3986/2005/ncx-2005-1.dtd'>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en">
+  <head>
+    <meta content="http://www.gutenberg.org/ebooks/54404" name="dtb:uid"/>
+    <meta content="3" name="dtb:depth"/>
+    <meta content="Ebookmaker 0.4.0a5 by Marcello Perathoner &lt;webmaster@gutenberg.org&gt;" name="dtb:generator"/>
+    <meta content="0" name="dtb:totalPageCount"/>
+    <meta content="0" name="dtb:maxPageNumber"/>
+  </head>
+  <docTitle>
+    <text>Mehalah
+A Story of the Salt Marshes</text>
+  </docTitle>
+  <navMap>
+    <navPoint id="np-1" playOrder="1">
+      <navLabel>
+        <text>MEHALAH</text>
+      </navLabel>
+      <content src="@public@vhost@g@gutenberg@html@files@54404@54404-rst@54404-rst-0.rst.html#mehalah"/>
+    </navPoint>
+    <navPoint id="np-2" playOrder="2">
+      <navLabel>
+        <text>A Word from Project Gutenberg</text>
+      </navLabel>
+      <content src="@public@vhost@g@gutenberg@html@files@54404@54404-rst@54404-rst-14.rst.html#pgepubid00000"/>
+      <navPoint id="np-3" playOrder="3">
+        <navLabel>
+          <text>The Full Project Gutenberg License</text>
+        </navLabel>
+        <content src="@public@vhost@g@gutenberg@html@files@54404@54404-rst@54404-rst-14.rst.html#pgepubid00001"/>
+        <navPoint id="np-4" playOrder="4">
+          <navLabel>
+            <text>Section 1. General Terms of Use &amp; Redistributing Project Gutenberg™ electronic works</text>
+          </navLabel>
+          <content src="@public@vhost@g@gutenberg@html@files@54404@54404-rst@54404-rst-14.rst.html#section-1-general-terms-of-use-redistributing-project-gutenberg-electronic-works"/>
+        </navPoint>
+        <navPoint id="np-5" playOrder="5">
+          <navLabel>
+            <text>Section 2. Information about the Mission of Project Gutenberg™</text>
+          </navLabel>
+          <content src="@public@vhost@g@gutenberg@html@files@54404@54404-rst@54404-rst-14.rst.html#section-2-information-about-the-mission-of-project-gutenberg"/>
+        </navPoint>
+        <navPoint id="np-6" playOrder="6">
+          <navLabel>
+            <text>Section 3. Information about the Project Gutenberg Literary Archive Foundation</text>
+          </navLabel>
+          <content src="@public@vhost@g@gutenberg@html@files@54404@54404-rst@54404-rst-14.rst.html#section-3-information-about-the-project-gutenberg-literary-archive-foundation"/>
+        </navPoint>
+        <navPoint id="np-7" playOrder="7">
+          <navLabel>
+            <text>Section 4. Information about Donations to the Project Gutenberg Literary Archive Foundation</text>
+          </navLabel>
+          <content src="@public@vhost@g@gutenberg@html@files@54404@54404-rst@54404-rst-14.rst.html#section-4-information-about-donations-to-the-project-gutenberg-literary-archive-foundation"/>
+        </navPoint>
+        <navPoint id="np-8" playOrder="8">
+          <navLabel>
+            <text>Section 5. General Information About Project Gutenberg™ electronic works.</text>
+          </navLabel>
+          <content src="@public@vhost@g@gutenberg@html@files@54404@54404-rst@54404-rst-14.rst.html#section-5-general-information-about-project-gutenberg-electronic-works"/>
+        </navPoint>
+      </navPoint>
+    </navPoint>
+  </navMap>
+</ncx>

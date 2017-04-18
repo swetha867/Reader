@@ -73,8 +73,7 @@
             else{
               bookTag.innerHTML =
                 "<div data-blink='" + blink + "'><img data-blink='" + blink +
-                "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'></div>"
-                + bname;
+                "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'></div>";
             }
             mydiv.appendChild(bookTag);
           }
@@ -247,14 +246,13 @@
         doChange('learning.html');
       });
       $('#gotostatistics').click( function() {
-        doChange('graph.html');
+        doChange('stats.html');
       });
 
             $('#drop').click(function deleteDB(){
 
                 db.transaction(function (tx) {
-
-                        tx.executeSql('DROP TABLE IF EXISTS BooksTable');
+                    tx.executeSql("Delete from BooksTable where link ='file:///storage/emulated/0/Android/data/io.cordova.hellocordova/files/L41a%20(1)/'");
                 }, function (error) {
                     console.log('Transaction ERROR: ' + error.message);
                 }, function () {
@@ -296,10 +294,10 @@
     <!--<a onclick="window.location.href=window.location.href;" class="ui-btn icon-angle-right" style="margin-top:0.5em" ></a>-->
     <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
     <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
-    <!--<a id="drop" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">DROP</a>-->
+    <a id="drop" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">DROP</a>
     <!--<a id="gotolearning" data-icon="refresh" class="ui-btn-left" >Refresh</a>-->
-    <a id="cloud" data-icon="refresh" class="ui-btn-left"
-       onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>
+    <!--<a id="cloud" data-icon="refresh" class="ui-btn-left"-->
+       <!--onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>-->
     <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" >Refresh</a>-->
 
     <a id="fileinput" data-icon="plus" class="ui-btn-right">Add Books</a>
