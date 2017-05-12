@@ -45,6 +45,9 @@
         },
         "org.apache.cordova.speech.speechrecognition": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-email-composer": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
     "dependent_plugins": {

@@ -331,6 +331,21 @@ module.exports = [
         "clobbers": [
             "SpeechGrammarList"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-email-composer/www/email_composer.js",
+        "id": "cordova-plugin-email-composer.EmailComposer",
+        "pluginId": "cordova-plugin-email-composer",
+        "clobbers": [
+            "cordova.plugins.email",
+            "plugin.email"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-email-composer/src/browser/EmailComposerProxy.js",
+        "id": "cordova-plugin-email-composer.EmailComposerProxy",
+        "pluginId": "cordova-plugin-email-composer",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -350,7 +365,8 @@ module.exports.metadata =
     "cordova-plugin-filepath": "1.0.2",
     "cordova-plugin-android-permissions": "0.10.0",
     "cordova-plugin-zip": "3.1.0",
-    "org.apache.cordova.speech.speechrecognition": "0.1.2"
+    "org.apache.cordova.speech.speechrecognition": "0.1.2",
+    "cordova-plugin-email-composer": "0.8.3"
 }
 // BOTTOM OF METADATA
 });

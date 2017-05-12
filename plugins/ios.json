@@ -47,6 +47,9 @@
             "MICROPHONE_USAGE_DESCRIPTION": " ",
             "SPEECH_RECOGNITION_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-email-composer": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
     "dependent_plugins": {

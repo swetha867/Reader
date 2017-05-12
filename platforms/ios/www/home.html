@@ -245,12 +245,14 @@
         localStorage.fromPage = 'home';
         doChange('learning.html');
       });
+      $('#gotostatistics').click( function() {
+        doChange('stats.html');
+      });
 
             $('#drop').click(function deleteDB(){
 
                 db.transaction(function (tx) {
-
-                        tx.executeSql('DROP TABLE IF EXISTS BooksTable');
+                    tx.executeSql("Delete from BooksTable where link ='file:///storage/emulated/0/Android/data/io.cordova.hellocordova/files/L41a%20(1)/'");
                 }, function (error) {
                     console.log('Transaction ERROR: ' + error.message);
                 }, function () {
@@ -292,10 +294,10 @@
     <!--<a onclick="window.location.href=window.location.href;" class="ui-btn icon-angle-right" style="margin-top:0.5em" ></a>-->
     <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
     <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
-    <a id="drop" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">DROP
-    </a>
+    <a id="drop" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">DROP</a>
     <!--<a id="gotolearning" data-icon="refresh" class="ui-btn-left" >Refresh</a>-->
-    <!--<a id="cloud" data-icon="refresh" class="ui-btn-left" onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Refresh</a>-->
+    <!--<a id="cloud" data-icon="refresh" class="ui-btn-left"-->
+       <!--onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>-->
     <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" >Refresh</a>-->
 
     <a id="fileinput" data-icon="plus" class="ui-btn-right">Add Books</a>
@@ -319,7 +321,8 @@
       <ul>
         <li><a href="home.html" data-transition="none">Home</a></li>
         <li><a id="gotobook" data-transition="none" >Book</a></li>
-        <li><a onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a></li>
+        <li><a id="gotostatistics" data-transition="none">Statistics
+        </a></li>
         <li><a id="gotolearning" data-transition="none">Learning</a></li>
         <!--<li><a onclick="doChange('learning.html');" id="learning" data-transition="none">Learning</a></li>-->
 

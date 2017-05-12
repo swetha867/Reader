@@ -107,12 +107,16 @@ EPUBJS.Reader = function (bookPath, _options) {
 	// book.renderTo("#viewer");
 
 	 setTimeout(function(){
-
+		 window.loadingscreen = document.getElementById("loadingscreen");
+		 window.notepad = document.getElementById('notes');
      var controlss = document.getElementById("controls");
      var currentPage = document.getElementById("currentpg");
      var totalPages = document.getElementById("totalpg");
      var slider = document.createElement("input");
      var pageList;
+		 var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+		 window.arrayOfTimes = [];
+		 window.arrayOfPages = [];
      var slide = function(){
        console.log("Slider no sliding");
        book.gotoPage(slider.value);
@@ -129,15 +133,18 @@ EPUBJS.Reader = function (bookPath, _options) {
 			// Or generate the pageList on the fly
 			book.ready.all.then(function () {
 				book.generatePagination();
+				window.loadingscreen.style.display = "block";
 			});
 		}
 
      book.pageListReady.then(function(pageList){
        controlss.style.display = "block";
+	     window.loadingscreen.style.display = "none";
 //     console.log(JSON.stringify(pageList)); // Save the result
        localStorage.pageList = JSON.stringify(pageList);
 	     localStorage.setItem(localStorage.getItem('bookies'), JSON.stringify(pageList));
        console.log(pageList);
+
 	     window.resolveLocalFileSystemURL(window.mybook.spine[0].url, gotFile, fail);
 	     function fail(e) {
 		     console.log("FileSystem Error");
@@ -151,7 +158,7 @@ EPUBJS.Reader = function (bookPath, _options) {
 
 			     reader.onloadend = function (e) {
 				     var fulltext = this.result;
-				     console.log(fulltext);
+				     // console.log(fulltext);
 				     var getUrlPathOfBook = window.mybook.spine[0].url;
 				     var lastIndexofSlash = getUrlPathOfBook.lastIndexOf('/');
 				     var baseBookUrlPath = getUrlPathOfBook.substr(0,lastIndexofSlash+1);
@@ -161,7 +168,7 @@ EPUBJS.Reader = function (bookPath, _options) {
 					     imgSrcIndex = fulltext.lastIndexOf("xlink:href=");
 					     imgPartText = fulltext.substr(imgSrcIndex+ 12, fulltext.length);
 				     }
-				     console.log(imgPartText);
+				     // console.log(imgPartText);
 
 				     // console.log(imgPartText);
 				     var lastIndexOfImgTag = imgPartText.indexOf('"');
@@ -203,7 +210,6 @@ EPUBJS.Reader = function (bookPath, _options) {
          var currentPage = book.pagination.pageFromCfi(currentLocation);
          slider.value = currentPage;
          currentPage.value = currentPage;
-
        });
        controlss.appendChild(slider);
        totalPages.innerText = book.pagination.totalPages;
@@ -215,11 +221,73 @@ EPUBJS.Reader = function (bookPath, _options) {
      book.on('book:pageChanged', function(location){
        if(!mouseDown) {
          slider.value = location.anchorPage;
-         // console.log(location.pageRange)
-         // console.log(location);
-         // console.log(book.manifest);
+	       // var currentPageTime = Date.now();
+	       localStorage.first = Math.floor(Date.now()/1000);
+
+	       if(arrayOfTimes.length==0){
+	       	arrayOfTimes[0] = parseFloat(localStorage.first);
+	       }
+	       else{
+		       arrayOfTimes[1] = parseFloat(localStorage.first);
+	       }
+
        }
        currentPage.value = location.anchorPage;
+	     if(arrayOfPages.length == 0){
+		     arrayOfPages[0]=currentPage.value;
+	     }
+	     else{
+		     arrayOfPages[1]=currentPage.value;
+	     }
+
+	     if(arrayOfTimes.length==2) {
+		     db.transaction(function (tx) {
+		     	tx.executeSql('CREATE TABLE IF NOT EXISTS PageTable (book, page, seconds)');
+		     	var stat = "SELECT count(*) AS mycount FROM PageTable WHERE page='" + arrayOfPages[0] + "';" ;
+			     tx.executeSql(stat, [], function (tx, rs) {
+				     // console.log('Record count : ' + rs.rows.item(0).mycount);
+				     if (rs.rows.item(0).mycount == 0) {
+					     db.transaction(function (tx) {
+						     tx.executeSql('INSERT INTO PageTable VALUES (?,?,?)', [book.metadata.bookTitle, arrayOfPages[0], arrayOfTimes[1] - arrayOfTimes[0] ]);
+
+					     }, function (error) {
+						     console.log('Transaction ERROR: ' + error.message);
+					     }, function () {
+						     console.log('Inserted New time and page values');
+						     console.log(arrayOfPages[0]);
+						     console.log(arrayOfTimes[1] - arrayOfTimes[0]);
+						     arrayOfTimes[0] = arrayOfTimes[1];
+						     arrayOfPages[0] = arrayOfPages[1];
+					     });
+				     }
+				     else {
+					     db.transaction(function (tx) {
+					     	var newtime =  arrayOfTimes[1] - arrayOfTimes[0];
+						     tx.executeSql("Update PageTable Set seconds = "+ newtime+" WHERE" +
+							     " book='" + book.metadata.bookTitle + "' AND" +
+							     " page =" + arrayOfPages[0] + ";");
+							     // " page ='" + arrayOfPages[0] + "';");
+					     }, function (error) {
+						     console.log('Transaction ERROR: ' + error.message);
+					     }, function () {
+						     console.log('Incremented');
+						     console.log(arrayOfPages[0]);
+						     console.log(arrayOfTimes[1] - arrayOfTimes[0]);
+						     arrayOfTimes[0] = arrayOfTimes[1];
+						     arrayOfPages[0] = arrayOfPages[1];
+					     });
+				     }
+			     }, function (tx, error) {
+				     console.log('SELECT error: ' + error.message);
+			     }, function () {
+				     console.log('Recorded');
+			     });
+		     });
+	     }
+
+
+
+
        // console.log(location.pageRange)
      });
     }, 500);
@@ -1268,7 +1336,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
 		if (didPan) {
 			didPan = false;
-			console.log('left');
 			ultimate.nextPage();
 		}
 		else {
@@ -1276,12 +1343,25 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 		}
 	});
 
-	// pa
+	// var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+	// db.transaction(function (tx) {
+	//
+	// 	tx.executeSql("Select * from PageTable", [], function (tx, rs) {
+	//
+	// 		for (var i = 0; i < rs.rows.length; i++) {
+	// 			console.log('book: ' +  ' ' + rs.rows.item(i).book);
+	// 			console.log('page: ' +  ' ' + rs.rows.item(i).page);
+	// 			console.log('seconds : ' + ' ' + rs.rows.item(i).seconds);
+	// 			console.log("----------------------------------------------");
+	// 		}
+	// 	}, function (tx, error) {
+	// 		console.log('SELECT error: ' + error.message);
+	// 	});
+	// });
 
 	mc.on("panright", function () {
 		if (didPan) {
 			didPan = false;
-			console.log('right');
 			ultimate.prevPage();
 		}
 		else {
@@ -1295,14 +1375,15 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 	var speaker = $(renderer.render.window.frameElement).parent().parent().contents()[13];
 	var shutters = $(renderer.render.window.frameElement).parent().parent().contents()[15];
 	var listener = $(renderer.render.window.frameElement).parent().parent().contents()[17];
+	// window.loadingscreen = $(renderer.render.window.frameElement).parent().parent().contents()[19];
 	localStorage.isPause = "resume";
 
-	var textToSpeech = function(arrayOfParas, counter) {
-		 console.log(arrayOfParas[counter].innerText);
+	var textToSpeech = function (arrayOfParas, counter) {
+		console.log(arrayOfParas[counter].innerText);
 		TTS.speak({text: arrayOfParas[counter].innerText, rate: 0.85}, function () {
 			console.log('success');
 			counter = counter + 1;
-			if(counter<arrayOfParas.length && localStorage.isPause=="resume") {
+			if (counter < arrayOfParas.length && localStorage.isPause == "resume") {
 				setTimeout(textToSpeech(arrayOfParas, counter), 1500);
 			}
 		}, function (reason) {
@@ -1311,14 +1392,14 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 	};
 
 
-	var speakout = function(){
+	var speakout = function () {
 
 		var speechElements = renderer.doc.querySelectorAll('p');
 		textToSpeech(speechElements, 0);
 		localStorage.isPause = "resume";
 	};
 
-	var textToStop = function(counter) {
+	var textToStop = function (counter) {
 
 		TTS.speak('', function () {
 			console.log("Stopped");
@@ -1328,7 +1409,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 		});
 	};
 
-	var speakless = function(){
+	var speakless = function () {
 
 		textToStop(0);
 		// TTS.speak('', function () {
@@ -1342,28 +1423,9 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
 	};
 
-// 	var hear = function(){
-//
-// 		recognition = new SpeechRecognition();
-// //      recognition.start();
-// 		recognition.onresult = function(event) {
-// 			if (event.results.length > 0) {
-// //          q.value = event.results[0][0].transcript;
-// //          q.form.submit();
-// 				console.log(event);
-// 				console.log(event.results[0][0].transcript);
-// 				if(event.results[0][0].transcript=='next'){
-// 					console.log('Next Page');
-//
-// 				}
-// 				if(event.results[0][0].transcript=='previous'){
-// 					console.log('Previous Page');
-//
-// 				}
-//
-// 			}
-// 		}
-// 	}
+	var hear = function(){
+		window.recognition.start();
+}
 
 	if((typeof speaker =='undefined') && (typeof shutters =='undefined')){
 		$(speaker).hide();
@@ -1376,7 +1438,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 		$(shutters).show();
 		speaker.addEventListener("click", speakout, false);
 		shutters.addEventListener("click", speakless, false);
-		// listener.addEventListener("click", hear, false);
+		listener.addEventListener("click", hear, false);
 	}
 
 	var elements = renderer.doc.querySelectorAll('p'),
@@ -1399,7 +1461,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 			});
 
 			// wrap.style.display = "block";
-			console.log(window.cfi);
+			// console.log(window.cfi);
 
 			//get the word from screen
 			var t = '';
@@ -1479,7 +1541,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 				data: {}, // Additional parameters here
 				dataType: 'json',
 				success: function (data) {
-					//console.log(data);
+					console.log(data);
 
 					var output = $.ajax({
 						url: 'https://api.pearson.com/v2/dictionaries/ldoce5/entries?headword=' + t + '', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
@@ -1514,7 +1576,8 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 							localStorage.meaning = meanings[0];
 
 
-							wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[1].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[2].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[3].thumbnailUrl + "&w=200&h=200'/></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
+							// wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[1].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[2].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[3].thumbnailUrl + "&w=200&h=200'/></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
+							wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + "&w=200&h=200'/></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
 							// console.log(wrap.firstChild.nextSibling.firstChild);
 
 							//wrap.innerHTML="<span id='cross'>✖</span><div id='imagecontainer'><center><img src ='"+data.value[0].thumbnailUrl+"&w=200&h=200'/></center></div><h1>"+ogword+"</h1><div id='meaningspara'>"+meanings[0]+"<br>"+meanings[1]+"</div>";
@@ -1531,6 +1594,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 									tx.executeSql('CREATE TABLE IF NOT EXISTS WordsTable (word, meaning, sentence, frequency, book)');
 									tx.executeSql("SELECT count(*) AS mycount FROM WordsTable where word='"+localStorage.word+"' ", [], function (tx, rs) {
 										console.log('Record count : ' + rs.rows.item(0).mycount);
+										console.log(rs);
 										if(rs.rows.item(0).mycount == 0){
 											db.transaction(function (tx) {
 												//tx.executeSql('DROP TABLE IF EXISTS WordsTable');
@@ -1559,15 +1623,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 									});
 								});
 
-								// db.transaction(function (tx) {
-								// 	//tx.executeSql('DROP TABLE IF EXISTS WordsTable');
-								// 	tx.executeSql('CREATE TABLE IF NOT EXISTS WordsTable (word, meaning, sentence, frequency, book)');
-								// 	tx.executeSql('INSERT INTO WordsTable VALUES (?,?,?,?,?)', [localStorage.word, localStorage.meaning, localStorage.sentence,0,window.bookKaMeta.bookTitle]);
-								// }, function (error) {
-								// 	console.log('Transaction ERROR: ' + error.message);
-								// }, function () {
-								// 	console.log('Inserted');
-								// });
+
 							}
 							console.log(localStorage.meaning);
 						},

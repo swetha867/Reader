@@ -4,5 +4,6 @@
     "SystemConfiguration.framework": 2,
     "Security.framework": 2,
     "CFNetwork.framework": 2,
-    "Speech.framework": 2
+    "Speech.framework": 2,
+    "MessageUI.framework": 1
 }

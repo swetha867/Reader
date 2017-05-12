@@ -4,7 +4,18 @@
         "uninstalled": []
     },
     "config_munge": {
-        "files": {}
+        "files": {
+            "res/xml/config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"EmailComposer\"><param name=\"browser-package\" value=\"de.appplant.cordova.emailcomposer.EmailComposer\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
     },
     "installed_plugins": {
         "cordova-android-support-v4": {
@@ -50,6 +61,9 @@
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
         "org.apache.cordova.speech.speechrecognition": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-email-composer": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
@@ -386,6 +400,21 @@
             "clobbers": [
                 "SpeechGrammarList"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-email-composer/www/email_composer.js",
+            "id": "cordova-plugin-email-composer.EmailComposer",
+            "pluginId": "cordova-plugin-email-composer",
+            "clobbers": [
+                "cordova.plugins.email",
+                "plugin.email"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-email-composer/src/browser/EmailComposerProxy.js",
+            "id": "cordova-plugin-email-composer.EmailComposerProxy",
+            "pluginId": "cordova-plugin-email-composer",
+            "runs": true
         }
     ],
     "plugin_metadata": {
@@ -403,6 +432,7 @@
         "cordova-plugin-filepath": "1.0.2",
         "cordova-plugin-android-permissions": "0.10.0",
         "cordova-plugin-zip": "3.1.0",
-        "org.apache.cordova.speech.speechrecognition": "0.1.2"
+        "org.apache.cordova.speech.speechrecognition": "0.1.2",
+        "cordova-plugin-email-composer": "0.8.3"
     }
 }

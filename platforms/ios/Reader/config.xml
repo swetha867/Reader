@@ -34,6 +34,9 @@
     <feature name="SpeechRecognition">
         <param name="ios-package" value="SpeechRecognition" />
     </feature>
+    <feature name="EmailComposer">
+        <param name="ios-package" value="APPEmailComposer" />
+    </feature>
     <feature name="Zip">
         <param name="ios-package" value="ZipPlugin" />
     </feature>
@@ -44,7 +47,7 @@
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Mahesh
     </author>
-    <content src="home.html" />
+    <content src="email.html" />
     <access origin="*" />
     <allow-navigation href="*" />
     <allow-intent href="*" />

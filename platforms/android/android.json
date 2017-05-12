@@ -51,6 +51,10 @@
                         {
                             "xml": "<feature name=\"SpeechRecognition\"><param name=\"android-package\" value=\"org.apache.cordova.speech.SpeechRecognition\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"EmailComposer\"><param name=\"android-package\" value=\"de.appplant.cordova.emailcomposer.EmailComposer\" /></feature>",
+                            "count": 1
                         }
                     ],
                     "/widget": [
@@ -88,6 +92,10 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\" />",
                             "count": 1
                         }
                     ],
@@ -189,6 +197,9 @@
             "PACKAGE_NAME": "io.cordova.hellocordova"
         },
         "org.apache.cordova.speech.speechrecognition": {
+            "PACKAGE_NAME": "io.cordova.hellocordova"
+        },
+        "cordova-plugin-email-composer": {
             "PACKAGE_NAME": "io.cordova.hellocordova"
         }
     },
@@ -519,6 +530,15 @@
             "clobbers": [
                 "SpeechGrammarList"
             ]
+        },
+        {
+            "id": "cordova-plugin-email-composer.EmailComposer",
+            "file": "plugins/cordova-plugin-email-composer/www/email_composer.js",
+            "pluginId": "cordova-plugin-email-composer",
+            "clobbers": [
+                "cordova.plugins.email",
+                "plugin.email"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -536,6 +556,7 @@
         "cordova-plugin-filepath": "1.0.2",
         "cordova-plugin-android-permissions": "0.10.0",
         "cordova-plugin-zip": "3.1.0",
-        "org.apache.cordova.speech.speechrecognition": "0.1.2"
+        "org.apache.cordova.speech.speechrecognition": "0.1.2",
+        "cordova-plugin-email-composer": "0.8.3"
     }
 }

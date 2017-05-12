@@ -80,7 +80,7 @@
         }
 
         if(localStorage.sortWords=='frequency'){
-          statementToExecute = "SELECT * FROM WordsTable Order By " + localStorage.sortWords + "DESC";
+          statementToExecute = "SELECT * FROM WordsTable Order By " + localStorage.sortWords + " DESC";
         }
 
         if(localStorage.sortWords=='recent'){
@@ -152,6 +152,9 @@
         localStorage.sortWords = 'word';
         doChange('learning.html');
       });
+      $('#gotostatistics').click( function() {
+        doChange('stats.html');
+      });
 
       $(document).on('click', '#frequency', function () {
         localStorage.sortWords = 'frequency';
@@ -206,8 +209,8 @@
       <ul>
         <li><a id="gotohome" data-transition="none">Home</a></li>
         <li><a id="gotobook" data-transition="none">Book</a></li>
-        <li><a onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>
-        </li>
+        <li><a id="gotostatistics" data-transition="none">Statistics
+        </a></li>
         <li><a href="learning.html" id="learning" data-transition="none">Learning</a></li>
 
       </ul>

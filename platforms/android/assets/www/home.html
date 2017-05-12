@@ -41,40 +41,38 @@
     function onDeviceReady() {
 
       AndroidFullScreen.showSystemUI();
+
+      // Open database to access all books in BooksTable of database
       var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
-
       db.transaction(function(tx) {
-
+        //Get all row information from BooksTable
         tx.executeSql('SELECT * FROM BooksTable', [], function(tx, rs) {
-
+          // gallery is the div in the DOM to which the frames of books are appended dynamically
           var mydiv = document.getElementById("mydiv");
+          // Loop through each row in BooksTable
           for(var i=0; i<rs.rows.length;i++) {
-//                        console.log('name : '+ i+ ' ' + rs.rows.item(i).name);
-//                        console.log('link : '+ i+ ' ' + rs.rows.item(i).link);
+            // Use the book name, book link, book author and book image path
             var bname = rs.rows.item(i).name;
             var blink = rs.rows.item(i).link;
             var bookStatusFlag = rs.rows.item(i).flag;
             var bookStatusAuthor = rs.rows.item(i).author;
             var bookStatusImgPath = rs.rows.item(i).imgpath;
-            console.log(bname);
-            console.log(blink);
-            console.log(bookStatusFlag);
-            console.log(bookStatusAuthor);
-            console.log(bookStatusImgPath);
-
+            //Create the book element
             var bookTag = document.createElement('div');
             bookTag.className = "frame";
-//                        bookTag.className = "book_link";
+            // Add name and link metadata to tag
             bookTag.setAttribute('data-bname', bname);
             bookTag.setAttribute('data-blink', blink);
             if(bookStatusFlag == 0) {
               bookTag.innerHTML = "<div data-blink='" + blink + "' class='innerText'>" + bname + "</div>";
             }
             else{
+              // Set the cover image of the frame from the book image path
               bookTag.innerHTML =
                 "<div data-blink='" + blink + "'><img data-blink='" + blink +
                 "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'></div>";
             }
+            // append the book element to the GALLERY
             mydiv.appendChild(bookTag);
           }
         }, function(tx, error) {
@@ -89,23 +87,12 @@
       }
 
 
-
-//            $(document).on('click', '#gotolearning', function(){
-//                doChange('learning.html');
-////                window.location.href=window.location.href;
-//            });
-
+      // Event listener on book frame
       $(document).on('click', '.frame', function(event){
-//                var m = $(event.target).text();
-//                var n = $(event.target).data('link');
-
-//        var on_touch_go_to_book = $(event.target).data('blink');
-//        console.log(on_touch_go_to_book);
-//        localStorage.bookies = on_touch_go_to_book;
+        // Set localStorage to book path link so book tab opens with current book
         localStorage.bookies = $(event.target).data('blink');
-
         if(!(localStorage.bookies == 'undefined')) {
-          console.log(localStorage.bookies);
+          // Move to the book reader tab
           doChange('reader.html');
         }
         else
@@ -132,13 +119,11 @@
       {
         return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
       }
-
+      //When Add book button is clicked, the filechooser plugin opens device library
       $('#fileinput').click(function () {
-//        console.log('hello input');
         fileChooser.open(function (furi) {
           var suri = furi;
-//          console.log(furi);
-
+          // Android Permissions are asked when required
           var permissions = cordova.plugins.permissions;
           permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, checkPermissionCallback, null);
 
@@ -156,55 +141,44 @@
                 errorCallback);
             }
           }
-
+          // The Filepath plugin is used to get path where .epub will be unzipped
           window.FilePath.resolveNativePath(suri, function (uri) {
             var source = uri;
-//                var linkname = uri;
-
-//            var dest = "file:///storage/emulated/0/Android/data/io.cordova.unzipper/files/";
+            // String manipulation to get exact path and name
             var slash_index = uri.lastIndexOf("/") + 1;
             var epubindex = uri.lastIndexOf(".epub");
             var onlyname = uri.substring(slash_index, epubindex);
             onlyname = onlyname.replace(/-/g, " ");
-
             var bname = toTitleCase(onlyname);
-            console.log(bname);
-
-
+            //Create directory for the book in the application path, if directory already exists it is overwritten.
             window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory,  creatingFolder, function (error) {
               console.log(error);
             });
-
+            //This function creates the folder.
             function creatingFolder(fileSystem) {
               var entry = fileSystem.filesystem.root;
-//              console.log(entry.toURL());
+              //The following function includes callback for when entry is successful.
               entry.getDirectory(bname, {create: true, exclusive: false}, win, function (error) {
                 console.log(error);
               });
             }
-
+            //After a successful directory creation the following callback is called.
             function win(dir) {
-              console.log("Created dir "+dir.name);
-              console.log("Created dir "+dir.fullPath);
-              console.log("Created dir NativePath" + dir.nativeURL);
               var dest = dir.nativeURL;
               var linkname = dest;
-
-
+              // The book path and name are stored in database.
               var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
               db.transaction(function(tx) {
+                //Checking if book is already present.
                 var statement = "SELECT count(*) AS num FROM BooksTable where name='" + bname + "'";
-                console.log(statement);
-//                tx.executeSql('CREATE TABLE IF NOT EXISTS BooksTable (name, link)');
                 tx.executeSql('CREATE TABLE IF NOT EXISTS BooksTable (name, link, flag, author,imgpath)');
                 tx.executeSql("SELECT count(*) AS num FROM BooksTable where name='"+ bname+"'", [], function(tx,rs) {
                   console.log(rs.rows.item(0).num);
                   if(rs.rows.item(0).num<1)
                   {
                     db.transaction(function (tx) {
-//                      tx.executeSql('CREATE TABLE IF NOT EXISTS BooksTable (name, link)');
+                      // Insert books to BooksTable
                       tx.executeSql('CREATE TABLE IF NOT EXISTS BooksTable (name, link, flag, author,imgpath)');
-//                      tx.executeSql('INSERT INTO BooksTable VALUES (?,?)', [bname, linkname]);
                       tx.executeSql('INSERT INTO BooksTable VALUES (?,?,?,?,?)', [bname,
                         linkname,0,'','']);
                     }, function (error) {
@@ -218,7 +192,7 @@
                   console.log('SELECT error: ' + error.message);
                 });
               });
-
+              //This function unzips the content of the .epub file and its callback refreshes Home page
               zip.unzip(source, dest, zipCallback);
 
               function zipCallback(zipEvent) {
@@ -228,7 +202,7 @@
 
                 }
                 else{
-                  console.log("you are a failure");
+                  console.log("unzip failure");
                 }
               }
             }
@@ -252,7 +226,7 @@
             $('#drop').click(function deleteDB(){
 
                 db.transaction(function (tx) {
-                    tx.executeSql("Delete from BooksTable where link ='file:///storage/emulated/0/Android/data/io.cordova.hellocordova/files/L41a%20(1)/'");
+                    tx.executeSql("Delete from PageTable WHERE page='1079' AND book='Moby-Dick';");
                 }, function (error) {
                     console.log('Transaction ERROR: ' + error.message);
                 }, function () {
@@ -294,10 +268,10 @@
     <!--<a onclick="window.location.href=window.location.href;" class="ui-btn icon-angle-right" style="margin-top:0.5em" ></a>-->
     <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
     <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
-    <a id="drop" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">DROP</a>
+    <!--<a id="drop" data-icon="refresh" class="ui-btn-left" >DROP</a>-->
     <!--<a id="gotolearning" data-icon="refresh" class="ui-btn-left" >Refresh</a>-->
-    <!--<a id="cloud" data-icon="refresh" class="ui-btn-left"-->
-       <!--onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>-->
+    <a id="cloud" data-icon="refresh" class="ui-btn-left"
+       onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>
     <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" >Refresh</a>-->
 
     <a id="fileinput" data-icon="plus" class="ui-btn-right">Add Books</a>

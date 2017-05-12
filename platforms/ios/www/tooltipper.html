@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
-
+  <meta name="viewport" content="width=device-width, height=device-height initial-scale=1, maximum-scale=1, user-scalable=no" />
   <script type="text/javascript" src="http://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script type="text/javascript" src="js/tipped.js"></script>
   <link rel="stylesheet" type="text/css" href="css/tipped.css"/>
+  <link rel="stylesheet" type="text/css" href="css/buttons.css"/>
+
     <script>
       $(document).ready(function() {
-        Tipped.create("#demo", "This tooltip is a bit more advanced", {
+
+        Tipped.create(".demo", "This is me.", {
           skin: 'light',
           showOn: 'click',
           close: true,
@@ -21,12 +24,79 @@
             $(element).removeClass('highlight');
           }
         });
+
+//        $(".demo").on('click', function () {
+//          console.log('new span')
+//        });
+
+        var elementList = document.querySelectorAll('p');
+        var items = Array.prototype.slice.call(elementList);
+//        items.forEach(function (item) {
+//          $(item).on('click', function () {
+//
+//            var t = '';
+//            if (window.getSelection && (sel = window.getSelection()).modify) {
+//              // Webkit, Gecko
+//              var s = window.getSelection();
+//              if (s.isCollapsed) {
+//                s.modify('move', 'forward', 'character');
+//                s.modify('move', 'backward', 'word');
+//                s.modify('extend', 'forward', 'word');
+//                t = s.toString();
+//                s.modify('move', 'forward', 'character'); //clear selection
+//              }
+//              else {
+//                t = s.toString();
+//              }
+//            } else if ((sel = document.selection) && sel.type != "Control") {
+//              // IE 4+
+//              var textRange = sel.createRange();
+//              if (!textRange.text) {
+//                textRange.expand("word");
+//              }
+//              // Remove trailing spaces
+//              while (/\s$/.test(textRange.text)) {
+//                textRange.moveEnd("character", -1);
+//              }
+//
+//              t = textRange.text;
+//
+//            }
+//              console.log(t);
+//              String.prototype.replaceAll = function (target, replacement) {
+//                return this.split(target).join(replacement);
+//              };
+//
+//              var replacee = " " + t;
+//              var replacer = " <b class='demo'>" + t + "</b>";
+//
+//              // var replacer = " <div data-role='popup' id='myPopup' class='godown' ><a class='ui-btn-inline'> </a><a class='ui-btn ui-btn-inline'> hi </a><a class='ui-btn ui-btn-inline'> bi </a></div><a href='#myPopup' data-rel='popup' class='makelinkblack'><span class = 'makespanblack hilite'>" + t +"</span></a>";
+//              var temp = item.innerHTML;
+//              var temper = item.innerHTML.replaceAll(replacee, replacer);
+//            item.innerHTML = temper;
+//
+//
+//
+//            }
+//
+//          )
+//        });
+
       });
     </script>
 </head>
 <body>
-<span id="demo" title="First tooltip">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras lacus neque, gravida dignissim dui quis, varius viverra felis. Donec id felis at nisi ullamcorper sodales id quis ipsum. Vestibulum laoreet elementum risus, ut ornare augue. Praesent vel consequat purus. Mauris bibendum sem eu velit lobortis fermentum non tincidunt ligula. Cras egestas, eros laoreet tincidunt aliquet, lectus eros viverra sapien, eu aliquam augue sem faucibus arcu. Proin maximus tempor ultricies. Cras at massa eros. Sed a arcu ut quam tristique venenatis. Phasellus et urna non tellus feugiat sollicitudin. Mauris pretium purus massa, ut fermentum velit tristique sed. Etiam a ex mauris.
+<p>Lorem ipsum dolor sit amet,  adipiscing elit. Cras lacus
+  neque, gravida dignissim dui
+  quis, varius <span class="demo">viverra</span>
+felis. Donec id felis at nisi ullamcorper sodales id quis ipsum. Vestibulum laoreet elementum risus, ut ornare augue.
+Praesent vel consequat purus.  bibendum sem eu velit lobortis  non tincidunt</p>
+  <p>ligula. egestas, eros laoreet tincidunt aliquet, lectus eros viverra sapien, eu aliquam augue sem faucibus arcu.
+Proin maximus tempor ultricies.  at massa eros. Sed a arcu ut quam tristique venenatis.
+  Phasellus et urna non tellusfeugiat sollicitudin. Mauris pretium purus massa, ut fermentum velit tristique sed. Etiam a ex.</p>
+<div id = 'optionator' style="display: none"><button class="button button-rounded button-primary" style="padding: 0 5px;">Define
+</button></div>
 
-Duis vehicula purus quam, eu sagittis tellus ornare quis. Ut vitae molestie orci. Duis dignissim tempus cursus. Cras maximus tortor sed nunc vestibulum, at tempus est iaculis. Integer auctor porttitor odio. Vestibulum lacus ante, tincidunt et dictum et, gravida eu est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin quis elit ac erat fringilla aliquam. Integer sapien sem, ullamcorper et sem eget, dignissim mollis massa.</span>
+
 </body>
 </html>
