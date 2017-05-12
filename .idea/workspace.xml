@@ -5,160 +5,8 @@
     <bookmark url="file://$PROJECT_DIR$/www/js/reader.js" line="1337" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="321ca608-f08d-43f4-98f4-41e73a740b3a" name="Default" comment="final changes to app">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main10.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main11.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main12.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main13.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main14.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main15.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main16.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main17.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main18.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main19.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main20.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main21.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main22.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main23.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main24.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main25.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main26.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main4.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main5.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main6.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main7.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main8.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/android/assets/www/books/macbeth/OPS/main9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main10.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main11.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main12.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main13.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main14.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main15.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main16.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main17.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main18.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main19.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main20.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main21.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main22.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main23.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main24.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main25.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main26.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main4.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main5.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main6.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main7.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main8.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/browser/www/books/macbeth/OPS/main9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main10.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main11.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main12.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main13.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main14.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main15.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main16.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main17.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main18.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main19.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main20.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main21.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main22.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main23.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main24.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main25.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main26.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main4.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main5.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main6.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main7.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main8.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/platforms/ios/www/books/macbeth/OPS/main9.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main10.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main11.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main12.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main13.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main14.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main15.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main16.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main17.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main18.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main19.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main20.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main21.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main22.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main23.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main24.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main25.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main26.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main4.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main5.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main6.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main7.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main8.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/www/books/macbeth/OPS/main9.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/.gradle/2.13/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/platforms/android/.gradle/2.13/taskArtifacts/cache.properties.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/.gradle/2.13/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/platforms/android/.gradle/2.13/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/.gradle/2.13/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/platforms/android/.gradle/2.13/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/.gradle/2.13/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/platforms/android/.gradle/2.13/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/.gradle/2.13/tasks/_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" afterPath="$PROJECT_DIR$/platforms/android/.gradle/2.13/tasks/_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/.gradle/2.13/tasks/_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/platforms/android/.gradle/2.13/tasks/_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/.gradle/2.13/tasks/_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/platforms/android/.gradle/2.13/tasks/_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
+    <list default="true" id="321ca608-f08d-43f4-98f4-41e73a740b3a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config.xml" afterPath="$PROJECT_DIR$/config.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/.idea/misc.xml" afterPath="$PROJECT_DIR$/platforms/android/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/.idea/workspace.xml" afterPath="$PROJECT_DIR$/platforms/android/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/AndroidManifest.xml" afterPath="$PROJECT_DIR$/platforms/android/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/android.iml" afterPath="$PROJECT_DIR$/platforms/android/android.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/android.json" afterPath="$PROJECT_DIR$/platforms/android/android.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/assets/www/cordova_plugins.js" afterPath="$PROJECT_DIR$/platforms/android/assets/www/cordova_plugins.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/assets/www/css/try.css" afterPath="$PROJECT_DIR$/platforms/android/assets/www/css/try.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/assets/www/graph.html" afterPath="$PROJECT_DIR$/platforms/android/assets/www/graph.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/assets/www/home.html" afterPath="$PROJECT_DIR$/platforms/android/assets/www/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/assets/www/js/reader.js" afterPath="$PROJECT_DIR$/platforms/android/assets/www/js/reader.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/assets/www/reader.html" afterPath="$PROJECT_DIR$/platforms/android/assets/www/reader.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/assets/www/tooltipper.html" afterPath="$PROJECT_DIR$/platforms/android/assets/www/tooltipper.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/platform_www/cordova_plugins.js" afterPath="$PROJECT_DIR$/platforms/android/platform_www/cordova_plugins.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/android/res/xml/config.xml" afterPath="$PROJECT_DIR$/platforms/android/res/xml/config.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/browser.json" afterPath="$PROJECT_DIR$/platforms/browser/browser.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/config.xml" afterPath="$PROJECT_DIR$/platforms/browser/config.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/platform_www/cordova_plugins.js" afterPath="$PROJECT_DIR$/platforms/browser/platform_www/cordova_plugins.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/www/config.xml" afterPath="$PROJECT_DIR$/platforms/browser/www/config.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/www/cordova_plugins.js" afterPath="$PROJECT_DIR$/platforms/browser/www/cordova_plugins.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/www/css/grid.css" afterPath="$PROJECT_DIR$/platforms/browser/www/css/grid.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/www/css/main.css" afterPath="$PROJECT_DIR$/platforms/browser/www/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/www/css/try.css" afterPath="$PROJECT_DIR$/platforms/browser/www/css/try.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/www/home.html" afterPath="$PROJECT_DIR$/platforms/browser/www/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/www/js/reader.js" afterPath="$PROJECT_DIR$/platforms/browser/www/js/reader.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/www/learning.html" afterPath="$PROJECT_DIR$/platforms/browser/www/learning.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/www/reader.html" afterPath="$PROJECT_DIR$/platforms/browser/www/reader.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/browser/www/tooltipper.html" afterPath="$PROJECT_DIR$/platforms/browser/www/tooltipper.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/Reader.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/platforms/ios/Reader.xcodeproj/project.pbxproj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/Reader/Reader-Info.plist" afterPath="$PROJECT_DIR$/platforms/ios/Reader/Reader-Info.plist" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/Reader/config.xml" afterPath="$PROJECT_DIR$/platforms/ios/Reader/config.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/frameworks.json" afterPath="$PROJECT_DIR$/platforms/ios/frameworks.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/ios.json" afterPath="$PROJECT_DIR$/platforms/ios/ios.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/platform_www/cordova_plugins.js" afterPath="$PROJECT_DIR$/platforms/ios/platform_www/cordova_plugins.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/www/cordova_plugins.js" afterPath="$PROJECT_DIR$/platforms/ios/www/cordova_plugins.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/www/css/grid.css" afterPath="$PROJECT_DIR$/platforms/ios/www/css/grid.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/www/css/main.css" afterPath="$PROJECT_DIR$/platforms/ios/www/css/main.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/www/css/try.css" afterPath="$PROJECT_DIR$/platforms/ios/www/css/try.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/www/home.html" afterPath="$PROJECT_DIR$/platforms/ios/www/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/www/js/reader.js" afterPath="$PROJECT_DIR$/platforms/ios/www/js/reader.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/www/learning.html" afterPath="$PROJECT_DIR$/platforms/ios/www/learning.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/www/reader.html" afterPath="$PROJECT_DIR$/platforms/ios/www/reader.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platforms/ios/www/tooltipper.html" afterPath="$PROJECT_DIR$/platforms/ios/www/tooltipper.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugins/android.json" afterPath="$PROJECT_DIR$/plugins/android.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugins/browser.json" afterPath="$PROJECT_DIR$/plugins/browser.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugins/fetch.json" afterPath="$PROJECT_DIR$/plugins/fetch.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plugins/ios.json" afterPath="$PROJECT_DIR$/plugins/ios.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/css/try.css" afterPath="$PROJECT_DIR$/www/css/try.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/graph.html" afterPath="$PROJECT_DIR$/www/graph.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/home.html" afterPath="$PROJECT_DIR$/www/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/js/reader.js" afterPath="$PROJECT_DIR$/www/js/reader.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/notes.html" afterPath="$PROJECT_DIR$/www/notes.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/reader.html" afterPath="$PROJECT_DIR$/www/reader.html" />
     </list>
     <ignored path="untitled2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -646,7 +494,7 @@
       <workItem from="1493619172996" duration="667000" />
       <workItem from="1493940226595" duration="20000" />
       <workItem from="1494356484026" duration="4195000" />
-      <workItem from="1494386977975" duration="2994000" />
+      <workItem from="1494386977975" duration="3006000" />
     </task>
     <task id="LOCAL-00001" summary="Changes to switch to developement branch">
       <created>1476596527069</created>
@@ -725,11 +573,18 @@
       <option name="project" value="LOCAL" />
       <updated>1491934393690</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="final changes to app">
+      <created>1494623191166</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1494623191167</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="624645000" />
+    <option name="totallyTimeSpent" value="624657000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
