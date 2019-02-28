@@ -1,6 +1,14 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
 module.exports = [
     {
+        "file": "plugins/com.megster.cordova.FileChooser/www/fileChooser.js",
+        "id": "com.megster.cordova.FileChooser.FileChooser",
+        "pluginId": "com.megster.cordova.FileChooser",
+        "clobbers": [
+            "fileChooser"
+        ]
+    },
+    {
         "file": "plugins/cordova-plugin-armsoft-mfilechooser-nancydrew/www/mfilechooser.js",
         "id": "cordova-plugin-armsoft-mfilechooser-nancydrew.MFileChooser",
         "pluginId": "cordova-plugin-armsoft-mfilechooser-nancydrew",
@@ -220,14 +228,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
-        "id": "cordova-sqlite-storage.SQLitePlugin",
-        "pluginId": "cordova-sqlite-storage",
-        "clobbers": [
-            "SQLitePlugin"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
         "id": "cordova-plugin-inappbrowser.inappbrowser",
         "pluginId": "cordova-plugin-inappbrowser",
@@ -253,19 +253,19 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/com.megster.cordova.FileChooser/www/fileChooser.js",
-        "id": "com.megster.cordova.FileChooser.FileChooser",
-        "pluginId": "com.megster.cordova.FileChooser",
-        "clobbers": [
-            "fileChooser"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-zip/zip.js",
         "id": "cordova-plugin-zip.Zip",
         "pluginId": "cordova-plugin-zip",
         "clobbers": [
             "zip"
+        ]
+    },
+    {
+        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
+        "id": "cordova-sqlite-storage.SQLitePlugin",
+        "pluginId": "cordova-sqlite-storage",
+        "clobbers": [
+            "SQLitePlugin"
         ]
     },
     {
@@ -351,22 +351,22 @@ module.exports = [
 module.exports.metadata = 
 // TOP OF METADATA
 {
+    "com.megster.cordova.FileChooser": "0.0.0",
     "cordova-android-support-v4": "22.2.1",
+    "cordova-plugin-android-permissions": "0.10.0",
     "cordova-plugin-armsoft-mfilechooser-nancydrew": "1.0.5",
-    "cordova-plugin-compat": "1.1.0",
     "cordova-plugin-file": "4.3.1",
     "cordova-plugin-file-transfer": "1.6.1",
+    "cordova-plugin-filepath": "1.0.2",
     "cordova-plugin-fullscreen": "1.1.0",
-    "cordova-plugin-whitelist": "1.3.0",
-    "cordova-sqlite-storage": "2.0.2",
     "cordova-plugin-inappbrowser": "1.6.1",
     "cordova-plugin-tts": "0.2.3",
-    "com.megster.cordova.FileChooser": "0.0.0",
-    "cordova-plugin-filepath": "1.0.2",
-    "cordova-plugin-android-permissions": "0.10.0",
+    "cordova-plugin-whitelist": "1.3.0",
     "cordova-plugin-zip": "3.1.0",
+    "cordova-sqlite-storage": "2.0.2",
     "org.apache.cordova.speech.speechrecognition": "0.1.2",
-    "cordova-plugin-email-composer": "0.8.3"
+    "cordova-plugin-compat": "1.2.0",
+    "cordova-plugin-email-composer": "0.8.4"
 }
 // BOTTOM OF METADATA
 });

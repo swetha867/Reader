@@ -33,13 +33,15 @@ var didPan = true;
 
 
 EPUBJS.Reader = function (bookPath, _options) {
+	// For current book and bookPath
 	var reader = this;
 	var book;
 	var plugin;
+	// This is the book text div where the book is displayed
 	var $viewer = $("#viewer");
 	var search = window.location.search;
 	var parameters;
-
+  // The settings specified within the options
 	this.settings = _.defaults(_options || {}, {
 		bookPath: bookPath,
 		restore: true,
@@ -65,8 +67,8 @@ EPUBJS.Reader = function (bookPath, _options) {
 		});
 	}
 
-	this.setBookKey(this.settings.bookPath); //-- This could be username + path or any unique string
-
+	this.setBookKey(this.settings.bookPath);
+  // Retrieve and Apply saved settings
 	if (this.settings.restore && this.isSaved()) {
 		this.applySavedSettings();
 	}
@@ -74,7 +76,7 @@ EPUBJS.Reader = function (bookPath, _options) {
 	this.settings.styles = this.settings.styles || {
 			fontSize: "100%"
 		};
-
+  // Change options based on Stored Settings
 	this.book = book = new EPUBJS.Book({
 		bookPath: this.settings.bookPath,
 		restore: this.settings.restore,
@@ -83,17 +85,18 @@ EPUBJS.Reader = function (bookPath, _options) {
 		bookKey: this.settings.bookKey,
 		styles: this.settings.styles
 	});
-
+  // Go to most recent location in book
 	if (this.settings.previousLocationCfi) {
 		book.gotoCfi(this.settings.previousLocationCfi);
 	}
 
 	this.offline = false;
 	this.sidebarOpen = false;
+	//Retrieve Bookmarks
 	if (!this.settings.bookmarks) {
 		this.settings.bookmarks = [];
 	}
-
+  // Retrieve annotations
 	if (!this.settings.annotations) {
 		this.settings.annotations = [];
 	}
@@ -114,7 +117,7 @@ EPUBJS.Reader = function (bookPath, _options) {
      var totalPages = document.getElementById("totalpg");
      var slider = document.createElement("input");
      var pageList;
-		 var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+		 // var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
 		 window.arrayOfTimes = [];
 		 window.arrayOfPages = [];
      var slide = function(){
@@ -125,14 +128,18 @@ EPUBJS.Reader = function (bookPath, _options) {
      var mouseDown = false;
 		var rendered = book.renderTo("viewer");
 
-		if(!(typeof localStorage.getItem(localStorage.getItem('bookies')) == 'undefined') && !(localStorage.getItem(localStorage.getItem('bookies')) == null)){
-			// console.log(localStorage.getItem(localStorage.getItem('bookies')));
+
+		// check Local storage for page List
+		if(!(typeof localStorage.getItem(localStorage.getItem('bookies')) == 'undefined') &&
+			!(localStorage.getItem(localStorage.getItem('bookies')) == null)){
+			// If it exists load the pages from the local storage
 			book.loadPagination(localStorage.getItem(localStorage.getItem('bookies')));
 		}
 		else {
-			// Or generate the pageList on the fly
+			// generate the pageList
 			book.ready.all.then(function () {
 				book.generatePagination();
+				// display loading screen
 				window.loadingscreen.style.display = "block";
 			});
 		}
@@ -140,10 +147,10 @@ EPUBJS.Reader = function (bookPath, _options) {
      book.pageListReady.then(function(pageList){
        controlss.style.display = "block";
 	     window.loadingscreen.style.display = "none";
-//     console.log(JSON.stringify(pageList)); // Save the result
+      //(JSON.stringify(pageList)); // Save the result
        localStorage.pageList = JSON.stringify(pageList);
 	     localStorage.setItem(localStorage.getItem('bookies'), JSON.stringify(pageList));
-       console.log(pageList);
+
 
 	     window.resolveLocalFileSystemURL(window.mybook.spine[0].url, gotFile, fail);
 	     function fail(e) {
@@ -218,7 +225,9 @@ EPUBJS.Reader = function (bookPath, _options) {
 	       console.log(currentPage);
        }, false);
      });
+		 var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
      book.on('book:pageChanged', function(location){
+
        if(!mouseDown) {
          slider.value = location.anchorPage;
 	       // var currentPageTime = Date.now();
@@ -241,9 +250,10 @@ EPUBJS.Reader = function (bookPath, _options) {
 	     }
 
 	     if(arrayOfTimes.length==2) {
+
 		     db.transaction(function (tx) {
 		     	tx.executeSql('CREATE TABLE IF NOT EXISTS PageTable (book, page, seconds)');
-		     	var stat = "SELECT count(*) AS mycount FROM PageTable WHERE page='" + arrayOfPages[0] + "';" ;
+		     	var stat = "SELECT count(*) AS mycount FROM PageTable WHERE page='" + arrayOfPages[0] + "' AND book='" + book.metadata.bookTitle + "';" ;
 			     tx.executeSql(stat, [], function (tx, rs) {
 				     // console.log('Record count : ' + rs.rows.item(0).mycount);
 				     if (rs.rows.item(0).mycount == 0) {
@@ -261,6 +271,7 @@ EPUBJS.Reader = function (bookPath, _options) {
 					     });
 				     }
 				     else {
+
 					     db.transaction(function (tx) {
 					     	var newtime =  arrayOfTimes[1] - arrayOfTimes[0];
 						     tx.executeSql("Update PageTable Set seconds = "+ newtime+" WHERE" +
@@ -1368,7 +1379,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 			didPan = true;
 		}
 	});
-	console.log($(renderer.render.window.frameElement).parent().parent().contents());
+	//console.log($(renderer.render.window.frameElement).parent().parent().contents());
 	var wrap = $(renderer.render.window.frameElement).parent().parent().contents()[5];
 	var definer = $(renderer.render.window.frameElement).parent().parent().contents()[9];
 	var cancelus = $(renderer.render.window.frameElement).parent().parent().contents()[11];
@@ -1441,29 +1452,23 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 		listener.addEventListener("click", hear, false);
 	}
 
+	// Select p tags to attach listener to them
 	var elements = renderer.doc.querySelectorAll('p'),
-
-		//Perform actions on each of the elements. Each item is paragraph in book html
-		items = Array.prototype.slice.call(elements);
-
+	//Perform actions on each of the elements. Each item is paragraph in book html
+	items = Array.prototype.slice.call(elements);
 	items.forEach(function (item) {
-
 		$(item).on('dblclick', function () {
-			//console.log(item);
 			localStorage.sentence = '';
 			localStorage.meaning = '';
 			localStorage.word = '';
 
 			var elems = renderer.doc.querySelectorAll(".hilite");
-
+			//
 			[].forEach.call(elems, function(el) {
 				el.classList.remove("hilite");
 			});
 
-			// wrap.style.display = "block";
-			// console.log(window.cfi);
-
-			//get the word from screen
+			//get the word when user double taps on screen
 			var t = '';
 			if (window.getSelection && (sel = window.getSelection()).modify) {
 				// Webkit, Gecko
@@ -1488,32 +1493,24 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 				while (/\s$/.test(textRange.text)) {
 					textRange.moveEnd("character", -1);
 				}
-
 				t = textRange.text;
 
 			}
-			// localStorage.word = t;
-			// localStorage.sentence = s.focusNode.data;
-
+			// Define replaceAll
 			String.prototype.replaceAll = function (target, replacement) {
 				return this.split(target).join(replacement);
 			};
-
 			var replacee = " " + t;
 			var replacer = " <b class='hilite'>" + t + "</b>";
 
-			// var replacer = " <div data-role='popup' id='myPopup' class='godown' ><a class='ui-btn-inline'> </a><a class='ui-btn ui-btn-inline'> hi </a><a class='ui-btn ui-btn-inline'> bi </a></div><a href='#myPopup' data-rel='popup' class='makelinkblack'><span class = 'makespanblack hilite'>" + t +"</span></a>";
 			var temp = item.innerHTML;
 			var temper = item.innerHTML.replaceAll(replacee, replacer);
-
-
 			item.innerHTML = temper;
-			//console.log(item.innerHTML);
-
-
-
+			// Display Define block and cancel circle
 			definer.style.display = "block";
 			cancelus.style.display = "block";
+
+
 			// $('#canceler').css('display', 'block');
 
 
@@ -1535,7 +1532,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
 
 			var outputs = $.ajax({
-				url: 'https://api.cognitive.microsoft.com/bing/v5.0/images/search?q=' + t + '', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
+				url: 'https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + t + '', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
 				//url: 'https://api.cognitive.microsoft.com/bing/v5.0/images/search?q='+damn+'', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
 				type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
 				data: {}, // Additional parameters here

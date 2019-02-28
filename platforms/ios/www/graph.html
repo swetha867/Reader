@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>smoothed line | amCharts</title>
-  <meta name="description" content="chart created using amCharts live editor" />
+  <meta name="description" content="chart created using amCharts live editor"/>
   <meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui, maximum-scale=1">
   <!-- amCharts javascript sources -->
   <script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
@@ -14,9 +14,8 @@
     function onDeviceReady() {
       var elementList = [];
       var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
-
       db.transaction(function (tx) {
-        var statementToExecute = "SELECT * FROM PageTable Where book='"+localStorage.pagestats+"'";
+        var statementToExecute = "SELECT * FROM PageTable Where book='" + localStorage.pagestats + "'";
 
         tx.executeSql(statementToExecute, [], function (tx, rs) {
 
@@ -28,43 +27,15 @@
             console.log(book_name);
             console.log(page_number);
             console.log(page_seconds);
-              elementList.push({"category": page_number, "column-1": page_seconds});
+            elementList.push({"category": page_number, "column-1": page_seconds});
           }
         }, function (tx, error) {
           console.log('SELECT error: ' + error.message);
         });
-      }, function(error) {
+      }, function (error) {
         console.log('transaction error: ' + error.message);
-      }, function() {
+      }, function () {
         console.log('transaction ok');
-        var elements = [{
-          "category": 1,
-          "column-1": 8
-        },
-          {
-            "category": 2,
-            "column-1": 6
-          },
-          {
-            "category": 3,
-            "column-1": 2
-          },
-          {
-            "category": 4,
-            "column-1": 1
-          },
-          {
-            "category": 5,
-            "column-1": 2
-          },
-          {
-            "category": 6,
-            "column-1": 3
-          },
-          {
-            "category": 7,
-            "column-1": 6
-          }];
         console.log(elementList);
         AmCharts.makeChart("chartdiv",
           {
@@ -111,6 +82,55 @@
       });
 
 
+      function emailReviewer() {
+        var email_book_name = localStorage.pagestats;
+
+        db.transaction(function (tx) {
+          var statementToExecute = "SELECT count(*) AS mycount FROM PageTable Where book='" + localStorage.pagestats +
+            "'";
+
+          tx.executeSql(statementToExecute, [], function (tx, rs) {
+
+           console.log(rs.rows.item(0).mycount);
+            window.emailpages = rs.rows.item(0).mycount;
+          }, function (tx, error) {
+            console.log('SELECT error: ' + error.message);
+          });
+        }, function (error) {
+          console.log('transaction error: ' + error.message);
+        }, function () {
+          console.log('transaction ok');
+
+          db.transaction(function (tx) {
+            var other_statement = "SELECT avg(seconds) AS timeavg FROM PageTable Where book='" + localStorage.pagestats +
+              "'";
+
+            tx.executeSql(other_statement, [], function (tx, rs) {
+
+              console.log(rs.rows.item(0).timeavg);
+              window.emailtime = parseInt(rs.rows.item(0).timeavg);
+            }, function (tx, error) {
+              console.log('SELECT error: ' + error.message);
+            });
+          }, function (error) {
+            console.log('transaction error: ' + error.message);
+          }, function () {
+            console.log('transaction ok');
+            cordova.plugins.email.open({
+
+              subject: 'Book Statistics Report',
+              body:
+              "<b>Book Name</b>: "+email_book_name+"<br>Pages Read: "+window.emailpages+"<br>Average Time per page : "+window.emailtime+" seconds",
+              isHtml: true
+            });
+          });
+        });
+
+      }
+
+      var emailStats = document.getElementById('emailer');
+      emailStats.addEventListener('click', emailReviewer, false);
+
     }
 
   </script>
@@ -119,13 +139,16 @@
 
 </head>
 <body>
-<center><div>Time spent per Page</div></center>
-<div id="chartdiv" style="width: 100%; height: 400px; background-color: #FFFFFF;" ></div>
+<center>
+  <div>Time spent per Page</div>
+</center>
+<div id="chartdiv" style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
 <div>
   X-Axis: Page Number
-  </div>
+</div>
 <div>
   Y-Axis: Duration in Seconds
 </div>
+<button id="emailer">Email Reviewer</button>
 </body>
 </html>

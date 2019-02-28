@@ -1,6 +1,4 @@
 /*
- Copyright 2013-2016 appPlant UG
-
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file
  distributed with this work for additional information
@@ -22,12 +20,10 @@
 #import "APPEmailComposerImpl.h"
 #import <Cordova/CDVAvailability.h>
 #ifndef __CORDOVA_4_0_0
-    #import <Cordova/NSData+Base64.h>
+# import <Cordova/NSData+Base64.h>
 #endif
 #import <MessageUI/MFMailComposeViewController.h>
 #import <MobileCoreServices/MobileCoreServices.h>
-
-#include "TargetConditionals.h"
 
 /**
  * Implements the interface methods of the plugin.
@@ -48,23 +44,22 @@
 {
     bool canSendMail = [MFMailComposeViewController canSendMail];
     bool withScheme  = false;
-    
-    if (![scheme hasSuffix:@":"]) {
+
+    if (!scheme) {
+        scheme = @"mailto:";
+    } else if (![scheme hasSuffix:@":"]) {
         scheme = [scheme stringByAppendingString:@":"];
     }
-    
+
+    NSCharacterSet *set = [NSCharacterSet URLFragmentAllowedCharacterSet];
     scheme = [[scheme stringByAppendingString:@"test@test.de"]
-                stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                stringByAddingPercentEncodingWithAllowedCharacters:set];
 
     NSURL *url = [[NSURL URLWithString:scheme]
                     absoluteURL];
 
     withScheme = [[UIApplication sharedApplication]
                    canOpenURL:url];
-
-    if (TARGET_IPHONE_SIMULATOR && [scheme hasPrefix:@"mailto:"]) {
-        canSendMail = withScheme = true;
-    }
 
     NSArray* resultArray = [NSArray arrayWithObjects:@(canSendMail),@(withScheme), nil];
 
@@ -437,18 +432,21 @@
  */
 - (NSString*) getMimeTypeFromFileExtension:(NSString*)extension
 {
-    if (!extension) {
+    if (!extension)
         return nil;
-    }
 
     // Get the UTI from the file's extension
-    CFStringRef ext = (CFStringRef)CFBridgingRetain(extension);
+    CFStringRef ext  = (CFStringRef)CFBridgingRetain(extension);
     CFStringRef type = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext, NULL);
 
-    ext = NULL;
-
     // Converting UTI to a mime type
-    return (NSString*)CFBridgingRelease(UTTypeCopyPreferredTagWithClass(type, kUTTagClassMIMEType));
+    NSString *result = (NSString*)
+    CFBridgingRelease(UTTypeCopyPreferredTagWithClass(type, kUTTagClassMIMEType));
+
+    CFRelease(ext);
+    CFRelease(type);
+    
+    return result;
 }
 
 /**

@@ -40,5 +40,11 @@
         <variable name="MICROPHONE_USAGE_DESCRIPTION" value=" " />
         <variable name="SPEECH_RECOGNITION_USAGE_DESCRIPTION" value=" " />
     </plugin>
-    <plugin name="cordova-plugin-email-composer" spec="https://github.com/katzer/cordova-plugin-email-composer.git" />
+    <plugin name="cordova-plugin-compat" spec="^1.2.0" />
+    <plugin name="cordova-plugin-email-composer" spec="^0.8.4">
+        <variable name="ANDROID_SUPPORT_V4_VERSION" value="27.+" />
+    </plugin>
+    <engine name="browser" spec="^5.0.4" />
+    <engine name="ios" spec="^4.5.5" />
+    <engine name="android" spec="^7.1.4" />
 </widget>

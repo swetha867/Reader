@@ -7,7 +7,7 @@
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Mahesh
     </author>
-    <content src="email.html" />
+    <content src="home.html" />
     <access origin="*" />
     <allow-navigation href="*" />
     <allow-intent href="*" />

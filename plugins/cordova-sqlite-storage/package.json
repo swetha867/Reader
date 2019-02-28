@@ -12,7 +12,9 @@
   },
   "engines": {
     "cordovaDependencies": {
-      "2.0.0": { "cordova-windows": ">4.4.1" }
+      "2.0.0": {
+        "cordova-windows": ">4.4.1"
+      }
     }
   },
   "repository": {

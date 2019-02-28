@@ -1,6 +1,4 @@
 /*
- Copyright 2013-2016 appPlant UG
-
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file
  distributed with this work for additional information
@@ -21,33 +19,29 @@
 
 #import "APPEmailComposer.h"
 #import "APPEmailComposerImpl.h"
-#import <Cordova/CDVAvailability.h>
-#ifndef __CORDOVA_4_0_0
-    #import <Cordova/NSData+Base64.h>
-#endif
-#import <MobileCoreServices/MobileCoreServices.h>
-
-#include "TargetConditionals.h"
 
 @interface APPEmailComposer ()
 
-@property (nonatomic, retain) CDVInvokedUrlCommand* command;
+@property (nonatomic, strong) CDVInvokedUrlCommand* command;
 
 /**
  * Implements the plugin functionality.
  */
-@property (nonatomic, retain) APPEmailComposerImpl* impl;
+@property (nonatomic, strong) APPEmailComposerImpl* impl;
 
 @end
 
 @implementation APPEmailComposer
+
+@synthesize command;
+@synthesize impl;
 
 #pragma mark -
 #pragma mark Lifecycle
 
 - (void)pluginInitialize
 {
-    _impl = [[APPEmailComposerImpl alloc] init];
+    self.impl = [[APPEmailComposerImpl alloc] init];
 }
 
 #pragma mark -
@@ -59,18 +53,18 @@
  * @param callbackId
  *      The ID of the JS function to be called with the result
  */
-- (void) isAvailable:(CDVInvokedUrlCommand*)command
+- (void) isAvailable:(CDVInvokedUrlCommand*)cmd
 {
     [self.commandDelegate runInBackground:^{
-        NSString* scheme = command.arguments[0];
-        NSArray* boolArray = [_impl canSendMail:scheme];
+        NSString* scheme = cmd.arguments[0];
+        NSArray* boolArray = [self.impl canSendMail:scheme];
         CDVPluginResult* result;
 
         result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
                                      messageAsMultipart:boolArray];
 
         [self.commandDelegate sendPluginResult:result
-                                    callbackId:command.callbackId];
+                                    callbackId:cmd.callbackId];
     }];
 }
 
@@ -80,11 +74,11 @@
  * @param properties
  *      The email properties like subject, body, attachments
  */
-- (void) open:(CDVInvokedUrlCommand*)command
+- (void) open:(CDVInvokedUrlCommand*)cmd
 {
-    NSDictionary* props = command.arguments[0];
+    NSDictionary* props = cmd.arguments[0];
 
-    _command = command;
+    self.command = cmd;
 
     [self.commandDelegate runInBackground:^{
         NSString* scheme = [props objectForKey:@"app"];
@@ -94,13 +88,7 @@
             return;
         }
 
-        if (TARGET_IPHONE_SIMULATOR) {
-            [self informAboutIssueWithSimulators];
-            [self execCallback];
-        }
-        else {
-            [self presentMailComposerFromProperties:props];
-        }
+        [self presentMailComposerFromProperties:props];
     }];
 }
 
@@ -133,7 +121,12 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         MFMailComposeViewController* draft =
-        [_impl mailComposerFromProperties:props delegateTo:self];
+        [self.impl mailComposerFromProperties:props delegateTo:self];
+
+        if (!draft) {
+            [self execCallback];
+            return;
+        }
 
         [self.viewController presentViewController:draft
                                           animated:YES
@@ -150,7 +143,7 @@
  */
 - (void) openURLFromProperties:(NSDictionary*)props
 {
-    NSURL* url = [_impl urlFromProperties:props];
+    NSURL* url = [self.impl urlFromProperties:props];
 
     [[UIApplication sharedApplication] openURL:url];
 }
@@ -169,21 +162,6 @@
 }
 
 /**
- * Presents a dialog to the user to inform him about an issue with the iOS8
- * simulator in combination with the mail library.
- */
-- (void) informAboutIssueWithSimulators
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[[UIAlertView alloc] initWithTitle:@"Email-Composer"
-                                    message:@"Please use a physical device."
-                                   delegate:NULL
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:NULL] show];
-    });
-}
-
-/**
  * Invokes the callback without any parameter.
  */
 - (void) execCallback
@@ -192,7 +170,7 @@
                                resultWithStatus:CDVCommandStatus_OK];
 
     [self.commandDelegate sendPluginResult:result
-                                callbackId:_command.callbackId];
+                                callbackId:self.command.callbackId];
 }
 
 @end

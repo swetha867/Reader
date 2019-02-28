@@ -1,0 +1,52 @@
+{
+  "name": "io.cordova.hellocordova",
+  "version": "1.0.0",
+  "displayName": "Reader",
+  "cordova": {
+    "platforms": [
+      "browser",
+      "ios",
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-compat": {},
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-fullscreen": {},
+      "cordova-plugin-file": {},
+      "cordova-sqlite-storage": {},
+      "cordova-plugin-armsoft-mfilechooser-nancydrew": {},
+      "cordova-plugin-file-transfer": {},
+      "cordova-plugin-inappbrowser": {},
+      "cordova-plugin-tts": {},
+      "com.megster.cordova.FileChooser": {},
+      "cordova-plugin-filepath": {},
+      "cordova-plugin-android-permissions": {},
+      "cordova-plugin-zip": {},
+      "org.apache.cordova.speech.speechrecognition": {
+        "MICROPHONE_USAGE_DESCRIPTION": " ",
+        "SPEECH_RECOGNITION_USAGE_DESCRIPTION": " "
+      },
+      "cordova-plugin-email-composer": {
+        "ANDROID_SUPPORT_V4_VERSION": "27.+"
+      }
+    }
+  },
+  "dependencies": {
+    "com.megster.cordova.FileChooser": "http://github.com/don/cordova-filechooser.git",
+    "cordova-android": "^7.1.4",
+    "cordova-browser": "^5.0.4",
+    "cordova-ios": "^4.5.5",
+    "cordova-plugin-android-permissions": "~0.10.0",
+    "cordova-plugin-armsoft-mfilechooser-nancydrew": "https://github.com/nancydrew123/MFileChooser",
+    "cordova-plugin-compat": "^1.2.0",
+    "cordova-plugin-email-composer": "^0.8.4",
+    "cordova-plugin-file-transfer": "~1.6.1",
+    "cordova-plugin-filepath": "~1.0.2",
+    "cordova-plugin-inappbrowser": "~1.6.1",
+    "cordova-plugin-tts": "~0.2.3",
+    "cordova-plugin-whitelist": "1",
+    "cordova-plugin-zip": "~3.1.0",
+    "cordova-sqlite-storage": "~2.0.2",
+    "org.apache.cordova.speech.speechrecognition": "https://github.com/macdonst/SpeechRecognitionPlugin"
+  }
+}

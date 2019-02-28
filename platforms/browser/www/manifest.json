@@ -1,0 +1,11 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "Reader",
+  "short_name": "Reader",
+  "version": "io.cordova.hellocordova",
+  "description": "Reader app",
+  "author": "Mahesh",
+  "icons": [],
+  "start_url": "home.html"
+}
