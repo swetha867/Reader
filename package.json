@@ -32,6 +32,7 @@
     }
   },
   "dependencies": {
+    "cloudconvert": "^1.1.2",
     "com.megster.cordova.FileChooser": "http://github.com/don/cordova-filechooser.git",
     "cordova-android": "^7.1.4",
     "cordova-browser": "^5.0.4",

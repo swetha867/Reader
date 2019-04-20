@@ -1532,8 +1532,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
 
 			var outputs = $.ajax({
-				url: 'https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + t + '', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
-				//url: 'https://api.cognitive.microsoft.com/bing/v5.0/images/search?q='+damn+'', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
+				url: 'https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + t + '',
 				type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
 				data: {}, // Additional parameters here
 				dataType: 'json',
@@ -1574,7 +1573,9 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
 
 							// wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[1].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[2].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[3].thumbnailUrl + "&w=200&h=200'/></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
+							
 							wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + "&w=200&h=200'/></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
+							
 							// console.log(wrap.firstChild.nextSibling.firstChild);
 
 							//wrap.innerHTML="<span id='cross'>✖</span><div id='imagecontainer'><center><img src ='"+data.value[0].thumbnailUrl+"&w=200&h=200'/></center></div><h1>"+ogword+"</h1><div id='meaningspara'>"+meanings[0]+"<br>"+meanings[1]+"</div>";
@@ -1635,7 +1636,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 					console.log(err);
 				},
 				beforeSend: function (xhr) {
-					xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "e0e79469ea954e32a7578e19dbce617e");
+					xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "457dba72ab0347b28f31e688d4a332e5");
 					//xhr.setRequestHeader("Access-Control-Allow-Origin", "*");// Enter here your Mashape key
 				}
 
