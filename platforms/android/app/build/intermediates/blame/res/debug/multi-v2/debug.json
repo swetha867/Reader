@@ -1,0 +1,110 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\Users\\shala\\Reader\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\values-v14_values-v14.arsc.flat",
+            "map": [
+                {
+                    "source": "C:\\Users\\shala\\Reader\\platforms\\android\\app\\src\\main\\res\\values-v14\\styles.xml",
+                    "from": {
+                        "startLines": "7",
+                        "startColumns": "4",
+                        "startOffsets": "227",
+                        "endLines": "9",
+                        "endColumns": "12",
+                        "endOffsets": "375"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "4",
+                        "endColumns": "12",
+                        "endOffsets": "201"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "C:\\Users\\shala\\Reader\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\values_values.arsc.flat",
+            "map": [
+                {
+                    "source": "C:\\Users\\shala\\Reader\\platforms\\android\\app\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "6,15",
+                        "startColumns": "4,4",
+                        "startOffsets": "192,525",
+                        "endLines": "12,17",
+                        "endColumns": "12,12",
+                        "endOffsets": "484,682"
+                    },
+                    "to": {
+                        "startLines": "19,26",
+                        "startColumns": "4,4",
+                        "startOffsets": "870,1161",
+                        "endLines": "25,28",
+                        "endColumns": "12,12",
+                        "endOffsets": "1156,1316"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\shala\\Reader\\platforms\\android\\app\\src\\main\\res\\values\\colors_filechooser.xml",
+                    "from": {
+                        "startLines": "7,3,6,5,2,4,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "289,101,248,197,57,146,331",
+                        "endColumns": "40,43,39,49,42,49,51",
+                        "endOffsets": "325,140,283,242,95,191,378"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "55,96,140,180,230,273,323",
+                        "endColumns": "40,43,39,49,42,49,51",
+                        "endOffsets": "91,135,175,225,268,318,370"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\shala\\Reader\\platforms\\android\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "4,2,9,6,8,7,11,5,10,3",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "158,55,412,269,365,320,504,222,458,99",
+                        "endColumns": "63,43,45,50,46,44,45,46,45,58",
+                        "endOffsets": "217,94,453,315,407,360,545,264,499,153"
+                    },
+                    "to": {
+                        "startLines": "9,10,11,12,13,14,15,16,17,18",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "375,439,483,529,580,627,672,718,765,811",
+                        "endColumns": "63,43,45,50,46,44,45,46,45,58",
+                        "endOffsets": "434,478,524,575,622,667,713,760,806,865"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "C:\\Users\\shala\\Reader\\platforms\\android\\app\\build\\intermediates\\res\\merged\\debug\\values-v11_values-v11.arsc.flat",
+            "map": [
+                {
+                    "source": "C:\\Users\\shala\\Reader\\platforms\\android\\app\\src\\main\\res\\values-v11\\styles.xml",
+                    "from": {
+                        "startLines": "6",
+                        "startColumns": "4",
+                        "startOffsets": "183",
+                        "endLines": "8",
+                        "endColumns": "12",
+                        "endOffsets": "317"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "4",
+                        "endColumns": "12",
+                        "endOffsets": "187"
+                    }
+                }
+            ]
+        }
+    ]
+}

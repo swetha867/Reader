@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>smoothed line | amCharts</title>
+  <meta name="description" content="chart created using amCharts live editor"/>
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui, maximum-scale=1">
+  <!-- amCharts javascript sources -->
+  <script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+  <script type="text/javascript" src="https://cdn.amcharts.com/lib/3/serial.js"></script>
+  <script src="js/jquery-2.1.0.js"></script>
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript">
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+      var elementList = [];
+      var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+      db.transaction(function (tx) {
+        var statementToExecute = "SELECT * FROM PageTable Where book='" + localStorage.pagestats + "'";
+
+        tx.executeSql(statementToExecute, [], function (tx, rs) {
+
+          for (var i = 0; i < rs.rows.length; i++) {
+
+            var book_name = rs.rows.item(i).book;
+            var page_number = rs.rows.item(i).page;
+            var page_seconds = rs.rows.item(i).seconds;
+            console.log(book_name);
+            console.log(page_number);
+            console.log(page_seconds);
+            elementList.push({"category": page_number, "column-1": page_seconds});
+          }
+        }, function (tx, error) {
+          console.log('SELECT error: ' + error.message);
+        });
+      }, function (error) {
+        console.log('transaction error: ' + error.message);
+      }, function () {
+        console.log('transaction ok');
+        console.log(elementList);
+        AmCharts.makeChart("chartdiv",
+          {
+            "type": "serial",
+            "categoryField": "category",
+            "autoMarginOffset": 5,
+            "marginRight": 15,
+            "marginTop": 20,
+            "startDuration": 1,
+            "fontSize": 13,
+            "theme": "default",
+            "categoryAxis": {
+              "startOnAxis": true
+            },
+            "chartScrollbar": {
+              "enabled": true
+            },
+            "trendLines": [],
+            "graphs": [
+              {
+                "balloonText": "[[value]] Seconds on Page [[category]]",
+                "bullet": "round",
+                "bulletSize": 10,
+                "id": "AmGraph-1",
+                "lineThickness": 3,
+                "title": "graph 1",
+                "type": "smoothedLine",
+                "valueField": "column-1"
+              }
+            ],
+            "guides": [],
+            "valueAxes": [
+              {
+                "id": "ValueAxis-1",
+                "title": ""
+              }
+            ],
+            "allLabels": [],
+            "balloon": {},
+            "titles": [],
+            "dataProvider": elementList
+          }
+        );
+      });
+
+
+      function emailReviewer() {
+        var email_book_name = localStorage.pagestats;
+
+        db.transaction(function (tx) {
+          var statementToExecute = "SELECT count(*) AS mycount FROM PageTable Where book='" + localStorage.pagestats +
+            "'";
+
+          tx.executeSql(statementToExecute, [], function (tx, rs) {
+
+           console.log(rs.rows.item(0).mycount);
+            window.emailpages = rs.rows.item(0).mycount;
+          }, function (tx, error) {
+            console.log('SELECT error: ' + error.message);
+          });
+        }, function (error) {
+          console.log('transaction error: ' + error.message);
+        }, function () {
+          console.log('transaction ok');
+
+          db.transaction(function (tx) {
+            var other_statement = "SELECT avg(seconds) AS timeavg FROM PageTable Where book='" + localStorage.pagestats +
+              "'";
+
+            tx.executeSql(other_statement, [], function (tx, rs) {
+
+              console.log(rs.rows.item(0).timeavg);
+              window.emailtime = parseInt(rs.rows.item(0).timeavg);
+            }, function (tx, error) {
+              console.log('SELECT error: ' + error.message);
+            });
+          }, function (error) {
+            console.log('transaction error: ' + error.message);
+          }, function () {
+            console.log('transaction ok');
+            cordova.plugins.email.open({
+
+              subject: 'Book Statistics Report',
+              body:
+              "<b>Book Name</b>: "+email_book_name+"<br>Pages Read: "+window.emailpages+"<br>Average Time per page : "+window.emailtime+" seconds",
+              isHtml: true
+            });
+          });
+        });
+
+      }
+
+      var emailStats = document.getElementById('emailer');
+      emailStats.addEventListener('click', emailReviewer, false);
+
+    }
+
+  </script>
+
+  <!-- amCharts javascript code -->
+
+</head>
+<body>
+<center>
+  <div>Time spent per Page</div>
+</center>
+<div id="chartdiv" style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
+<div>
+  X-Axis: Page Number
+</div>
+<div>
+  Y-Axis: Duration in Seconds
+</div>
+<button id="emailer">Email Reviewer</button>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+    "libz.dylib": 1,
+    "AudioToolbox.framework": 1,
+    "SystemConfiguration.framework": 1,
+    "Security.framework": 1,
+    "CFNetwork.framework": 1,
+    "Speech.framework": 1,
+    "MessageUI.framework": 1
+}
