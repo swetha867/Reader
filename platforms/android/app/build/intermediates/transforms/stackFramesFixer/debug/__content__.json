@@ -1,1 +1,0 @@
-[{"name":"android.local.jars:android-support-v4.jar:e4684a7e2662054da73239a169013306da530a69","index":0,"scopes":["EXTERNAL_LIBRARIES"],"types":["CLASSES"],"format":"JAR","present":true},{"name":"android.local.jars:sqlite-connector.jar:a0c69274ce03cf0450898a338e2a6cc559c981e4","index":1,"scopes":["EXTERNAL_LIBRARIES"],"types":["CLASSES"],"format":"JAR","present":true}]
