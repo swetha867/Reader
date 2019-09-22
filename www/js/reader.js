@@ -1540,8 +1540,8 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
           console.log(data);
 
           var output = $.ajax({
-            url: 'https://api.pearson.com/v2/dictionaries/ldoce5/entries?headword=' + t + '', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
-            //url: 'https://wordsapiv1.p.mashape.com/words/'+t+'/definitions',
+            //url: 'https://api.pearson.com/v2/dictionaries/ldoce5/entries?headword=' + t + '', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
+						url: 'https://www.dictionaryapi.com/api/v3/references/learners/json/' + t + '?key=44e0ef0b-a516-4c4d-8fff-12be8779749b',
             type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
             data: {}, // Additional parameters here
             dataType: 'json',
@@ -1554,16 +1554,12 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               var ogword = t;
 
               console.log(r);
-              // localStorage.meaning = r.results[0].senses[0].definition[0];
-
-
               try {
-                for (var i = 0; i < r.count; i++) {
-                  if (r.results[i].senses[0].definition) {
-                    meanings[i] = '[' + (i + 1) + '] ' + r.results[i].senses[0].definition[0];
-                    // console.log(meanings[i]);
-                  }
-                }
+                for (var i = 0; i < r[0].shortdef.length; i++) {
+									if (r[0].shortdef[i] != '') {
+										meanings[i] = '[' + (i + 1) + '] ' + r[0].shortdef[i];
+									}
+								}
 
               } catch (err) {
                 meanings[0] = "Definition not found";
@@ -1571,17 +1567,12 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
               localStorage.meaning = meanings[0];
 
-
-              // wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[1].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[2].thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.value[3].thumbnailUrl + "&w=200&h=200'/></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
-
-              wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + "&w=200&h=200'/></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
-
-              // console.log(wrap.firstChild.nextSibling.firstChild);
-
-              //wrap.innerHTML="<span id='cross'>✖</span><div id='imagecontainer'><center><img src ='"+data.value[0].thumbnailUrl+"&w=200&h=200'/></center></div><h1>"+ogword+"</h1><div id='meaningspara'>"+meanings[0]+"<br>"+meanings[1]+"</div>";
-              //mydef = data.defintinitons;
-              //console.log(mydef);
-              //document.getElementById("output1").innerHTML = data.definitions[0].partOfSpeech;
+              if (!$.trim(data.queryExpansions)){   
+                wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><h1><center>Image Not Found!</center></h1></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
+            }
+              else{
+                wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + "&w=200&h=200'/></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
+              }
             },
             complete: function () {
               if (localStorage.meaning.length > 1 && localStorage.meaning != "Definition not found") {
