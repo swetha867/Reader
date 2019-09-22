@@ -1545,7 +1545,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
             type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
             data: {}, // Additional parameters here
             dataType: 'json',
-            success: function (r) {
+            success: function (dictionaryData) {
 
               var meanings = [];
               meanings[0] = "Definition not found";
@@ -1553,11 +1553,11 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               meanings[2] = "";
               var ogword = t;
 
-              console.log(r);
+              console.log(dictionaryData);
               try {
-                for (var i = 0; i < r[0].shortdef.length; i++) {
-									if (r[0].shortdef[i] != '') {
-										meanings[i] = '[' + (i + 1) + '] ' + r[0].shortdef[i];
+                for (var i = 0; i < dictionaryData[0].shortdef.length; i++) {
+									if (dictionaryData[0].shortdef[i] != '') {
+										meanings[i] = '[' + (i + 1) + '] ' + dictionaryData[0].shortdef[i];
 									}
 								}
 
