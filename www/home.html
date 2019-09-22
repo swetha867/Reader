@@ -222,6 +222,12 @@
         });
       });
 
+      //logout
+      $('#logout').click(function () {
+        window.localStorage.removeItem("reader_user_id");
+        window.location.href = "login.html";
+      });
+
       //When Add book button is clicked, the filechooser plugin opens device library
       $('#fileinput').click(function () {
         fileChooser.open(function (furi) {
@@ -369,17 +375,8 @@
 
   <div id = "readerhead" data-role="header" data-position="fixed" data-tap-toggle="false">
     <h1>Reader</h1>
-    <!--<a onclick="window.location.href=window.location.href;" class="ui-btn icon-angle-right" style="margin-top:0.5em" ></a>-->
-    <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
-    <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
-    <!--<a id="drop" data-icon="refresh" class="ui-btn-left" >DROP</a>-->
-    <!--<a id="gotolearning" data-icon="refresh" class="ui-btn-left" >Refresh</a>-->
-    <a id="cloud" data-icon="refresh" class="ui-btn-left"
-       onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>
-    <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" >Refresh</a>-->
-
+    <a id="logout" data-icon="back" class="ui-btn-left">Logout</a>
     <a id="fileinput" data-icon="plus" class="ui-btn-right">Add Books</a>
-    <!--<a id="cloud" data-icon="plus" class="ui-btn-right" onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>-->
   </div>
 
   <div data-role="content">
