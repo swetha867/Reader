@@ -16,9 +16,9 @@ router.get('/', (req,res) => {
 });
 
 router.post('/', (req,res) => {
-    console.log('Student ID entered from UI is'+ req.body.studID);
+    console.log('Student ID entered from UI is'+ req.body.student_id);
     console.log('Student Email entered from UI is'+ req.body.email);
-    var studentID = req.body.studID;
+    var studentID = req.body.student_id;
     var email = req.body.email
     mysqlConnection.query('INSERT INTO Users (`Student_ID`, `Email_ID`) VALUES (?,?) ', 
     [studentID, email], (req,resp) => {
