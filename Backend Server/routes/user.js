@@ -23,9 +23,8 @@ router.post('/', (req,res) => {
     mysqlConnection.query('INSERT INTO Users (`Student_ID`, `Email_ID`) VALUES (?,?) ', 
     [studentID, email], (req,resp) => {
         console.log("Data Inserted " + resp.insertId);
-        res.end(JSON.stringify({ user_id: resp.insertId }));
+        res.send(JSON.stringify({ user_id: resp.insertId }));
     }
     );
-    
 })
 module.exports = router;
