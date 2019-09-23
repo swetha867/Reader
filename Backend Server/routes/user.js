@@ -22,8 +22,8 @@ router.post('/', (req,res) => {
     var email = req.body.email
     mysqlConnection.query('INSERT INTO Users (`Student_ID`, `Email_ID`) VALUES (?,?) ', 
     [studentID, email], (req,resp) => {
-        console.log("Data Inserted " + result.insertId);
-        res.end(JSON.stringify({ user_id: result.insertId }));
+        console.log("Data Inserted " + resp.insertId);
+        res.end(JSON.stringify({ user_id: resp.insertId }));
     }
     );
     
