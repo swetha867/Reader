@@ -3,11 +3,13 @@ const app = express();
 const port = 6010;
 const bodyParser = require('body-parser');
 const userController = require('./routes/user');
+const lookupController = require('./routes/lookup');
 
 //app.use(bodyParser()); // ??
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use('/users', userController);
+app.use('/lookup', lookupController);
 
 // DB CONNECTION STARTS
 
