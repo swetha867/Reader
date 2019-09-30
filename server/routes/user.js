@@ -4,7 +4,7 @@ const mysqlConnection = require('../database/db');
 const router = express.Router();
 
 router.get('/', (req,res) => {
-    mysqlConnection.query('SELECT * FROM Users', (err,rows,fields) => {
+    mysqlConnection.query('SELECT * FROM users', (err,rows,fields) => {
         if (!err) {
             res.send(rows);
             console.log('Fetched');
@@ -16,11 +16,9 @@ router.get('/', (req,res) => {
 });
 
 router.post('/', (req,res) => {
-    console.log('Student ID entered from UI is'+ req.body.student_id);
-    console.log('Student Email entered from UI is'+ req.body.email);
     var studentID = req.body.student_id;
     var email = req.body.email
-    mysqlConnection.query('INSERT INTO Users (`Student_ID`, `Email_ID`) VALUES (?,?) ', 
+    mysqlConnection.query('INSERT INTO users (`student_id`, `email`) VALUES (?,?) ', 
     [studentID, email], (req,resp) => {
         console.log("Data Inserted " + resp.insertId);
         res.send({ user_id: resp.insertId });
