@@ -92,3 +92,4 @@ typings/
 
 # Optional to ignore plugin Git clones
 #/plugins
+www/.DS_Store
