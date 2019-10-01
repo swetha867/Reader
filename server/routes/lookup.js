@@ -16,14 +16,30 @@ router.post('/', (req,res) => {
       }
       if(rows.length == 0){
         // Word is not in database. call the Api to insert the word.
-        dic.lookupAndSave("book").then( lookedUp => {
+        // Need to give dynamic value ${word}
+        dic.lookupAndSave(word).then( lookedUp => {
           console.log(`Looked up ${lookedUp}`)
           res.send('looked up');
         });
       }
+      // Should go in else block once the word is already saved in db
+      else {
+        db.query('SELECT dictionary_meanings.*, COUNT(votes.id) count ' +
+        'FROM dictionary_meanings LEFT JOIN votes ' +
+        'ON dictionary_meanings.id = votes.meaning_id ' +
+        'WHERE dictionary_meanings.word_id=1 ' +
+        'group by dictionary_meanings.id', (err,rows,fields) => {
+          if (!err){
+          res.send(rows);
+          console.log('Votes Table Information Fetched');
+          }
+          else {
+            console.log(`Here is the error for votes table:${err}`);
+          }
+        })
+      }
   })
-
-
-
 })
+
+
 module.exports = router;

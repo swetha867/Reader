@@ -4,13 +4,14 @@ const port = 6010;
 const bodyParser = require('body-parser');
 const userController = require('./routes/user');
 const lookupController = require('./routes/lookup');
+const votingController = require('./routes/vote');
 
 //app.use(bodyParser()); // ??
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use('/users', userController);
 app.use('/lookup', lookupController);
-
+app.use('/votes', votingController);
 // DB CONNECTION STARTS
 
 // Create Table Users (
