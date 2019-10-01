@@ -18,12 +18,12 @@ var dic = {
       db.query('INSERT INTO dictionary_words (`word`) VALUES (?) ', 
       [word], (req,resp) => {
         var word_id = resp.insertId;
-
         meanings.forEach(meaning => {
-          db.query('INSERT INTO dictionary_meanings (`word_id`,`fl`,`meaning`) VALUES (?,?,?) ', 
-          [word_id, meaning.fl, meaning.shortdef[0]], (req,resp) => { });
+          if(typeof meaning.shortdef != 'undefined' && meaning.shortdef.length > 0 ){
+            db.query('INSERT INTO dictionary_meanings (`word_id`,`fl`,`meaning`) VALUES (?,?,?) ', 
+            [word_id, meaning.fl, meaning.shortdef[0]], (req,resp) => { });
+          }
         })
-
         resolve(word_id);
       });
     });
