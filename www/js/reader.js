@@ -1540,10 +1540,11 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
           console.log(data);
 
           var output = $.ajax({
-            //url: 'https://api.pearson.com/v2/dictionaries/ldoce5/entries?headword=' + t + '', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
-						url: 'https://www.dictionaryapi.com/api/v3/references/learners/json/' + t + '?key=44e0ef0b-a516-4c4d-8fff-12be8779749b',
-            type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
-            data: {}, // Additional parameters here
+						url: 'http://3.15.37.149:6010/lookup',
+            type: 'POST', 
+            data: {
+              word : t
+            }, // Additional parameters here
             dataType: 'json',
             success: function (dictionaryData) {
 
@@ -1552,14 +1553,18 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               meanings[1] = "";
               meanings[2] = "";
               var ogword = t;
+              var definitions = '';
 
               console.log(dictionaryData);
               try {
-                for (var i = 0; i < dictionaryData[0].shortdef.length; i++) {
-									if (dictionaryData[0].shortdef[i] != '') {
-										meanings[i] = '[' + (i + 1) + '] ' + dictionaryData[0].shortdef[i];
-									}
-								}
+                if(dictionaryData.length != 0){
+                  for (var i = 0; i < dictionaryData.length; i++) {
+                      definitions += "<input type='radio' id="+dictionaryData[i].id+" name = 'meaningId' value="+ dictionaryData.id + "> <label for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label>";
+                  }
+                }
+                else{
+                  definitions += "<h2>Definition not found</h2>"
+                }
 
               } catch (err) {
                 meanings[0] = "Definition not found";
@@ -1568,10 +1573,10 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               localStorage.meaning = meanings[0];
 
               if (!$.trim(data.queryExpansions)){   
-                wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><h1><center>Image Not Found!</center></h1></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
+                wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><h1><center>Image Not Found!</center></h1></div><h1>" + ogword + "</h1><div id='meaningspara'><form style='padding-left:2%'>" + definitions + "<br><br><center><input type='submit' value='Submit'></center></form></div>";
             }
               else{
-                wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + "&w=200&h=200'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + "&w=200&h=200'/></div><h1>" + ogword + "</h1><div id='meaningspara'>" + meanings[0] + "<br>" + meanings[1] + "</div>";
+                wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + " width='300' height='300'/></div><h1>" + ogword.toLocaleUpperCase() + "</h1><div id='meaningspara'><form style='padding-left:2%'>" + definitions + "<br><br><center><input type='submit' value='Submit'></center></form></div>";
               }
             },
             complete: function () {
@@ -1645,20 +1650,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
       definer.addEventListener("click", openwrap, false);
 
-
-      // definer.addEventListener("click", openwrap, false);
-      // var bruh = $('#canceler');
-
-      //undefiner.addEventListener("click", hidepope, false);
-
-      // // Clear and hide the popup div
-      // var hidepope = function () {
-      // 	wrap.innerHTML="";
-      // 	wrap.style.display = "none";
-      // 	item.innerHTML = temp;
-      // 	//wrap.parentNode.removeChild(wrap);
-      // };
-
       var onCancel = function () {
         cancelus.style.display = "none";
         definer.style.display = "none";
@@ -1683,7 +1674,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
       };
 
       // $(renderer.doc).on('click', clearHighlights);
-      wrap.addEventListener("click", hidepope, false);
+      //wrap.addEventListener("click", hidepope, false);
       cancelus.addEventListener("click", onCancel, false);
 
     });
