@@ -5,7 +5,9 @@ const dic = require('../api/dictionary');
 const router = express.Router();
 
 router.post('/', (req, res) => {
-
+  var user_id = req.body.user_id;
+  var book_id = req.body.book_id;
+  var sentence = req.body.sentence;
   var word = req.body.word;
   if (typeof word == 'undefined' || word == '') {
     res.send('No word given');
@@ -21,7 +23,8 @@ router.post('/', (req, res) => {
     if (rows.length == 0) {
       // Word is not in database. call the Api to insert the word.
       // Need to give dynamic value ${word}
-      dic.lookupAndSave(word).then(lookedUp => {
+      dic.lookupAndSave(word).then(lookedUpID => {
+        updateFreq(user_id, book_id, lookedUpID, sentence)
         console.log(`Looked up ${lookedUp}`)
         lookupMeaning(lookedUp).then(meanings => {
           console.log(meanings);
@@ -33,6 +36,7 @@ router.post('/', (req, res) => {
         console.log(meanings);
         res.send(meanings);
       });
+      updateFreq(user_id, book_id, rows[0].id, sentence)
     }
   })
 })
@@ -55,6 +59,28 @@ async function lookupMeaning(word_id) {
         }
       })
   });
+}
+
+async function updateFreq(user_id, book_id, word_id, sentence) {
+  db.query('SELECT * FROM votes WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ?', [user_id, book_id, word_id, sentence], (err, rows, fields) => {
+    if (err) {
+      console.log(`Here is the error ${err}`)
+      return;
+    }
+    if (rows.length == 0) {
+      // not added in the db. add for first time.
+      db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `sentence`) VALUES (?,?,?,?) ',
+      [user_id, book_id, word_id, sentence], (req,resp) => {
+          console.log("vote details inserted!");
+      }
+      );
+    } else { // Already exists, increment the freq
+      db.query('UPDATE votes SET freq = freq + 1 WHERE id = ? ', [rows[0].id], (req,resp) => {
+          console.log("freq increased!");
+      }
+      );
+    }
+  })
 }
 
 
