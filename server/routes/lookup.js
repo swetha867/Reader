@@ -40,9 +40,10 @@ router.post('/', (req, res) => {
 
 async function lookupMeaning(word_id) {
   return new Promise(function (resolve, reject) {
-    db.query('SELECT dictionary_meanings.*, COUNT(votes.id) count ' +
+    db.query('SELECT dictionary_meanings.*, COUNT(votes.id) count, MAX(isTeacher) isTeacher ' +
       'FROM dictionary_meanings LEFT JOIN votes ' +
       'ON dictionary_meanings.id = votes.meaning_id ' +
+      'LEFT JOIN users ON votes.user_id = users.id ' +
       'WHERE dictionary_meanings.word_id = ? ' +
       'group by dictionary_meanings.id', [word_id], (err, rows, fields) => {
         if (err) {
