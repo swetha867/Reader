@@ -17,7 +17,8 @@ router.get('/', (req,res) => {
 });
 
 // POST call to enter the information in votes Table
-
+// Meaning id 0 means student is not sure which meaning is selected
+// When student lookup for word anytime, we should recieve a post request here with meaningId as null
 router.post('/', (req,res) => {
     var userID = req.body.user_id;
     var bookID = req.body.book_id;
@@ -29,7 +30,6 @@ router.post('/', (req,res) => {
         console.log("vote details inserted!");
     }
     );
-
 });
 
 
