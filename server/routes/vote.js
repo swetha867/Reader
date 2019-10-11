@@ -25,9 +25,19 @@ router.post('/', (req,res) => {
     var wordID = req.body.word_id;
     var meaningID = req.body.meaning_id;
     var sentence = req.body.sentence;
+    bookID = 1; // must fetch from db
+    if(wordID == ""){
+        res.send({res: 'error'});
+        return;
+    }
     mysqlConnection.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `meaning_id`, `sentence`) VALUES (?,?,?,?,?) ',
-    [userID, bookID, wordID, meaningID, sentence], (req,resp) => {
+    [userID, bookID, wordID, meaningID, sentence], (error, results, fields) => {
+        if(error){
+            res.send({res: 'error'});
+            return;
+        }
         console.log("vote details inserted!");
+        res.send({res: 'success'});
     }
     );
 });
