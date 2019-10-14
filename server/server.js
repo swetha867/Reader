@@ -6,6 +6,10 @@ const userController = require('./routes/user');
 const lookupController = require('./routes/lookup');
 const votingController = require('./routes/vote');
 
+//logging
+var morgan = require('morgan')
+app.use(morgan('tiny'))
+
 //app.use(bodyParser()); // ??
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
