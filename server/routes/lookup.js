@@ -7,6 +7,7 @@ const router = express.Router();
 router.post('/', (req, res) => {
   var user_id = req.body.user_id;
   var book_id = req.body.book_id;
+  book_id = 1; // it was undefined.. we need to have it pulled from db
   var sentence = req.body.sentence;
   var word = req.body.word;
   if (typeof word == 'undefined' || word == '') {
@@ -25,8 +26,8 @@ router.post('/', (req, res) => {
       // Need to give dynamic value ${word}
       dic.lookupAndSave(word).then(lookedUpID => {
         updateFreq(user_id, book_id, lookedUpID, sentence)
-        console.log(`Looked up ${lookedUp}`)
-        lookupMeaning(lookedUp).then(meanings => {
+        console.log(`Looked up ${lookedUpID}`)
+        lookupMeaning(lookedUpID).then(meanings => {
           console.log(meanings);
           res.send(meanings);
         });
@@ -69,6 +70,10 @@ async function updateFreq(user_id, book_id, word_id, sentence) {
     }
     if (rows.length == 0) {
       // not added in the db. add for first time.
+      console.log(user_id);
+      console.log(book_id);
+      console.log(word_id);
+      console.log(sentence);
       db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `sentence`) VALUES (?,?,?,?) ',
       [user_id, book_id, word_id, sentence], (req,resp) => {
           console.log("vote details inserted!");
