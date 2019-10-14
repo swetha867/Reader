@@ -63,20 +63,13 @@ body {
     bottom: 2vh;
     display: block;
     font-size: 135%;
-    opacity: .5;
     color: #4f4f4f;
-    /*visibility: hidden;*/
 }
 
-
-
 #titlebar a {
-  width: 18px;
-  height: 19px;
   line-height: 20px;
   overflow: hidden;
   display: inline-block;
-  opacity: .5;
   padding: 4px;
   border-radius: 4px;
 }
