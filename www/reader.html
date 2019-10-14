@@ -113,7 +113,14 @@
       width: 40vw;
     }
 
-
+    #font-controls {
+      position: absolute;
+      bottom: 2vh;
+      right: 75px;
+      width: 50px;
+      /*margin-left: -200px;*/
+      text-align: center;
+    }
   </style>
 
 </head>
@@ -163,6 +170,10 @@
   <div id="controls">
     <input id="currentpg" size="3" maxlength="3"/> / <span id="totalpg">0</span><br/>
   </div>
+  <div id="font-controls">
+    <i id="font-small" class="fa fa-font fa-sm"></i>
+    <i id="font-big" class="fa fa-font fa-lg"></i>
+  </div>
   <div
     id="loadingscreen"><img src="img/loader.gif"><p style="text-align: center">Generating page numbers...</p><p
     style="text-align: center; font-size: small">(Only occurs when book is added for the first time.)</p></div>
@@ -177,8 +188,23 @@
 </div>
 <div class="overlay"></div>
 
-<script>
+<script type="text/javascript">
+  $( "#font-small" ).click(function() {
+    console.log("Decreasing font");
+    fontSize = parseInt(mybook.settings.styles.fontSize.slice(0, -1));
+    console.log("Current font size: " + fontSize);
+    mybook.setStyle("fontSize", (fontSize - 10) + "%");
+    mybook.generatePagination();
+  });
 
+
+  $( "#font-big" ).click(function() {
+    console.log("Increasing font");
+    fontSize = parseInt(mybook.settings.styles.fontSize.slice(0, -1));
+    console.log("Current font size: " + fontSize);
+    mybook.setStyle("fontSize", (fontSize + 10) + "%");
+    mybook.generatePagination();
+  });
 </script>
 </body>
 </html>
