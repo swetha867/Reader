@@ -222,11 +222,7 @@
         });
       });
 
-      //logout
-      $('#logout').click(function () {
-        window.localStorage.removeItem("reader_user_id");
-        window.location.href = "login.html";
-      });
+
 
       //When Add book button is clicked, the filechooser plugin opens device library
       $('#fileinput').click(function () {
@@ -345,6 +341,10 @@
 
             });
 
+      //settings
+      $('#settings').click(function () {
+        window.location.href = "settings.html";
+      });
     }
   </script>
 </head>
@@ -375,7 +375,7 @@
 
   <div id = "readerhead" data-role="header" data-position="fixed" data-tap-toggle="false">
     <h1>Reader</h1>
-    <a id="logout" data-icon="back" class="ui-btn-left">Logout</a>
+    <a id="settings" data-icon="gear" class="ui-btn-left">Settings</a>
     <a id="fileinput" data-icon="plus" class="ui-btn-right">Add Books</a>
   </div>
 
