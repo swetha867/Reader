@@ -29,18 +29,34 @@
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
 
+      // back
+      $('#backBtn').click(function () {
+        window.location.href = "home.html";
+      });
+
       //logout
       $('#logout').click(function () {
         window.localStorage.removeItem("reader_user_id");
         window.location.href = "login.html";
       });
 
-      $('#fontXS').click(function () { alert("x-small"); });
-      $('#fontS').click(function () { alert("small"); });
-      $('#fontR').click(function () { alert("regular"); });
-      $('#fontL').click(function () { alert("large"); });
-      $('#fontXL').click(function () { alert("x-large"); });
+      var currentFont = getDefaultFont();
+      $('#defaultFontSize').text(currentFont);
 
+      $('#fontXS').click(function () { setDefaultFont("xsmall"); });
+      $('#fontS').click(function () { setDefaultFont("small"); });
+      $('#fontR').click(function () { setDefaultFont("regular"); });
+      $('#fontL').click(function () { setDefaultFont("large"); });
+      $('#fontXL').click(function () { setDefaultFont("xlarge"); });
+    }
+
+    function getDefaultFont(font){
+      return window.localStorage.getItem("reader_default_font") || "regular";
+    }
+
+    function setDefaultFont(font){
+      window.localStorage.setItem("reader_default_font", font);
+      $('#defaultFontSize').text(font);
     }
   </script>
 </head>
@@ -62,13 +78,13 @@
 
   <div id = "readerhead" data-role="header" data-position="fixed" data-tap-toggle="false">
     <h1>Settings</h1>
-    <a data-icon="back" class="ui-btn-left">Back</a>
+    <a id="backBtn" data-icon="back" class="ui-btn-left">Back</a>
   </div>
   <div data-role="content">
 
 
 
-    <h3>Book Font Size:</h3>
+    <h3>Book Font Size: <span id="defaultFontSize"></span></h3>
 
     <div data-role="controlgroup" data-type="horizontal">
       <a id="fontXS" href="#" data-role="button">Extra Small</a>
