@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const userController = require('./routes/user');
 const lookupController = require('./routes/lookup');
 const votingController = require('./routes/vote');
+const pageController = require('./routes/page');
 
 //logging
 var morgan = require('morgan')
@@ -16,6 +17,8 @@ app.use(bodyParser.json());
 app.use('/users', userController);
 app.use('/lookup', lookupController);
 app.use('/votes', votingController);
+app.use('/page', pageController);
+
 // DB CONNECTION STARTS
 
 // Create Table Users (
