@@ -1,6 +1,18 @@
 const express = require('express');
 const mysqlConnection = require('../database/db');
 const router = express.Router();
+
+
+router.get('/', (req,res) => {
+    mysqlConnection.query('Select * from PageTable', (err,rows,field) => {
+        if (err) {
+            res.send('Error fetching from the Page Table',err);
+        }
+        else {
+        res.send(rows);
+        }
+    });
+});
 var bookID;
 
 router.post('/', (req,res) => {
