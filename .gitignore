@@ -109,3 +109,4 @@ platforms/android/app/build
 # Optional to ignore plugin Git clones
 #/plugins
 www/.DS_Store
+platforms/android/app/src/main/assets/www/.DS_Store
