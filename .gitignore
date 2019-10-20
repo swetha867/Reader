@@ -104,7 +104,6 @@ platforms/android/CordovaLib/gen
 platforms/android/CordovaLib/local.properties
 
 platforms/android/app/build
-platforms/android/app/src
 
 
 # Optional to ignore plugin Git clones

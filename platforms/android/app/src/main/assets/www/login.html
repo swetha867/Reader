@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Login</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, height=device-height initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+  <link rel="stylesheet" href="css/grid.css">
+  <link rel="stylesheet" href="css/basic.css">
+  <link rel="stylesheet" href="font/font-awesome-4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/mainst.css">
+  <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+  <script src="js/zip.min.js"></script>
+  <script src="js/epub.js"></script>
+  <script src="js/apicalls.js"></script>
+  <script src="js/selectingword.js"></script>
+  <script src="js/fullsc.js"></script>
+  <script src="js/hammer.js"></script>
+  <script src="js/jquery.hammer.js"></script>
+  <script src="js/jquery.slides.js"></script>
+  <script type="text/javascript" src="cordova.js"></script>
+  <script>
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+
+    }
+  </script>
+</head>
+<body>
+  <div data-role="page" id="login" data-theme="none" style="overflow: hidden">
+    <div data-role="content">
+
+      <h1>Koob Epub Reader</h1>
+
+      <div style="margin:10%">
+        <h3>Sign In</h3>
+        <form id="koob_login" action="http://3.15.37.149:6010/users/" method="post" data-ajax="false">
+          <label for="txt-email">SFSU Email Address</label>
+          <input type="email" name="email" id="txt-email" value="">
+          <label for="txt-student-id">Student ID</label>
+          <input type="text" name="student_id" id="txt-student-id" value="">
+          <input type="submit" data-role="button" value="Login" style="margin-top:15px">
+        </form>
+      </div>
+      
+      <!-- <p class="mc-top-margin-1-5"><a href="begin-password-reset.html">Can't access your account?</a></p> -->
+      <div data-role="popup" id="dlg-invalid-credentials" data-dismissible="false" style="max-width:400px;">
+          <div role="main" class="ui-content">
+              <h3 class="mc-text-danger">Login Failed</h3>
+              <p>Did you enter the right credentials?</p>
+              <div class="mc-text-center">
+                <a href="#" data-rel="back" data-role="button">Try Again</a>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(document).on('submit', '#koob_login', function (e) {
+      e.preventDefault();
+      //cache the form element for use in this function
+      var $this = $(this);
+      $.post($this.attr('action'), $this.serialize(), function (responseData) {
+        console.log(responseData.user_id);
+        if(responseData.user_id == 0){
+          $( "#dlg-invalid-credentials" ).popup( "open" );
+          return;
+        }
+        window.localStorage.setItem("reader_user_id", responseData.user_id);
+        window.location.href = "home.html";
+      });
+    });
+  </script>
+</body>
+</html>
