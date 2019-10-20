@@ -35,13 +35,10 @@
 
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
-
-      
       // back
       $('#backBtn').click(function () {
         window.location.href = "home.html";
       });
-
       //logout
       $('#logout').click(function () {
         window.localStorage.removeItem("reader_user_id");
@@ -56,7 +53,6 @@
       $('#fontL').click(function () { setDefaultFont("large"); });
       $('#fontXL').click(function () { setDefaultFont("xlarge"); });
     }
-
     function getDefaultFont(font){
       return window.localStorage.getItem("reader_default_font") || "regular";
     }
@@ -83,17 +79,12 @@
 <body>
 
 <div data-role="page" id="settings" data-theme="none" style="overflow: hidden">
-
   <div id = "readerhead" data-role="header" data-position="fixed" data-tap-toggle="false">
     <h1>Settings</h1>
     <a id="backBtn" data-icon="back" class="ui-btn-left">Back</a>
   </div>
   <div data-role="content">
-
-
-
     <h2>Book Font Size: <span id="defaultFontSize"></span></h2>
-
     <div data-role="controlgroup" data-type="horizontal">
       <a id="fontXS" href="#" data-role="button">Extra Small</a>
       <a id="fontS" href="#" data-role="button">Small</a>
@@ -107,15 +98,9 @@
       <b>Sample Text:</b> <br>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
       Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-    </div>
-    
-    
-    
+    </div> 
     <br><br>
     <input id="logout" type="button" data-role="button" value="Logout" style="margin-top:15px">
-
-
-
   </div>
 </div> <!--page1 ends-->
 </body>

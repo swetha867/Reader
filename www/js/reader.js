@@ -1,5 +1,21 @@
 EPUBJS.reader = {};
 EPUBJS.reader.plugins = {}; //-- Attach extra Controllers as plugins (like search?)
+
+
+
+function getDefaultFont(font){
+  // font sizes
+  sizes = [];
+  sizes["xsmall"] = "90%";
+  sizes["small"] = "100%";
+  sizes["regular"] = "120%";
+  sizes["large"] = "150%";
+  sizes["xlarge"] = "200%";
+
+  return sizes[window.localStorage.getItem("reader_default_font") || "regular"];
+}
+
+
 var didPan = true;
 
 (function (root, $) {
@@ -73,9 +89,17 @@ EPUBJS.Reader = function (bookPath, _options) {
     this.applySavedSettings();
   }
 
-  this.settings.styles = this.settings.styles || {
-    fontSize: "100%"
-  };
+  forceGenerate = false;
+  if(this.settings.styles.fontSize !=  getDefaultFont()){
+    forceGenerate = true;
+  }
+  this.settings.styles = {fontSize: getDefaultFont()}
+
+  // this.settings.styles = this.settings.styles || {
+  //   fontSize: "100%"
+  // };
+
+
   // Change options based on Stored Settings
   this.book = book = new EPUBJS.Book({
     bookPath: this.settings.bookPath,
@@ -130,12 +154,13 @@ EPUBJS.Reader = function (bookPath, _options) {
 
 
     // check Local storage for page List
-    if (!(typeof localStorage.getItem(localStorage.getItem('bookies')) == 'undefined') &&
+    if (!forceGenerate && !(typeof localStorage.getItem(localStorage.getItem('bookies')) == 'undefined') &&
       !(localStorage.getItem(localStorage.getItem('bookies')) == null)) {
       // If it exists load the pages from the local storage
       book.loadPagination(localStorage.getItem(localStorage.getItem('bookies')));
     }
     else {
+      console.log("Reloading pages");
       // generate the pageList
       book.ready.all.then(function () {
         book.generatePagination();
