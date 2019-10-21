@@ -103,7 +103,7 @@ EPUBJS.Reader = function (bookPath, _options) {
   }
 
   forceGenerate = false;
-  if(this.settings.styles.fontSize !=  getDefaultFont()){
+  if(this.settings.styles && this.settings.styles.fontSize !=  getDefaultFont()){
     forceGenerate = true;
   }
   this.settings.styles = {fontSize: getDefaultFont()}
