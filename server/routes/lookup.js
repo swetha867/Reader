@@ -35,13 +35,13 @@ async function handleLookup(req) {
         dic.lookupAndSave(word).then(lookedUpID => {
           updateFreq(user_id, book_id, lookedUpID, sentence)
           console.log(`Looked up ${lookedUpID}`)
-          lookupMeaning(lookedUpID).then(meanings => {
+          lookupMeaning(user_id, lookedUpID).then(meanings => {
             console.log(meanings);
             resolve(meanings);
           });
         });
       } else { // Should go in else block once the word is already saved in db
-        lookupMeaning(rows[0].id).then(meanings => {
+        lookupMeaning(user_id, rows[0].id).then(meanings => {
           console.log(meanings);
           resolve(meanings);
         });
@@ -54,14 +54,14 @@ async function handleLookup(req) {
 
 
 
-async function lookupMeaning(word_id) {
+async function lookupMeaning(user_id, word_id) {
   return new Promise(function (resolve, reject) {
-    db.query('SELECT dictionary_meanings.*, COUNT(votes.id) count, MAX(isTeacher) isTeacher ' +
+    db.query('SELECT dictionary_meanings.*, COUNT(votes.id) count, MAX(isTeacher) isTeacher,  IF(users.id=?, 1, 0) isUser ' +
       'FROM dictionary_meanings LEFT JOIN votes ' +
       'ON dictionary_meanings.id = votes.meaning_id ' +
       'LEFT JOIN users ON votes.user_id = users.id ' +
       'WHERE dictionary_meanings.word_id = ? ' +
-      'group by dictionary_meanings.id', [word_id], (err, rows, fields) => {
+      'group by dictionary_meanings.id', [user_id, word_id], (err, rows, fields) => {
         if (err) {
           console.log(`Here is the error for votes table:${err}`);
           resolve(err);
