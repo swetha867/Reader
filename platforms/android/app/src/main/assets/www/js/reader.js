@@ -290,6 +290,8 @@ EPUBJS.Reader = function (bookPath, _options) {
       if (arrayOfTimes.length == 2) {
         var downTime = backOnFocusTime - outOfFocusTime;
         var readingTime = arrayOfTimes[1] - arrayOfTimes[0] - downTime;
+        if(readingTime > 1200)
+          readingTime = 1200;
         $.ajax({
           type: "POST",
           url: "http://3.15.37.149:6010/page",
@@ -1593,7 +1595,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               try {
                 if(dictionaryData.length != 0){
                   for (var i = 0; i < dictionaryData.length; i++) {
-                      if(dictionaryData[i].isTeacher!=null){
+                      if(dictionaryData[i].isTeacher==1){
                         definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ "><label id='student' for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
                       }
                       else{
