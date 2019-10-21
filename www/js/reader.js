@@ -290,6 +290,8 @@ EPUBJS.Reader = function (bookPath, _options) {
       if (arrayOfTimes.length == 2) {
         var downTime = backOnFocusTime - outOfFocusTime;
         var readingTime = arrayOfTimes[1] - arrayOfTimes[0] - downTime;
+        if(readingTime > 1200)
+          readingTime = 1200;
         $.ajax({
           type: "POST",
           url: "http://3.15.37.149:6010/page",
