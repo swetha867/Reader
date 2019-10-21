@@ -1705,7 +1705,9 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
       var hidepope = function () {
         $('#votingForm').trigger("reset"); 
         $("#close").empty();
+        $("#close").html("<span>✖</span>");
         $("#definitions").empty();
+        $("#definitions").html("<div class='loader'></div>");
         $("#votingForm").empty();
         wrap.style.display = "none";
         cancelus.style.display = "none";
