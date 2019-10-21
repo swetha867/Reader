@@ -6,6 +6,7 @@ const userController = require('./routes/user');
 const lookupController = require('./routes/lookup');
 const votingController = require('./routes/vote');
 const pageController = require('./routes/page');
+const learningController = require('./routes/learning');
 
 //logging
 var morgan = require('morgan')
@@ -18,6 +19,7 @@ app.use('/users', userController);
 app.use('/lookup', lookupController);
 app.use('/votes', votingController);
 app.use('/page', pageController);
+app.use('/learning', learningController);
 
 // DB CONNECTION STARTS
 
