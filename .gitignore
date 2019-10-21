@@ -87,9 +87,26 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
-# App platform binaries and built files
-/platforms
+
+# iOS Platform
+platforms/ios/build/
+platforms/ios/www/
+platforms/ios/cordova/console.log
+*.xcuserdatad
+
+# Android Platform
+platforms/android/.gradle
+platforms/android/build
+platforms/android/assets/www
+platforms/android/local.properties
+platforms/android/CordovaLib/build
+platforms/android/CordovaLib/gen
+platforms/android/CordovaLib/local.properties
+
+platforms/android/app/build
+
 
 # Optional to ignore plugin Git clones
 #/plugins
 www/.DS_Store
+platforms/android/app/src/main/assets/www/.DS_Store

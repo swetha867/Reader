@@ -238,10 +238,20 @@ label {
   input[type=radio] {
     display: none;
   }
+
+  #student {
+    border: solid 1px #7c9c84;
+    background-color: #d9f2d8;
+  }
+
+  input:checked + #student {
+    border: solid 1px #6f9ca8;
+    background-color: #c9e9f2;
+  }
   
   input:checked + label {
-    border: solid 1px green;
-    background-color: #cff5c1;
+    border: solid 1px #b1b376;
+    background-color: #feffde;
   }
   
   input:checked + label:before {
@@ -255,3 +265,22 @@ label {
   input.checkbox:checked + label:before {
   content: "";
   }
+
+  .aaa {
+    display: flex;
+  }
+  
+  .aaa span {
+    padding: 2px;
+  }
+  
+  .bbb {
+    width: 90%;
+    text-align: left;
+  }
+  
+  .ccc {
+    width: 10%;
+    text-align: center;
+  }
+  

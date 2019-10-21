@@ -1,5 +1,21 @@
 EPUBJS.reader = {};
 EPUBJS.reader.plugins = {}; //-- Attach extra Controllers as plugins (like search?)
+
+
+
+function getDefaultFont(font){
+  // font sizes
+  sizes = [];
+  sizes["xsmall"] = "90%";
+  sizes["small"] = "100%";
+  sizes["regular"] = "120%";
+  sizes["large"] = "150%";
+  sizes["xlarge"] = "200%";
+
+  return sizes[window.localStorage.getItem("reader_default_font") || "regular"];
+}
+
+
 var didPan = true;
 
 (function (root, $) {
@@ -73,9 +89,17 @@ EPUBJS.Reader = function (bookPath, _options) {
     this.applySavedSettings();
   }
 
-  this.settings.styles = this.settings.styles || {
-    fontSize: "100%"
-  };
+  forceGenerate = false;
+  if(this.settings.styles.fontSize !=  getDefaultFont()){
+    forceGenerate = true;
+  }
+  this.settings.styles = {fontSize: getDefaultFont()}
+
+  // this.settings.styles = this.settings.styles || {
+  //   fontSize: "100%"
+  // };
+
+
   // Change options based on Stored Settings
   this.book = book = new EPUBJS.Book({
     bookPath: this.settings.bookPath,
@@ -117,7 +141,7 @@ EPUBJS.Reader = function (bookPath, _options) {
     var totalPages = document.getElementById("totalpg");
     var slider = document.createElement("input");
     var pageList;
-    // var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+    var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
     window.arrayOfTimes = [];
     window.arrayOfPages = [];
     var slide = function () {
@@ -130,12 +154,13 @@ EPUBJS.Reader = function (bookPath, _options) {
 
 
     // check Local storage for page List
-    if (!(typeof localStorage.getItem(localStorage.getItem('bookies')) == 'undefined') &&
+    if (!forceGenerate && !(typeof localStorage.getItem(localStorage.getItem('bookies')) == 'undefined') &&
       !(localStorage.getItem(localStorage.getItem('bookies')) == null)) {
       // If it exists load the pages from the local storage
       book.loadPagination(localStorage.getItem(localStorage.getItem('bookies')));
     }
     else {
+      console.log("Reloading pages");
       // generate the pageList
       book.ready.all.then(function () {
         book.generatePagination();
@@ -250,8 +275,29 @@ EPUBJS.Reader = function (bookPath, _options) {
       }
 
       if (arrayOfTimes.length == 2) {
+        var readingTime = arrayOfTimes[1] - arrayOfTimes[0];
+        $.ajax({
+          type: "POST",
+          url: "http://3.15.37.149:6010/page",
+          data: {
+            userID: window.localStorage.getItem("reader_user_id"),
+            page_number: arrayOfPages[0],
+            seconds: readingTime,
+            book_name: window.bookKaMeta.bookTitle,
+            author_name: window.bookKaMeta.creator 
+            
+          }, 
+          success: function(data)
+          {
+              console.log(data); 
+          },
+          complete: function (data) {
+            arrayOfTimes[0] = arrayOfTimes[1];
+            arrayOfPages[0] = arrayOfPages[1];
+          }
+        });
 
-        db.transaction(function (tx) {
+        /*db.transaction(function (tx) {
           tx.executeSql('CREATE TABLE IF NOT EXISTS PageTable (book, page, seconds)');
           var stat = "SELECT count(*) AS mycount FROM PageTable WHERE page='" + arrayOfPages[0] + "' AND book='" + book.metadata.bookTitle + "';";
           tx.executeSql(stat, [], function (tx, rs) {
@@ -277,7 +323,6 @@ EPUBJS.Reader = function (bookPath, _options) {
                 tx.executeSql("Update PageTable Set seconds = " + newtime + " WHERE" +
                   " book='" + book.metadata.bookTitle + "' AND" +
                   " page =" + arrayOfPages[0] + ";");
-                // " page ='" + arrayOfPages[0] + "';");
               }, function (error) {
                 console.log('Transaction ERROR: ' + error.message);
               }, function () {
@@ -293,7 +338,7 @@ EPUBJS.Reader = function (bookPath, _options) {
           }, function () {
             console.log('Recorded');
           });
-        });
+        });*/
       }
 
 
@@ -404,19 +449,6 @@ EPUBJS.Reader.prototype.isBookmarked = function (cfi) {
 
   return bookmarks.indexOf(cfi);
 };
-
-/*
- EPUBJS.Reader.prototype.searchBookmarked = function(cfi) {
- var bookmarks = this.settings.bookmarks,
- len = bookmarks.length,
- i;
-
- for(i = 0; i < len; i++) {
- if (bookmarks[i]['cfi'] === cfi) return i;
- }
- return -1;
- };
- */
 
 EPUBJS.Reader.prototype.clearBookmarks = function () {
   this.settings.bookmarks = [];
@@ -1339,7 +1371,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
   var ultimate = window.mybook;
   var gettingcfi = ultimate.getCurrentLocationCfi();
-  // console.log($(renderer.render.window.frameElement).parent().parent().contents());
+   console.log($(renderer.render.window.frameElement).parent().parent().contents());
   // console.log($(renderer.render.window.frameElement).parent().parent().parent().parent().parent().parent().contents());
   var mc = new Hammer(renderer.doc);
 
@@ -1379,8 +1411,9 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
       didPan = true;
     }
   });
-  //console.log($(renderer.render.window.frameElement).parent().parent().contents());
+  //$(renderer.render.window.frameElement).parent().parent().contents()[5].css( "background-color", "#BADA55" );
   var wrap = $(renderer.render.window.frameElement).parent().parent().contents()[5];
+  var closeSign = document.getElementById("close");
   var definer = $(renderer.render.window.frameElement).parent().parent().contents()[9];
   var cancelus = $(renderer.render.window.frameElement).parent().parent().contents()[11];
   var speaker = $(renderer.render.window.frameElement).parent().parent().contents()[13];
@@ -1423,14 +1456,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
   var speakless = function () {
 
     textToStop(0);
-    // TTS.speak('', function () {
-    // 	console.log('Stopped');
-    // 	setTimeout(function () {
-    // 		console.log("please dont continue")
-    // 	}, 3000);
-    // }, function (reason) {
-    // 	console.log(reason);
-    // });
 
   };
 
@@ -1510,16 +1535,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
       definer.style.display = "block";
       cancelus.style.display = "block";
 
-
-      // $('#canceler').css('display', 'block');
-
-
-      // Different alternatives to add elements to dom
-      //var division = parent.createElement("div");
-      //renderer.render.document.body.appendChild(division);
-      //item.appendChild(division);
-      //division.parentNode.innerHTML="<iframe height='300px' width='100%' src='../www/test.html'></iframe>";
-
       localStorage.word = t;
 
       var array_of_sentences = (item.innerText.split("."));
@@ -1529,7 +1544,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
         if (single.includes(t))
           localStorage.sentence = array_of_sentences[i];
       }
-
 
       var outputs = $.ajax({
         url: 'https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + t + '',
@@ -1543,8 +1557,12 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 						url: 'http://3.15.37.149:6010/lookup',
             type: 'POST', 
             data: {
-              word : t
-            }, // Additional parameters here
+              word : t,
+              user_id: window.localStorage.getItem("reader_user_id"),
+              sentence : localStorage.sentence,
+              book_name: window.bookKaMeta.bookTitle,
+              author_name: window.bookKaMeta.creator
+            }, 
             dataType: 'json',
             success: function (dictionaryData) {
 
@@ -1554,16 +1572,26 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               meanings[2] = "";
               var ogword = t;
               var definitions = '';
+              var voteDetails = '';
+              var defNotFound = 0; 
 
-              console.log(dictionaryData);
               try {
                 if(dictionaryData.length != 0){
                   for (var i = 0; i < dictionaryData.length; i++) {
-                      definitions += "<input type='radio' id="+dictionaryData[i].id+" name = 'meaningId' value="+ dictionaryData.id + "> <label for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label>";
+                      if(dictionaryData[i].isTeacher!=null){
+                        definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ "><label id='student' for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
+                      }
+                      else{
+                        definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ "><label for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
+                      }
                   }
+                  definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' checked><label for='notSure'><b>Not Sure</b></label></span></div>";
+                  definitions += "<input type='hidden' id="+dictionaryData[0].word_id+" name='word_id' value="+ dictionaryData[0].word_id+ ">";
+
                 }
                 else{
                   definitions += "<h2>Definition not found</h2>"
+                  defNotFound = 1;
                 }
 
               } catch (err) {
@@ -1572,16 +1600,28 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
               localStorage.meaning = meanings[0];
 
-              if (!$.trim(data.queryExpansions)){   
-                wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><h1><center>Image Not Found!</center></h1></div><h1>" + ogword + "</h1><div id='meaningspara'><form style='padding-left:2%'>" + definitions + "<br><br><center><input type='submit' value='Submit'></center></form></div>";
+              voteDetails += "<input type='hidden' id="+window.localStorage.getItem('reader_user_id')+" name='user_id' value="+ window.localStorage.getItem('reader_user_id')+ ">";
+              voteDetails += "<input type='hidden' id='clickedSentence' name='sentence' value="+localStorage.sentence+">";
+              voteDetails += "<input type='hidden' id='bookName' name='book_name' value="+window.bookKaMeta.bookTitle+ ">";
+              voteDetails += "<input type='hidden' id='authorName' name='author_name' value="+window.bookKaMeta.creator+ ">";
+              
+              $("#close").html("<span>✖</span>");
+              console.log(voteDetails);
+
+            if (!$.trim(data.queryExpansions)){   
+              $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1>" + ogword + "</h1>");
+              if(defNotFound != 1)
+                $("#votingForm").html(definitions + voteDetails + "<br><br><center><input type='submit' value='Vote'></center></form>");
             }
-              else{
-                wrap.innerHTML = "<span id='cross'>✖</span><div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + " width='300' height='300'/></div><h1>" + ogword.toLocaleUpperCase() + "</h1><div id='meaningspara'><form style='padding-left:2%'>" + definitions + "<br><br><center><input type='submit' value='Submit'></center></form></div>";
+            else{
+                $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + " width='300' height='300'/></div><h1>" + ogword.toLocaleUpperCase() + "</h1>");
+                if(defNotFound != 1)
+                $("#votingForm").html(definitions + voteDetails + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
               }
+
             },
             complete: function () {
               if (localStorage.meaning.length > 1 && localStorage.meaning != "Definition not found") {
-                // console.log(localStorage.meaning + "goes to db");
                 var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
 
                 db.transaction(function (tx) {
@@ -1601,8 +1641,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
                     }
                     else {
                       db.transaction(function (tx) {
-                        //tx.executeSql('DROP TABLE IF EXISTS WordsTable');
-                        // tx.executeSql('INSERT INTO WordsTable VALUES (?,?,?,?,?)', [localStorage.word, localStorage.meaning, localStorage.sentence,0,window.bookKaMeta.bookTitle]);
                         tx.executeSql("Update WordsTable Set frequency = frequency + 1 WHERE word='" + localStorage.word + "' ");
                       }, function (error) {
                         console.log('Transaction ERROR: ' + error.message);
@@ -1619,9 +1657,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
 
               }
-              console.log(localStorage.meaning);
             },
-            //beforeSend: function(){console.log("hey");},
             error: function (err) {
               console.log(err);
             }
@@ -1640,7 +1676,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
       var openwrap = function () {
 
-        // $(renderer.doc).on('click', hidepope);
         wrap.style.display = "block";
         definer.style.display = "none";
         cancelus.style.display = "none";
@@ -1657,24 +1692,42 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
       };
 
       var hidepope = function () {
-        wrap.innerHTML = "";
+        $('#votingForm').trigger("reset"); 
+        $("#close").empty();
+        $("#definitions").empty();
+        $("#votingForm").empty();
         wrap.style.display = "none";
         cancelus.style.display = "none";
         definer.style.display = "none";
         item.innerHTML = temp;
-
-        //wrap.parentNode.removeChild(wrap);
       };
 
       var clearHighlights = function () {
-        console.log("hellp");
         item.innerHTML = temp;
         cancelus.style.display = "none";
         definer.style.display = "none";
       };
 
-      // $(renderer.doc).on('click', clearHighlights);
-      //wrap.addEventListener("click", hidepope, false);
+      $("#votingForm").one('submit',function(e) {
+        e.preventDefault(); 
+        var form = $(this);
+        console.log($(this).serialize());
+        $.ajax({
+               type: "POST",
+               url: "http://3.15.37.149:6010/votes",
+               data: form.serialize(), 
+               success: function(data)
+               {
+                   alert("Vote Saved"); 
+               },
+               complete: function (data) {
+                hidepope(); 
+               }
+             });
+    });
+
+      closeSign.addEventListener("click", hidepope, false);
+
       cancelus.addEventListener("click", onCancel, false);
 
     });
@@ -1683,4 +1736,3 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
   if (callback) callback();
 };
 
-//# sourceMappingURL=reader.js.map

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Reader</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, height=device-height initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+  <link rel="stylesheet" href="css/jquery.mobile-1.2.0.min.css" />
+  <link rel="stylesheet" href="css/grid.css">
+  <link rel="stylesheet" href="css/basic.css">
+  <link rel="stylesheet" href="css/thebook.css">
+  <link rel="stylesheet" href="font/font-awesome-4.7.0/css/font-awesome.min.css">
+  <!--<link rel="stylesheet" href="css/try.css">-->
+  <link rel="stylesheet" href="css/mainst.css">
+  <script src="js/jquery-1.8.2.min.js"></script>
+  <script src="js/jquery.mobile-1.2.0.min.js"></script>
+  <!--<script src="js/jquery.mobile-1.4.5.js"></script>-->
+  <script src="js/zip.min.js"></script>
+  <script src="js/epub.js"></script>
+  <script src="js/apicalls.js"></script>
+  <script src="js/selectingword.js"></script>
+  <script src="js/fullsc.js"></script>
+  <script src="js/hammer.js"></script>
+  <script src="js/jquery.hammer.js"></script>
+  <script src="js/jquery.slides.js"></script>
+
+
+  <script type="text/javascript" src="cordova.js"></script>
+
+  <script>
+
+    //        if(localStorage.prevPage=='learning')
+    //        {
+    //          window.location.href=window.location.href= 'home';
+    //          window.location.href=window.location.href;
+    //        }
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+
+      AndroidFullScreen.showSystemUI();
+
+      // Open database to access all books in BooksTable of database
+      var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+      db.transaction(function(tx) {
+        //Get all row information from BooksTable
+        tx.executeSql('SELECT * FROM BooksTable', [], function(tx, rs) {
+          // gallery is the div in the DOM to which the frames of books are appended dynamically
+          var mydiv = document.getElementById("mydiv");
+          // Loop through each row in BooksTable
+          for(var i=0; i<rs.rows.length;i++) {
+            // Use the book name, book link, book author and book image path
+            var bname = rs.rows.item(i).name;
+            var blink = rs.rows.item(i).link;
+            var bookStatusFlag = rs.rows.item(i).flag;
+            var bookStatusAuthor = rs.rows.item(i).author;
+            var bookStatusImgPath = rs.rows.item(i).imgpath;
+            //Create the book element
+            var bookTag = document.createElement('div');
+            bookTag.className = "frame";
+            // Add name and link metadata to tag
+            bookTag.setAttribute('data-bname', bname);
+            bookTag.setAttribute('data-blink', blink);
+            if(bookStatusFlag == 0) {
+              bookTag.innerHTML = "<div data-blink='" + blink + "' class='innerText'>" + bname + "</div>";
+            }
+            else{
+              // Set the cover image of the frame from the book image path
+              bookTag.innerHTML =
+                "<div data-blink='" + blink + "'><img data-blink='" + blink +
+                "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'></div>";
+            }
+            // append the book element to the GALLERY
+            mydiv.appendChild(bookTag);
+          }
+        }, function(tx, error) {
+          console.log('SELECT error: ' + error.message);
+        });
+      });
+
+
+      function doChange(newPage) {
+//                $.mobile.changePage(newPage, {transition: "none", reloadPage: true, allowSamePageTransition: true });
+        window.location.href = newPage;
+      }
+
+
+      // Event listener on book frame
+      $(document).on('click', '.frame', function(event){
+        // Set localStorage to book path link so book tab opens with current book
+        localStorage.bookies = $(event.target).data('blink');
+        if(!(localStorage.bookies == 'undefined')) {
+          // Move to the book reader tab
+          doChange('reader.html');
+        }
+        else
+          alert("Book is not available");
+
+        $('#screener').css('display', 'block');
+        $('#readerheader').css('visibility', 'hidden');
+        $('#readerfooter').css('visibility', 'hidden');
+        AndroidFullScreen.immersiveMode();
+
+      });
+
+
+      $(document).on('click', '#gotobook', function(){
+//                $('#screener').css('display', 'block');
+        $('#readerheader').css('visibility', 'hidden');
+        $('#readerfooter').css('visibility', 'hidden');
+        AndroidFullScreen.immersiveMode();
+        doChange('reader.html')
+
+      });
+
+      function toTitleCase(str)
+      {
+        return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+      }
+
+      $('#pdfToEpub').click(function () {
+        console.log("Test pass");
+      });
+
+      //When Add book button is clicked, the filechooser plugin opens device library
+      $('#fileinput').click(function () {
+        fileChooser.open(function (furi) {
+          var suri = furi;
+          // Android Permissions are asked when required
+          var permissions = cordova.plugins.permissions;
+          permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, checkPermissionCallback, null);
+
+          function checkPermissionCallback(status) {
+            if (!status.hasPermission) {
+              var errorCallback = function () {
+                console.warn('File permission is not turned on');
+              }
+
+              permissions.requestPermission(
+                permissions.READ_EXTERNAL_STORAGE,
+                function (status) {
+                  if (!status.hasPermission) errorCallback();
+                },
+                errorCallback);
+            }
+          }
+          // The Filepath plugin is used to get path where .epub will be unzipped
+          window.FilePath.resolveNativePath(suri, function (uri) {
+            var source = uri;
+            // String manipulation to get exact path and name
+            var slash_index = uri.lastIndexOf("/") + 1;
+            var epubindex = uri.lastIndexOf(".epub");
+            var onlyname = uri.substring(slash_index, epubindex);
+            onlyname = onlyname.replace(/-/g, " ");
+            var bname = toTitleCase(onlyname);
+            //Create directory for the book in the application path, if directory already exists it is overwritten.
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory,  creatingFolder, function (error) {
+              console.log(error);
+            });
+            //This function creates the folder.
+            function creatingFolder(fileSystem) {
+              var entry = fileSystem.filesystem.root;
+              //The following function includes callback for when entry is successful.
+              entry.getDirectory(bname, {create: true, exclusive: false}, win, function (error) {
+                console.log(error);
+              });
+            }
+            //After a successful directory creation the following callback is called.
+            function win(dir) {
+              var dest = dir.nativeURL;
+              var linkname = dest;
+              // The book path and name are stored in database.
+              var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+              db.transaction(function(tx) {
+                //Checking if book is already present.
+                var statement = "SELECT count(*) AS num FROM BooksTable where name='" + bname + "'";
+                tx.executeSql('CREATE TABLE IF NOT EXISTS BooksTable (name, link, flag, author,imgpath)');
+                tx.executeSql("SELECT count(*) AS num FROM BooksTable where name='"+ bname+"'", [], function(tx,rs) {
+                  console.log(rs.rows.item(0).num);
+                  if(rs.rows.item(0).num<1)
+                  {
+                    db.transaction(function (tx) {
+                      // Insert books to BooksTable
+                      tx.executeSql('CREATE TABLE IF NOT EXISTS BooksTable (name, link, flag, author,imgpath)');
+                      tx.executeSql('INSERT INTO BooksTable VALUES (?,?,?,?,?)', [bname,
+                        linkname,0,'','']);
+                    }, function (error) {
+                      console.log('Transaction ERROR: ' + error.message);
+                    }, function () {
+                      console.log('Inserted');
+                    });
+                  }
+
+                }, function(tx, error) {
+                  console.log('SELECT error: ' + error.message);
+                });
+              });
+              //This function unzips the content of the .epub file and its callback refreshes Home page
+              zip.unzip(source, dest, zipCallback);
+
+              function zipCallback(zipEvent) {
+                if(zipEvent==0){
+                  console.log("unzipped");
+                  window.location.href=window.location.href;
+
+                }
+                else{
+                  console.log("unzip failure");
+                }
+              }
+            }
+
+          }, function (error) {
+            console.log(error);
+          });
+        }, function (errs) {
+          console.log(errs);
+        });
+      });
+
+      $('#gotolearning').click( function() {
+        localStorage.fromPage = 'home';
+        doChange('learning.html');
+      });
+      $('#gotostatistics').click( function() {
+        doChange('stats.html');
+      });
+
+            $('#drop').click(function deleteDB(){
+
+                db.transaction(function (tx) {
+                    tx.executeSql("Delete from PageTable WHERE page='1079' AND book='Moby-Dick';");
+                }, function (error) {
+                    console.log('Transaction ERROR: ' + error.message);
+                }, function () {
+                    console.log('Deleted');
+                });
+
+            });
+
+    }
+  </script>
+</head>
+
+<style>
+  body {
+    background:
+      radial-gradient(circle, transparent 20%, slategray 20%, slategray 80%, transparent 80%, transparent),
+      radial-gradient(circle, transparent 20%, slategray 20%, slategray 80%, transparent 80%, transparent) 50px 50px,
+      linear-gradient(#A8B1BB 8px, transparent 8px) 0 -4px,
+      linear-gradient(90deg, #A8B1BB 8px, transparent 8px) -4px 0;
+    background-color: slategray;
+    background-size:100px 100px, 100px 100px, 50px 50px, 50px 50px;
+
+    /*background: #e9dfc4;*/
+    /*background: -moz-linear-gradient(left, #e9dfc4 0%, #e9dfc4 1%, #ede3c8 2%, #ede3c8 24%, #ebddc3 25%, #e9dfc4 48%, #ebddc3 49%, #e6d8bd 52%, #e6d8bd 53%, #e9dbc0 54%, #e6d8bd 55%, #e6d8bd 56%, #e9dbc0 57%, #e6d8bd 58%, #e6d8bd 73%, #e9dbc0 74%, #e9dbc0 98%, #ebddc3 100%);*/
+    /*background: -webkit-gradient(linear, left top, right top, color-stop(0%, #e9dfc4), color-stop(1%, #e9dfc4), color-stop(2%, #ede3c8), color-stop(24%, #ede3c8), color-stop(25%, #ebddc3), color-stop(48%, #e9dfc4), color-stop(49%, #ebddc3), color-stop(52%, #e6d8bd), color-stop(53%, #e6d8bd), color-stop(54%, #e9dbc0), color-stop(55%, #e6d8bd), color-stop(56%, #e6d8bd), color-stop(57%, #e9dbc0), color-stop(58%, #e6d8bd), color-stop(73%, #e6d8bd), color-stop(74%, #e9dbc0), color-stop(98%, #e9dbc0), color-stop(100%, #ebddc3));*/
+    /*background: -webkit-linear-gradient(left, #e9dfc4 0%, #e9dfc4 1%, #ede3c8 2%, #ede3c8 24%, #ebddc3 25%, #e9dfc4 48%, #ebddc3 49%, #e6d8bd 52%, #e6d8bd 53%, #e9dbc0 54%, #e6d8bd 55%, #e6d8bd 56%, #e9dbc0 57%, #e6d8bd 58%, #e6d8bd 73%, #e9dbc0 74%, #e9dbc0 98%, #ebddc3 100%);*/
+    /*background: -o-linear-gradient(left, #e9dfc4 0%, #e9dfc4 1%, #ede3c8 2%, #ede3c8 24%, #ebddc3 25%, #e9dfc4 48%, #ebddc3 49%, #e6d8bd 52%, #e6d8bd 53%, #e9dbc0 54%, #e6d8bd 55%, #e6d8bd 56%, #e9dbc0 57%, #e6d8bd 58%, #e6d8bd 73%, #e9dbc0 74%, #e9dbc0 98%, #ebddc3 100%);*/
+    /*background: -ms-linear-gradient(left, #e9dfc4 0%, #e9dfc4 1%, #ede3c8 2%, #ede3c8 24%, #ebddc3 25%, #e9dfc4 48%, #ebddc3 49%, #e6d8bd 52%, #e6d8bd 53%, #e9dbc0 54%, #e6d8bd 55%, #e6d8bd 56%, #e9dbc0 57%, #e6d8bd 58%, #e6d8bd 73%, #e9dbc0 74%, #e9dbc0 98%, #ebddc3 100%);*/
+    /*background: linear-gradient(to right, #e9dfc4 0%, #e9dfc4 1%, #ede3c8 2%, #ede3c8 24%, #ebddc3 25%, #e9dfc4 48%, #ebddc3 49%, #e6d8bd 52%, #e6d8bd 53%, #e9dbc0 54%, #e6d8bd 55%, #e6d8bd 56%, #e9dbc0 57%, #e6d8bd 58%, #e6d8bd 73%, #e9dbc0 74%, #e9dbc0 98%, #ebddc3 100%);*/
+  }
+</style>
+
+<body>
+
+<div data-role="page" id="home" data-theme="none" style="overflow: hidden">
+
+  <div id = "readerhead" data-role="header" data-position="fixed" data-tap-toggle="false">
+    <h1>Reader</h1>
+    <!--<a onclick="window.location.href=window.location.href;" class="ui-btn icon-angle-right" style="margin-top:0.5em" ></a>-->
+    <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
+    <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
+    <!--<a id="drop" data-icon="refresh" class="ui-btn-left" >DROP</a>-->
+    <!--<a id="gotolearning" data-icon="refresh" class="ui-btn-left" >Refresh</a>-->
+    <a id="cloud" data-icon="refresh" class="ui-btn-left"
+       onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>
+    <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" >Refresh</a>-->
+
+    <a id="fileinput" data-icon="plus" class="ui-btn-right">Add Books</a>
+	<a id="pdfToEpub" data-icon="plus" class="">Pdf to Epub</a>
+    <!--<a id="cloud" data-icon="plus" class="ui-btn-right" onclick="window.open(encodeURI('http://maheshsinghsawant.scienceontheweb.net'),'_system');">Cloud</a>-->
+  </div>
+
+  <div data-role="content">
+
+
+    <div id="mydiv">
+
+    </div>
+
+
+
+  </div>
+  <!--the footer bar-->
+  <!--<i id="screener" class="fa fa-compress fa-2x"></i>-->
+  <div id = "readerfoot" data-role="footer" data-position="fixed" data-tap-toggle="false">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="home.html" data-transition="none">Home</a></li>
+        <li><a id="gotobook" data-transition="none" >Book</a></li>
+        <li><a id="gotostatistics" data-transition="none">Statistics
+        </a></li>
+        <li><a id="gotolearning" data-transition="none">Learning</a></li>
+        <!--<li><a onclick="doChange('learning.html');" id="learning" data-transition="none">Learning</a></li>-->
+
+      </ul>
+    </div>
+  </div>
+
+</div> <!--page1 ends-->
+
+</body>
+</html>
