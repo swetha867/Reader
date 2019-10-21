@@ -6,47 +6,7 @@ const book = require('../database/book');
 const router = express.Router();
 
 router.post('/', (req, res) => {
-
   handleLookup(req).then(results => res.send(results));
-
-
-
-  // var user_id = req.body.user_id;
-  // var book_id = req.body.book_id;
-  // book_id = 1; // it was undefined.. we need to have it pulled from db
-  // var sentence = req.body.sentence;
-  // var word = req.body.word;
-  // if (typeof word == 'undefined' || word == '') {
-  //   res.send('No word given');
-  //   return;
-  // }
-  // // first check if word exists in database
-  // db.query('SELECT * FROM dictionary_words WHERE word = ?', [word], (err, rows, fields) => {
-  //   if (err) {
-  //     console.log(`Here is the error ${err}`)
-  //     res.send(`Here is the error ${err}`);
-  //     return;
-  //   }
-  //   if (rows.length == 0) {
-  //     // Word is not in database. call the Api to insert the word.
-  //     // Need to give dynamic value ${word}
-  //     dic.lookupAndSave(word).then(lookedUpID => {
-  //       updateFreq(user_id, book_id, lookedUpID, sentence)
-  //       console.log(`Looked up ${lookedUpID}`)
-  //       lookupMeaning(lookedUpID).then(meanings => {
-  //         console.log(meanings);
-  //         res.send(meanings);
-  //       });
-  //     });
-  //   } else { // Should go in else block once the word is already saved in db
-  //     lookupMeaning(rows[0].id).then(meanings => {
-  //       console.log(meanings);
-  //       res.send(meanings);
-  //     });
-  //     updateFreq(user_id, book_id, rows[0].id, sentence)
-  //   }
-  // })
-
 })
 
 async function handleLookup(req) {
