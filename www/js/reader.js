@@ -1,7 +1,8 @@
 EPUBJS.reader = {};
 EPUBJS.reader.plugins = {}; //-- Attach extra Controllers as plugins (like search?)
 
-
+var outOfFocusTime = 0;
+var backOnFocusTime = 0;
 
 function getDefaultFont(font){
   // font sizes
@@ -13,6 +14,18 @@ function getDefaultFont(font){
   sizes["xlarge"] = "200%";
 
   return sizes[window.localStorage.getItem("reader_default_font") || "regular"];
+}
+
+document.addEventListener("pause", onPause, false);
+
+function onPause() {
+    outOfFocusTime = Math.floor(Date.now() / 1000);
+}
+
+document.addEventListener("resume", onResume, false);
+
+function onResume() {
+    backOnFocusTime = Math.floor(Date.now() / 1000);  
 }
 
 
@@ -275,7 +288,8 @@ EPUBJS.Reader = function (bookPath, _options) {
       }
 
       if (arrayOfTimes.length == 2) {
-        var readingTime = arrayOfTimes[1] - arrayOfTimes[0];
+        var downTime = backOnFocusTime - outOfFocusTime;
+        var readingTime = arrayOfTimes[1] - arrayOfTimes[0] - downTime;
         $.ajax({
           type: "POST",
           url: "http://3.15.37.149:6010/page",
@@ -294,6 +308,8 @@ EPUBJS.Reader = function (bookPath, _options) {
           complete: function (data) {
             arrayOfTimes[0] = arrayOfTimes[1];
             arrayOfPages[0] = arrayOfPages[1];
+            outOfFocusTime =0;
+            backOnFocusTime =0;
           }
         });
 
