@@ -95,7 +95,6 @@ platforms/ios/cordova/console.log
 *.xcuserdatad
 
 # Android Platform
-platforms/android/.gradle
 platforms/android/build
 platforms/android/assets/www
 platforms/android/local.properties
