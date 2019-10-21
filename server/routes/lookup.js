@@ -74,7 +74,7 @@ async function updateFreq(user_id, book_id, word_id, sentence) {
       console.log(book_id);
       console.log(word_id);
       console.log(sentence);
-      db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `sentence`) VALUES (?,?,?,?) ',
+      db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `sentence`, `updated_on`) VALUES (?,?,?,?, CURRENT_TIMESTAMP()) ',
       [user_id, book_id, word_id, sentence], (req,resp) => {
           console.log("vote details inserted!");
       }
