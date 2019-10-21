@@ -71,17 +71,11 @@
                 return (a.word > b.word) ? 1 : ((b.word > a.word) ? -1 : 0)
               });
             }
-            else if(localStorage.sortWords == 'recent'){
-              data.reverse();
-            }
             else if(localStorage.sortWords == 'frequency'){
               data.sort(function(a, b) {
               return b.freq-a.freq;
               });
             } 
-            else{
-              data.reverse();
-            }
             $.each(data, function(index,item) {        
               console.log(item.word+" "+item.meaning);
               if(item.meaning_teacher != null){
