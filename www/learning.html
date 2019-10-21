@@ -29,15 +29,6 @@
   <script type="text/javascript" src="cordova.js"></script>
 
   <script>
-
-    //      if(localStorage.fromPage == 'home')
-    //      {
-    //        localStorage.fromPage = 'learning';
-    //        window.location.href=window.location.href;
-    //      }
-
-
-
     document.addEventListener("deviceready", onDeviceReady, false);
 
     function onDeviceReady() {
@@ -67,7 +58,48 @@
         $('#frequency').addClass('ui-btn-active');
       }
 
-      var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+      $.ajax({
+          type: "POST",
+          url: "http://3.15.37.149:6010/learning",
+          data: {
+            user_id: window.localStorage.getItem("reader_user_id"),
+          }, 
+          success: function(data)
+          {
+            if(localStorage.sortWords == 'word'){
+              data.sort(function(a,b){
+                return (a.word > b.word) ? 1 : ((b.word > a.word) ? -1 : 0)
+              });
+            }
+            if(localStorage.sortWords == 'recent'){
+              data.reverse();
+            }
+            if(localStorage.sortWords == 'frequency'){
+              data.sort(function(a, b) {
+              return b.freq-a.freq;
+              });
+            } 
+            $.each(data, function(index,item) {        
+              console.log(item.word+" "+item.meaning);
+              if(item.meaning_teacher != null){
+                var content = "<div data-role='collapsible'><h3>" + item.word + "<span style='font-size:100%;color:green;''>&nbsp;&nbsp;&starf;</span></h3><p><b>Definition: </b><br/>" +
+                item.meaning + "</p><p><b>Sentence: </b><br/>" + item.sentence + "</p><p><b>Book: </b> " +
+                item.book_name + "</p><p><b>Frequency: </b> " + item.freq + "</p><p><b>Teacher's Vote: </b> " + 
+                item.meaning_teacher + "</p></div>";
+              }
+              else{
+                var content = "<div data-role='collapsible'><h3>" + item.word + "</h3><p><b>Definition: </b><br/>" +
+                item.meaning + "</p><p><b>Sentence: </b><br/>" + item.sentence + "</p><p><b>Book: </b> " +
+                item.book_name + "</p><p><b>Frequency: </b> " + item.freq + "</p></div>";
+              } 
+            $("#set").append(content).collapsibleset('refresh');
+            });
+          },
+          complete: function (data) {
+          }
+        });
+
+      /*var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
 
       db.transaction(function (tx) {
         var statementToExecute = "SELECT * FROM WordsTable";
@@ -109,7 +141,7 @@
         }, function (tx, error) {
           console.log('SELECT error: ' + error.message);
         });
-      });
+      });*/
 
       function doChange(newPage) {
 //                $.mobile.changePage(newPage, {transition: "none", reloadPage: true, allowSamePageTransition: true });
@@ -183,8 +215,8 @@
     <h1>Reader</h1>
 
     <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>-->
-    <a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>
-    <a id="deleter" data-icon="minus" class="ui-btn-right">Delete</a>
+    <!--<a id="refresh" data-icon="refresh" class="ui-btn-left" onclick="window.location.href=window.location.href;">Refresh</a>
+    <a id="deleter" data-icon="minus" class="ui-btn-right">Delete</a>-->
 
   </div>
   <div class="wrapperForBut">
