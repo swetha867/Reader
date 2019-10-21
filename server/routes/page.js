@@ -15,6 +15,32 @@ router.get('/', (req,res) => {
 });
 var bookID;
 
+router.post('/statistics', (req,res) => {
+    var userID = req.body.userID;
+    var book_name = req.body.book_name;
+    var author_name = req.body.author_name;
+
+    mysqlConnection.query('Select id from books where book_name=? and author_name=?;', [book_name,author_name], (err,result,fields) => {
+        if (err) {
+            res.send('error in selecting book id for stats call',err);
+        }
+        if (result.length === 0) {
+            res.send('Book not in the database');
+        }
+        else {
+            console.log(result[0].id);
+            mysqlConnection.query('Select * from PageTable where user_id=? and book_id=?;',[userID,result[0].id], (err,result,fields) => {
+                if (err) {
+                    res.send('Error getting page stats for book',err);
+                }
+                else {
+                    res.send(result);
+                }
+            })
+        }
+    })
+})
+
 router.post('/', (req,res) => {
    
     var userID = req.body.userID;
