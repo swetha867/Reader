@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
   FROM votes v1 
   JOIN books ON book_id = books.id
   JOIN dictionary_words ON word_id = dictionary_words.id
-  JOIN dictionary_meanings ON meaning_id = dictionary_meanings.id
+  LEFT OUTER JOIN dictionary_meanings ON meaning_id = dictionary_meanings.id
   WHERE user_id = ?
   /* HAVING meaning <>  meaning_teacher */
   ORDER BY updated_on DESC`, [user_id], (err, rows, fields) => {
