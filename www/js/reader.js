@@ -1588,7 +1588,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               meanings[2] = "";
               var ogword = t;
               var definitions = '';
-              var voteDetails = '';
               var defNotFound = 0; 
 
               try {
@@ -1616,23 +1615,17 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
               localStorage.meaning = meanings[0];
 
-              voteDetails += "<input type='hidden' id="+window.localStorage.getItem('reader_user_id')+" name='user_id' value="+ window.localStorage.getItem('reader_user_id')+ ">";
-              voteDetails += "<input type='hidden' id='clickedSentence' name='sentence' value="+localStorage.sentence+">";
-              voteDetails += "<input type='hidden' id='bookName' name='book_name' value="+window.bookKaMeta.bookTitle+ ">";
-              voteDetails += "<input type='hidden' id='authorName' name='author_name' value="+window.bookKaMeta.creator+ ">";
-              
               $("#close").html("<span>✖</span>");
-              console.log(voteDetails);
 
             if (!$.trim(data.queryExpansions)){   
               $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1>" + ogword + "</h1>");
               if(defNotFound != 1)
-                $("#votingForm").html(definitions + voteDetails + "<br><br><center><input type='submit' value='Vote'></center></form>");
+                $("#votingForm").html(definitions  + "<br><br><center><input type='submit' value='Vote'></center></form>");
             }
             else{
                 $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + " width='300' height='300'/></div><h1>" + ogword.toLocaleUpperCase() + "</h1>");
                 if(defNotFound != 1)
-                $("#votingForm").html(definitions + voteDetails + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
+                $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
               }
 
             },
@@ -1726,12 +1719,23 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
       $("#votingForm").one('submit',function(e) {
         e.preventDefault(); 
-        var form = $(this);
-        console.log($(this).serialize());
+        var result = { };
+        $.each($(this).serializeArray(), function() {
+            result[this.name] = this.value;
+        });
+
+      console.log('meaning = ' + result.meaning_id + ', Word Id = ' + result.word_id);
         $.ajax({
                type: "POST",
                url: "http://3.15.37.149:6010/votes",
-               data: form.serialize(), 
+               data: {
+                 user_id: window.localStorage.getItem('reader_user_id'),
+                 meaning_id: result.meaning_id,
+                 word_id: result.word_id,
+                 sentence: localStorage.sentence,
+                 book_name: window.bookKaMeta.bookTitle,
+                 author_name: window.bookKaMeta.creator
+               }, 
                success: function(data)
                {
                    alert("Vote Saved"); 
