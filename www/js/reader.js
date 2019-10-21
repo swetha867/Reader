@@ -275,8 +275,29 @@ EPUBJS.Reader = function (bookPath, _options) {
       }
 
       if (arrayOfTimes.length == 2) {
+        var readingTime = arrayOfTimes[1] - arrayOfTimes[0];
+        $.ajax({
+          type: "POST",
+          url: "http://3.15.37.149:6010/page",
+          data: {
+            userID: window.localStorage.getItem("reader_user_id"),
+            page_number: arrayOfPages[0],
+            seconds: readingTime,
+            book_name: window.bookKaMeta.bookTitle,
+            author_name: window.bookKaMeta.creator 
+            
+          }, 
+          success: function(data)
+          {
+              console.log(data); 
+          },
+          complete: function (data) {
+            arrayOfTimes[0] = arrayOfTimes[1];
+            arrayOfPages[0] = arrayOfPages[1];
+          }
+        });
 
-        db.transaction(function (tx) {
+        /*db.transaction(function (tx) {
           tx.executeSql('CREATE TABLE IF NOT EXISTS PageTable (book, page, seconds)');
           var stat = "SELECT count(*) AS mycount FROM PageTable WHERE page='" + arrayOfPages[0] + "' AND book='" + book.metadata.bookTitle + "';";
           tx.executeSql(stat, [], function (tx, rs) {
@@ -317,7 +338,7 @@ EPUBJS.Reader = function (bookPath, _options) {
           }, function () {
             console.log('Recorded');
           });
-        });
+        });*/
       }
 
 
@@ -1703,7 +1724,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
                 hidepope(); 
                }
              });
-             return false;
     });
 
       closeSign.addEventListener("click", hidepope, false);
