@@ -4,7 +4,7 @@ EPUBJS.reader.plugins = {}; //-- Attach extra Controllers as plugins (like searc
 var outOfFocusTime = 0;
 var backOnFocusTime = 0;
 
-function getDefaultFont(font){
+function getDefaultFont(){
   // font sizes
   sizes = [];
   sizes["xsmall"] = "90%";
@@ -216,7 +216,7 @@ EPUBJS.Reader = function (bookPath, _options) {
 
             var lastIndexOfImgTag = imgPartText.indexOf('"');
             var finalImgPath = baseBookUrlPath + imgPartText.substr(0, lastIndexOfImgTag);
-            console.log(finalImgPath);
+            console.log("Image Path "+finalImgPath);
             var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
             db.transaction(function (tx) {
               tx.executeSql("Update BooksTable Set name ='" + window.bookKaMeta.bookTitle + "' WHERE link='" + localStorage.bookies + "' ");
@@ -297,7 +297,8 @@ EPUBJS.Reader = function (bookPath, _options) {
             page_number: arrayOfPages[0],
             seconds: readingTime,
             book_name: window.bookKaMeta.bookTitle,
-            author_name: window.bookKaMeta.creator 
+            author_name: window.bookKaMeta.creator,
+            font_size: getDefaultFont()
             
           }, 
           success: function(data)
