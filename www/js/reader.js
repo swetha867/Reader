@@ -213,16 +213,14 @@ EPUBJS.Reader = function (bookPath, _options) {
               imgSrcIndex = fulltext.lastIndexOf("xlink:href=");
               imgPartText = fulltext.substr(imgSrcIndex + 12, fulltext.length);
             }
-            // console.log(imgPartText);
 
-            // console.log(imgPartText);
             var lastIndexOfImgTag = imgPartText.indexOf('"');
             var finalImgPath = baseBookUrlPath + imgPartText.substr(0, lastIndexOfImgTag);
             console.log(finalImgPath);
             var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
             db.transaction(function (tx) {
-              tx.executeSql("Update BooksTable Set name ='" + book.metadata.bookTitle + "' WHERE link='" + localStorage.bookies + "' ");
-              tx.executeSql("Update BooksTable Set author ='" + book.metadata.bookTitle + "' WHERE link='" + localStorage.bookies + "' ");
+              tx.executeSql("Update BooksTable Set name ='" + window.bookKaMeta.bookTitle + "' WHERE link='" + localStorage.bookies + "' ");
+              tx.executeSql("Update BooksTable Set author ='" + window.bookKaMeta.creator + "' WHERE link='" + localStorage.bookies + "' ");
               tx.executeSql("Update BooksTable Set imgpath ='" + finalImgPath + "' WHERE link='" + localStorage.bookies + "' ");
               tx.executeSql("Update BooksTable Set flag = 1 WHERE link='" + localStorage.bookies + "' ");
             }, function (error) {
@@ -230,7 +228,6 @@ EPUBJS.Reader = function (bookPath, _options) {
             }, function () {
               console.log('Changed name');
             });
-
             // console.log("Text is: " + this.result);
           };
 
