@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 6010;
+const session = require('express-session');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 
@@ -26,6 +27,15 @@ app.set('views', './views');
 
 
 // Auth
+// use express session
+app.use(
+  session({
+    secret: 'KoobProject123',
+    saveUninitialized: false,
+    resave: false,
+  }),
+);
+
 require('./config/passport.js')(app);
 
 passport.serializeUser((user, done) => {

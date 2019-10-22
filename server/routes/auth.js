@@ -32,7 +32,15 @@ authRouter.route('/logout')
 
   authRouter.route('/success')
   .get((req, res) => {
-    res.send(req.body.user);
+    if(!req.isAuthenticated()){
+      res.redirect('/auth/login');
+      return;
+    }
+    if(req.user.isTeacher === 1){
+      res.redirect('/instructor/students');
+    }else{
+      res.redirect('/dash');
+    }
   });
 
 module.exports = authRouter;
