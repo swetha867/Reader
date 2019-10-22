@@ -1,0 +1,22 @@
+<% include partials/head %>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Student ID</th>
+        <th scope="col">Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(var i=0; i < students.length; i++) { %>
+      <tr>
+        <th scope="row"><%= students[i].id %></th>
+        <td><%= students[i].email %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+
+
+<% include partials/foot %>
