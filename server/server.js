@@ -8,6 +8,9 @@ const votingController = require('./routes/vote');
 const pageController = require('./routes/page');
 const learningController = require('./routes/learning');
 const instController = require('./routes/inst');
+const passport = require('passport');
+
+
 
 
 //logging
@@ -17,6 +20,32 @@ app.use(morgan('tiny'))
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
+
+
+// Auth
+require('./config/passport.js')(app);
+
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+passport.deserializeUser((id, done) => {
+    done(null, id);
+});
+
+function authProtectInst(req, res, next) {
+    if (req.isAuthenticated()) {
+      if (req.user.isTeacher !== 1) {
+        res.redirect('/auth/logout');
+      } else {
+        next();
+      }
+    } else {
+      res.redirect('/auth/login');
+    }
+  }
+
+
 //app.use(bodyParser()); // ??
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -25,7 +54,7 @@ app.use('/lookup', lookupController);
 app.use('/votes', votingController);
 app.use('/page', pageController);
 app.use('/learning', learningController);
-app.use('/instructor', instController);
+app.use('/instructor', authProtectInst, instController);
 
 
 
