@@ -7,10 +7,15 @@ const lookupController = require('./routes/lookup');
 const votingController = require('./routes/vote');
 const pageController = require('./routes/page');
 const learningController = require('./routes/learning');
+const instController = require('./routes/inst');
+
 
 //logging
 var morgan = require('morgan')
 app.use(morgan('tiny'))
+
+app.set('view engine', 'ejs');
+app.set('views', './views');
 
 //app.use(bodyParser()); // ??
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -20,6 +25,9 @@ app.use('/lookup', lookupController);
 app.use('/votes', votingController);
 app.use('/page', pageController);
 app.use('/learning', learningController);
+app.use('/instructor', instController);
+
+
 
 // DB CONNECTION STARTS
 
