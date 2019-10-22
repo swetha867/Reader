@@ -59,24 +59,55 @@ router.post('/', (req,res) => {
                     res.send('Error is in inserting book name and author of that book', err);
                 }
                 bookID = result.insertId;
-                mysqlConnection.query('Insert into PageTable (`user_id`,`book_id`,`page_number`,`seconds`) VALUES (?,?,?,?);', [userID, bookID, page_number, seconds], (err, result, fields) => {
+                mysqlConnection.query(`Select id from PageTable where user_id=? and book_id=? and page_number=?`,[userID,bookID,page_number], (err,result,fields) => {
                     if (err) {
-                        res.send('Error in inserting the page statistics', err);
+                        res.send('Error getting id from pagetable', err);
                     }
-                    else {
-                        res.send('Page stats are inserted successfully');
+                    if (result.length !== 0) {
+                        mysqlConnection.query('Insert into PageTable (`user_id`,`book_id`,`page_number`,`seconds`) VALUES (?,?,?,?);', [userID, bookID, page_number, seconds], (err, result, fields) => {
+                            if (err) {
+                                res.send('Error in inserting the page statistics', err);
+                            }
+                            else {
+                                res.send('Page stats are inserted successfully');
+                            }
+                        });
                     }
-                });
+                    else if (result.length === 0) {
+                        mysqlConnection.query(`Update PageTable set seconds=seconds + ${seconds}`, (err,result,fields) => {
+                            if (err) {
+                                res.send(`Error in updating the Page Table seconds with ${err}`);
+                            }
+                            res.send(result);
+                        })
+                    }
+                })
             });
         }
         else if (result.length !== 0) {
             bookID = result[0].id;
-            mysqlConnection.query('Insert into PageTable (`user_id`,`book_id`,`page_number`,`seconds`) VALUES (?,?,?,?);', [userID, bookID, page_number, seconds], (err, result, fields) => {
+            mysqlConnection.query(`Select id from PageTable where user_id=? and book_id=? and page_number=?`,[userID,bookID,page_number], (err,result,fields) => {
                 if (err) {
-                    res.send('Error in inserting the page statistics', err);
+                    res.send('Error getting id from pagetable', err);
                 }
-                else {
-                    res.send('Page stats are inserted successfully');
+                if (result.length === 0) {
+                    mysqlConnection.query('Insert into PageTable (`user_id`,`book_id`,`page_number`,`seconds`) VALUES (?,?,?,?);', [userID, bookID, page_number, seconds], (err, result, fields) => {
+                        if (err) {
+                            res.send('Error in inserting the page statistics', err);
+                        }
+                        else {
+                            res.send('Page stats are inserted successfully');
+                        }
+                    });
+                }
+                else if (result.length !== 0) {
+                    var id = result[0].id;
+                    mysqlConnection.query(`Update PageTable set seconds = seconds + ${seconds} where id = ${id} `, (err,result,fields) => {
+                        if (err) {
+                            res.send(`Error in updating the Page Table seconds with ${err}`);
+                        }
+                        res.send('Seconds updated');
+                    })
                 }
             });
         }
