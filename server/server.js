@@ -70,7 +70,7 @@ app.use('/instructor', authProtectInst, instController);
 app.use('/auth/', authController);
 
 app.get('/', (req,res) => {
-    res.send('Hello world');
+  res.render('index');
 });
 
 app.listen(port,  () => {

@@ -1,0 +1,29 @@
+<% include partials/head %>
+<% for(var i=0; i < votes.length; i++) { 
+    meanings = JSON.parse('[' + votes[i].meanings + ']');
+
+    %>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title"><%= votes[i].word %></h5>
+        <p class="card-text"><%= votes[i].sentence %></p>
+        <ul>
+            <% for(var j=0; j < meanings.length; j++) { %>
+            <li>[<%= meanings[j].fl %>] <%= meanings[j].meaning %>
+            <button onclick="vote(1,2)">Select</button>
+            </li>
+            <% } %>
+
+        </ul>
+
+
+
+    </div>
+</div>
+<% } %>
+<script type="text/javascript">
+    function vote(word_id, meaning_id){
+        alert(word_id + " "  + meaning_id);
+    }
+</script>
+<% include partials/foot %>

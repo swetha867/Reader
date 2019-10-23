@@ -37,9 +37,9 @@ authRouter.route('/logout')
       return;
     }
     if(req.user.isTeacher === 1){
-      res.redirect('/instructor/students');
+      res.redirect('/instructor/');
     }else{
-      res.redirect('/dash');
+      res.redirect('/student/');
     }
   });
 
