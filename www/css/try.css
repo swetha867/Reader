@@ -107,7 +107,7 @@
     height: 75%;
     background: #ffffff;
     border-radius: 1px;
-    outline: 1px solid lightgray;
+    outline: 3px solid gray;
     overflow-y: auto;
 }
 

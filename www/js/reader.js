@@ -1593,6 +1593,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               var ogword = t;
               var definitions = '';
               var defNotFound = 0; 
+              var recheck =0;
 
               try {
                 if(dictionaryData.length != 0){
@@ -1600,11 +1601,20 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
                       if(dictionaryData[i].isTeacher==1){
                         definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ "><label id='student' for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
                       }
+                      else if(dictionaryData[i].isUser == 1){
+                        definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ " checked><label for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
+                        recheck = 1;
+                      }
                       else{
                         definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ "><label for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
                       }
                   }
-                  definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' checked><label for='notSure'><b>Not Sure</b></label></span></div>";
+                  if(recheck == 1 ){
+                    definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' ><label for='notSure'><b>Not Sure</b></label></span></div>";
+                  }
+                  else{
+                    definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' checked><label for='notSure'><b>Not Sure</b></label></span></div>";
+                  }
                   definitions += "<input type='hidden' id="+dictionaryData[0].word_id+" name='word_id' value="+ dictionaryData[0].word_id+ ">";
 
                 }
@@ -1622,12 +1632,12 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               $("#close").html("<span>✖</span>");
 
             if (!$.trim(data.queryExpansions)){   
-              $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1>" + ogword + "</h1>");
+              $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 style='padding-left:20px'>" + ogword + "</h1>");
               if(defNotFound != 1)
                 $("#votingForm").html(definitions  + "<br><br><center><input type='submit' value='Vote'></center></form>");
             }
             else{
-                $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + " width='300' height='300'/></div><h1>" + ogword.toLocaleUpperCase() + "</h1>");
+                $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + " width='300' height='300'/></div><h1 style='padding-left:20px'>" + ogword.toLocaleUpperCase() + "</h1>");
                 if(defNotFound != 1)
                 $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
               }
