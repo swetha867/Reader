@@ -203,20 +203,24 @@ EPUBJS.Reader = function (bookPath, _options) {
 
           reader.onloadend = function (e) {
             var fulltext = this.result;
-            // console.log(fulltext);
+             //console.log("Fulltext "+fulltext);
             var getUrlPathOfBook = window.mybook.spine[0].url;
             var lastIndexofSlash = getUrlPathOfBook.lastIndexOf('/');
             var baseBookUrlPath = getUrlPathOfBook.substr(0, lastIndexofSlash + 1);
-            var imgSrcIndex = fulltext.lastIndexOf("<img src=");
-            var imgPartText = fulltext.substr(imgSrcIndex + 10, fulltext.length);
+            var imgSrcIndex = fulltext.indexOf("src=");
+            //var imgPartText = fulltext.substr(imgSrcIndex + 10, fulltext.length);
+            var regex = /<img.*?src=['"](.*?)['"]/;
+            var imgPartText;
             if (imgSrcIndex == -1) {
               imgSrcIndex = fulltext.lastIndexOf("xlink:href=");
               imgPartText = fulltext.substr(imgSrcIndex + 12, fulltext.length);
             }
+            else{
+              imgPartText = regex.exec(fulltext)[1]+'"';
+            }
 
             var lastIndexOfImgTag = imgPartText.indexOf('"');
             var finalImgPath = baseBookUrlPath + imgPartText.substr(0, lastIndexOfImgTag);
-            console.log("Image Path "+finalImgPath);
             var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
             db.transaction(function (tx) {
               tx.executeSql("Update BooksTable Set name ='" + window.bookKaMeta.bookTitle + "' WHERE link='" + localStorage.bookies + "' ");
