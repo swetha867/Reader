@@ -1433,7 +1433,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
   });
   //$(renderer.render.window.frameElement).parent().parent().contents()[5].css( "background-color", "#BADA55" );
   var wrap = $(renderer.render.window.frameElement).parent().parent().contents()[5];
-  var closeSign = document.getElementById("close");
   var definer = $(renderer.render.window.frameElement).parent().parent().contents()[9];
   var cancelus = $(renderer.render.window.frameElement).parent().parent().contents()[11];
   var speaker = $(renderer.render.window.frameElement).parent().parent().contents()[13];
@@ -1715,12 +1714,13 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
       };
 
       var hidepope = function () {
-        $('#votingForm').trigger("reset"); 
+        $( "#votingForm" ).unbind();
         $("#close").empty();
         $("#close").html("<span>✖</span>");
         $("#definitions").empty();
         $("#definitions").html("<div class='loader'></div>");
         $("#votingForm").empty();
+        $("#votingForm").html();
         wrap.style.display = "none";
         cancelus.style.display = "none";
         definer.style.display = "none";
@@ -1762,7 +1762,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
              });
     });
 
-      closeSign.addEventListener("click", hidepope, false);
+      document.getElementById("close").addEventListener("click", hidepope, false);
 
       cancelus.addEventListener("click", onCancel, false);
 
