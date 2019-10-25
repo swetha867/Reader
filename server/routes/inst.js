@@ -20,7 +20,25 @@ async function getStudents(req, res){
       res.render('inst/students', { students: rows});
     }
   })
+}
 
+router.post('/vote', (req, res) => {
+  postVote(req, res);
+})
+
+async function postVote(req, res){
+  var vote_id = req.body.vote_id;
+  var meaning_id = req.body.meaning_id;
+
+  db.query(`INSERT INTO votes (user_id, book_id, word_id, meaning_id, sentence, freq, updated_on)
+  SELECT  ?, book_id, word_id, ?, sentence, 1, CURRENT_TIMESTAMP() FROM votes v2 WHERE v2.id = ? `,
+   [req.user.id, meaning_id, vote_id], (err, rows, fields) => {
+    if (err) {
+      res.send(err);
+    }else{
+      res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id});
+    }
+  });
 }
 
 
