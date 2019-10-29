@@ -30,17 +30,52 @@ async function postVote(req, res){
   var vote_id = req.body.vote_id;
   var meaning_id = req.body.meaning_id;
 
-  db.query(`INSERT INTO votes (user_id, book_id, word_id, meaning_id, sentence, freq, updated_on)
-  SELECT  ?, book_id, word_id, ?, sentence, 1, CURRENT_TIMESTAMP() FROM votes v2 WHERE v2.id = ? `,
-   [req.user.id, meaning_id, vote_id], (err, rows, fields) => {
-    if (err) {
-      res.send(err);
-    }else{
-      res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id});
-    }
-  });
+  // check if exists
+  var existing_id = await getVoteId(vote_id, req.user.id);
+  if(existing_id > 0){ // update
+    db.query(`UPDATE votes SET meaning_id = ? WHERE id = ?`,
+     [meaning_id, existing_id], (err, rows, fields) => {
+      if (err) {
+        res.send(err);
+      }else{
+        res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id});
+      }
+    });
+  }else{ // insert
+    db.query(`INSERT INTO votes (user_id, book_id, word_id, meaning_id, sentence, freq, updated_on)
+    SELECT  ?, book_id, word_id, ?, sentence, 1, CURRENT_TIMESTAMP() FROM votes v2 WHERE v2.id = ? `,
+     [req.user.id, meaning_id, vote_id], (err, rows, fields) => {
+      if (err) {
+        res.send(err);
+      }else{
+        res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id});
+      }
+    });
+  }
 }
 
+
+async function getVoteId(vote_id, user_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT v1.id FROM votes v1 JOIN votes v2
+    ON v1.book_id = v2.book_id
+    AND v1.word_id = v2.word_id
+    AND v1.sentence = v2.sentence
+    WHERE v2.id = ?
+    AND v1.user_id = 2`, [vote_id, user_id], (err, rows, fields) => {
+        if (err) {
+          console.log(`Here is the error for votes table:${err}`);
+          resolve(-1);
+          return;
+        }
+        if(rows.length == 0){
+          resolve(0);
+          return;
+        }
+        resolve(rows[0].id);
+      })
+  });
+}
 
 router.get('/vote', (req, res) => {
   getVote(req, res);
@@ -75,13 +110,15 @@ async function getAllBooks() {
 async function getVotesForBook(book_id) {
   return new Promise(function (resolve, reject) {
     db.query(`SELECT v.id vote_id, v.word_id, word, sentence,
-    GROUP_CONCAT(CONCAT('{"id":"', dm.id, '", "fl":"',dm.fl,'", "meaning":"',dm.meaning,'"}')) meanings
+    GROUP_CONCAT(CONCAT('{"id":"', dm.id, '", "fl":"',dm.fl,'", "meaning":"',dm.meaning,'"}')) meanings,
+    (SELECT meaning_id FROM votes vt JOIN users vu ON vt.user_id = vu.id WHERE vu.isTeacher = 1 AND v.word_id = vt.word_id AND v.sentence = vt.sentence AND v.book_id = vt.book_id ORDER BY meaning_id DESC LIMIT 0,1) meaning_teacher
     FROM votes v 
     JOIN dictionary_meanings dm ON v.word_id = dm.word_id
     JOIN dictionary_words dw ON dw.id = dm.word_id
     WHERE v.meaning_id = 0 
     AND v.book_id = ?
-    GROUP BY v.word_id;`, [book_id],
+    GROUP BY v.word_id
+    HAVING meaning_teacher IS NULL;`, [book_id],
     (err, rows, fields) => {
       if (err) {
         resolve(null);
