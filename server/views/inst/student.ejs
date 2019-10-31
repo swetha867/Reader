@@ -1,22 +1,21 @@
 <% include partials/head %>
+  <h3>Words by student <%= user_id %> <br>
+    <small>Total words: <%= votes.length %></small>
+  </h3>
 
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Student ID</th>
-        <th scope="col">Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% for(var i=0; i < students.length; i++) { %>
-      <tr>
-        <th scope="row"><%= students[i].id %></th>
-        <td><%= students[i].email %></td>
-      </tr>
-      <% } %>
-    </tbody>
-  </table>
-
-
+  <div class="card" style="margin-bottom: 50px;">
+    <div class="card-body">
+        <% for(var i=0; i < votes.length; i++) { %>
+            <div>
+                <h4 class="card-text"><%= votes[i].word %></h4>
+                <p class="card-text"><b>Book:</b> <%= votes[i].book_name %></p>
+                <p class="card-text"><b>Sentence:</b> <%= votes[i].sentence %></p>
+                <p class="card-text"><b>Selected Meaning:</b> <%= votes[i].meaning %></p>
+                <p class="card-text"><b>Time:</b> <%= votes[i].updated_on %></p>
+            </div>
+            <hr>
+        <% } %>
+    </div>
+</div>
 
 <% include partials/foot %>

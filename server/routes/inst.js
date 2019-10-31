@@ -8,19 +8,7 @@ router.get('/', (req, res) => {
   res.render('inst/index');
 })
 
-router.get('/students', (req, res) => {
-  getStudents(req, res);
-})
 
-async function getStudents(req, res){
-  db.query('SELECT * FROM users', [], (err, rows, fields) => {
-    if (err) {
-      res.send(err);
-    }else{
-      res.render('inst/students', { students: rows});
-    }
-  })
-}
 
 router.post('/vote', (req, res) => {
   postVote(req, res);
@@ -165,6 +153,57 @@ async function getPendingVotesForBook(book_id) {
     AND v.book_id = ?
     GROUP BY v.word_id
     HAVING meaning_teacher IS NULL;`, [book_id],
+    (err, rows, fields) => {
+      if (err) {
+        resolve(null);
+        return;
+      }else{
+        resolve(rows);
+        return;
+      }
+    })
+  });
+}
+
+/**
+ * GET /students
+ * List of all students
+ */
+router.get('/students', (req, res) => {
+  getStudents(req, res);
+})
+
+async function getStudents(req, res){
+  db.query('SELECT * FROM users', [], (err, rows, fields) => {
+    if (err) {
+      res.send(err);
+    }else{
+      res.render('inst/students', { students: rows});
+    }
+  })
+}
+
+/**
+ * GET /student
+ * History of instructor votes
+ */
+router.get('/student/:userId', (req, res) => {
+  getStudent(req, res);
+})
+
+async function getStudent(req, res){
+  const votes = await getStudentVotes(req.params.userId);
+  res.render('inst/student', {user_id: req.params.userId, votes: votes});
+}
+
+async function getStudentVotes(student_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT v.word_id, book_name, word, sentence, meaning, updated_on
+    FROM votes v 
+    JOIN books b ON v.book_id = b.id
+    JOIN dictionary_meanings dm ON v.word_id = dm.word_id
+    JOIN dictionary_words dw ON dw.id = dm.word_id
+    WHERE v.user_id = ?;`, [student_id],
     (err, rows, fields) => {
       if (err) {
         resolve(null);
