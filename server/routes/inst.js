@@ -139,6 +139,7 @@ async function getVotesForBook(user_id, book_id) {
     JOIN dictionary_words dw ON dw.id = dm.word_id
     WHERE v.user_id = ?
     AND v.book_id = ?
+    AND meaning_id != 0 AND meaning_id IS NOT NULL
     GROUP BY v.word_id;`, [user_id, book_id],
     (err, rows, fields) => {
       if (err) {
