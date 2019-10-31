@@ -12,9 +12,7 @@ const pageController = require('./routes/page');
 const learningController = require('./routes/learning');
 const instController = require('./routes/inst');
 const authController = require('./routes/auth');
-
-
-
+const studentSurveyController = require('./routes/student');
 
 
 //logging
@@ -67,7 +65,10 @@ app.use('/votes', votingController);
 app.use('/page', pageController);
 app.use('/learning', learningController);
 app.use('/instructor', authProtectInst, instController);
+
 app.use('/auth/', authController);
+
+app.use('/student', studentSurveyController);
 
 app.get('/', (req,res) => {
   res.render('index');

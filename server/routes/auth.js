@@ -39,7 +39,7 @@ authRouter.route('/logout')
     if(req.user.isTeacher === 1){
       res.redirect('/instructor/');
     }else{
-      res.redirect('/student/');
+      res.redirect(`/student/${req.user.id}`);
     }
   });
 

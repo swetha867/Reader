@@ -1,0 +1,94 @@
+<% var question1='Below is a list of the words that you looked up during this week. If you were reading a  traditional book, do you think you would have looked up all of these words in a dictionary or dictionary app or Web page?' %>
+<% var question1_sub='How many would you have skipped by guessing? Please mark (L) for words you would look up in a dictionary or (S) for words you would skip.'; %>
+<% var question2='Among the words you looked up during this week, please mark words that you understood more clearly because of the '; %>
+<% var question2_sub='images displayed by the app.' %>
+<% var question3='Among the words you looked up during this week, please mark words that you understood more clearly because of '; %>
+<% var question3_sub='the votes by other readers on the closest meaning.' %>
+<% var question4='When you looked up the definition with a simple touch, did that help your reading comprehension more than guessing the meaning and moving on?'; %>
+<% var question5=`How do you like seeing other teacher's and reader's votes on definitions for words with multiple definitions?`; %>
+<% var question6='Overall Reading Experience In what ways is your reading experience different using Koob than with a paper book or PDF file on your computer?  (For example, does it feel different to you? Do you read differently in some ways? Do you look up more words? Please explain.) If your answer is different from last week as you use more, please tell us about it.'; %>
+<% var question7='Check the app and look at the stastics feature where you can see the time spent on each page. Reading Speed and Time Spent Per Page How accurately does the  Koob information on your reading time spent per page reflect how you actually read this book?   In what ways, if any, does it seem to be inaccurate?'; %>
+<% var question8='Provide feedback for the application which can have impact on user experience'; %>
+
+<% include ../inst/partials/head %>
+    <style>
+        .feedback-text {
+            width:100%;
+        }
+        .survey-footer-buttons {
+            float: right;
+            margin: 3% 0%;
+        }
+        .question1_options {
+            float: right;
+            margin-right: 70%;
+        }
+    </style>
+
+    <div class="student-survey-block">
+       <form class="student-survey-form" method="POST" action="/student/<%= id%>/survey">
+            <div>
+               Q:1) <%= question1 %> <strong><%= question1_sub %></strong> <br>
+               <% for (var i in wordsList) {%>
+                <li>
+                    <%= wordsList[i].word %>
+                    <span class="question1_options">
+                        <input type="radio" name="Q1:<%= wordsList[i].word %>" value="Lookedup"> Lookedup </input>
+                        &nbsp;&nbsp;
+                        <input type="radio" name="Q1:<%= wordsList[i].word %>"  value="Skip"> Skip </input>
+                    </span>
+                </li>
+            <%} %>
+            </div>
+            <div>
+                Q:2) <%= question2 %> <strong><%= question2_sub %></strong><br>
+                <% for (var i in wordsList) {%>
+                <li>
+                    <input type="checkbox"  name="Q2:<%= wordsList[i].word %>" value=<%= wordsList[i].word %> />
+                    <%= wordsList[i].word %>
+                    </li>
+                <% } %>
+            </div>
+            <div>
+                Q:3) <%= question3 %> <strong><%= question3_sub %></strong><br>
+                <% for (var i in wordsList) {%>
+                    <li>
+                        <input type="checkbox" name="Q3:<%= wordsList[i].word %>" value=<%= wordsList[i].word %> />
+                        <%= wordsList[i].word %>
+                    </li>
+                <% } %>
+            </div>
+            <div>
+                Q:4) <%= question4 %> <br>
+                <input type="radio" name="Q4:answer" value="HelpedALot"> Helped A Lot <br>
+                <input type="radio" name="Q4:answer" value="HelpedSome"> Helped Some <br>
+                <input type="radio" name="Q4:answer" value="HelpedALittle"> Helped A Little <br>
+                <input type="radio" name="Q4:answer" value="DidNotHelp"> Did Not Help At All <br>
+            </div>
+            <div>
+                Q:5) <%= question5 %> <br>
+                <input type="radio" name="Q5:answer" value="ALot"> A Lot <br>
+                <input type="radio" name="Q5:answer" value="Somewhat"> Somewhat  <br>
+                <input type="radio" name="Q5:answer" value="ALittle"> A Little <br>
+                <input type="radio" name="Q5:answer" value="Don'tCare"> Don't Care <br>
+                <input type="radio" name="Q5:answer" value="DontLikeSeeingThem"> Don't Like Seeing Them <br>
+            </div>
+            <div>
+                Q:6) <%= question6 %> <br>
+                <textarea rows="5" class="feedback-text" name="Q6:response" placeholder="Begin your feedback here..."></textarea>
+            </div>
+            <div>
+                Q:7) <%= question7 %> <br>
+                <textarea rows="5" class="feedback-text" name="Q7:response" placeholder="Begin your feedback here..."></textarea>
+            </div>
+            <div>
+                Q:8) <%= question8 %> <br>
+                <textarea rows="5" class="feedback-text" name="Q8:response" placeholder="Begin your feedback here..."></textarea>
+            </div>
+            <div class="survey-footer-buttons">
+                <button type="reset">Reset</button>
+                <button type="submit">Submit</button>
+            </div>
+       </form>
+    </div>
+<% include ../inst/partials/foot %>
