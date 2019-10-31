@@ -77,6 +77,11 @@ async function getVoteId(vote_id, user_id) {
   });
 }
 
+
+/**
+ * GET /vote
+ * Words that the instructor still needs to vote
+ */
 router.get('/vote', (req, res) => {
   getVote(req, res);
 })
@@ -85,10 +90,27 @@ async function getVote(req, res){
   const books = await getAllBooks();
 
   for (i = 0; i < books.length; i++) {
-    books[i].votes = await getVotesForBook(books[i].id);
+    books[i].votes = await getPendingVotesForBook(books[i].id);
   }
-  console.log('rendering');
   res.render('inst/vote', { books: books});
+}
+
+
+/**
+ * GET /votes
+ * History of instructor votes
+ */
+router.get('/votes', (req, res) => {
+  getVotes(req, res);
+})
+
+async function getVotes(req, res){
+  const books = await getAllBooks();
+
+  for (i = 0; i < books.length; i++) {
+    books[i].votes = await getVotesForBook(req.user.id, books[i].id);
+  }
+  res.render('inst/votes', { books: books});
 }
 
 
@@ -107,7 +129,30 @@ async function getAllBooks() {
   });
 }
 
-async function getVotesForBook(book_id) {
+
+async function getVotesForBook(user_id, book_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT v.id vote_id, v.word_id, word, sentence, meaning_id,
+    GROUP_CONCAT(CONCAT('{"id":"', dm.id, '", "fl":"',dm.fl,'", "meaning":"',dm.meaning,'"}')) meanings
+    FROM votes v 
+    JOIN dictionary_meanings dm ON v.word_id = dm.word_id
+    JOIN dictionary_words dw ON dw.id = dm.word_id
+    WHERE v.user_id = ?
+    AND v.book_id = ?
+    GROUP BY v.word_id;`, [user_id, book_id],
+    (err, rows, fields) => {
+      if (err) {
+        resolve(null);
+        return;
+      }else{
+        resolve(rows);
+        return;
+      }
+    })
+  });
+}
+
+async function getPendingVotesForBook(book_id) {
   return new Promise(function (resolve, reject) {
     db.query(`SELECT v.id vote_id, v.word_id, word, sentence,
     GROUP_CONCAT(CONCAT('{"id":"', dm.id, '", "fl":"',dm.fl,'", "meaning":"',dm.meaning,'"}')) meanings,

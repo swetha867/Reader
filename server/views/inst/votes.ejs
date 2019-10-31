@@ -1,5 +1,5 @@
 <% include partials/head %>
-<h2>Words without voted meanings</h2>
+<h2>Voted meanings</h2>
 
 <style>
     .word {text-transform: capitalize;}
@@ -22,7 +22,8 @@
                     <p class="card-text">Sentence: <%= books[bi].votes[vi].sentence %></p>
                     <ul>
                         <% for(var j=0; j < meanings.length; j++) { %>
-                        <li id="vote<%= books[bi].votes[vi].vote_id %>meaning<%= meanings[j].id %>">
+                            
+                        <li id="vote<%= books[bi].votes[vi].vote_id %>meaning<%= meanings[j].id %>" class="<%= (books[bi].votes[vi].meaning_id == meanings[j].id)?'voted':''  %>">
                             [<%= meanings[j].fl %>] <%= meanings[j].meaning %>
                             <button class="btn btn-link" onclick="vote(<%= books[bi].votes[vi].vote_id %>, <%= meanings[j].id %>)">Select</button>
                         </li>
