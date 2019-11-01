@@ -19,6 +19,11 @@ var mysqlConnection = mysql.createConnection({
 mysqlConnection.connect((err) => {
     if(!err) {
         console.log('DB connected!') // DB SUCCESSFUL
+        // set max for group concat
+        mysqlConnection.query('SET SESSION group_concat_max_len=65535;', function (err, result) {
+            if (err) throw err;
+          });
+
     }
     else {
         console.log(err,`Here is the error:${JSON.stringify(err)}`)

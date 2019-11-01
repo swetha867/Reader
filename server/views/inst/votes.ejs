@@ -1,5 +1,7 @@
 <% include partials/head %>
-<h2>Voted meanings</h2>
+<h2>Voted meanings<br>
+    <small>Words that you have voted a meaning for</small>
+</h2>
 
 <style>
     .word {text-transform: capitalize;}
@@ -16,6 +18,7 @@
             </h2>
             <hr>
             <% for(var vi=0; vi < books[bi].votes.length; vi++) { 
+                console.log(books[bi].votes[vi].meanings);
                 var meanings = JSON.parse('[' + books[bi].votes[vi].meanings + ']');%>
                 <div id="vote<%= books[bi].votes[vi].vote_id %>">
                     <h5 class="word"><%= books[bi].votes[vi].word %></h5>
@@ -23,7 +26,7 @@
                     <ul>
                         <% for(var j=0; j < meanings.length; j++) { %>
                             
-                        <li id="vote<%= books[bi].votes[vi].vote_id %>meaning<%= meanings[j].id %>" class="<%= (books[bi].votes[vi].meaning_id == meanings[j].id)?'voted':''  %>">
+                        <li id="vote<%= books[bi].votes[vi].vote_id %>meaning<%= meanings[j].id %>" class="votemeaning<%= (books[bi].votes[vi].meaning_id == meanings[j].id)?' voted':''  %>">
                             [<%= meanings[j].fl %>] <%= meanings[j].meaning %>
                             <button class="btn btn-link" onclick="vote(<%= books[bi].votes[vi].vote_id %>, <%= meanings[j].id %>)">Select</button>
                         </li>
@@ -46,6 +49,7 @@
                 if(!res || typeof res.res === 'undefined' || res.res != 'success'){
                     return;
                 }
+                $('.votemeaning').removeClass("voted");
                 $('#vote'+res.vote_id+'meaning'+res.meaning_id).addClass("voted");
                 
             }, "json"

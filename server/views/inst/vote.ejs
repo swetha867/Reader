@@ -1,5 +1,8 @@
 <% include partials/head %>
-<h2>Words without voted meanings</h2>
+<h2>Words without voted meanings<br>
+<small>
+    Words that the students voted "I dont't know" as the meaning.
+</small></h2>
 
 <style>
     .word {text-transform: capitalize;}
@@ -22,7 +25,7 @@
                     <p class="card-text">Sentence: <%= books[bi].votes[vi].sentence %></p>
                     <ul>
                         <% for(var j=0; j < meanings.length; j++) { %>
-                        <li id="vote<%= books[bi].votes[vi].vote_id %>meaning<%= meanings[j].id %>">
+                        <li id="vote<%= books[bi].votes[vi].vote_id %>meaning<%= meanings[j].id %>" class="votemeaning">
                             [<%= meanings[j].fl %>] <%= meanings[j].meaning %>
                             <button class="btn btn-link" onclick="vote(<%= books[bi].votes[vi].vote_id %>, <%= meanings[j].id %>)">Select</button>
                         </li>
@@ -45,6 +48,7 @@
                 if(!res || typeof res.res === 'undefined' || res.res != 'success'){
                     return;
                 }
+                $('.votemeaning').removeClass("voted");
                 $('#vote'+res.vote_id+'meaning'+res.meaning_id).addClass("voted");
                 
             }, "json"

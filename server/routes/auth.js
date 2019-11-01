@@ -1,5 +1,4 @@
 const express = require('express');
-const request = require('request');
 const passport = require('passport');
 const { User } = require('../model/user.js');
 

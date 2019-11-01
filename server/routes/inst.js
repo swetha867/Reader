@@ -32,16 +32,76 @@ async function postVote(req, res){
   var vote_id = req.body.vote_id;
   var meaning_id = req.body.meaning_id;
 
-  db.query(`INSERT INTO votes (user_id, book_id, word_id, meaning_id, sentence, freq, updated_on)
-  SELECT  ?, book_id, word_id, ?, sentence, 1, CURRENT_TIMESTAMP() FROM votes v2 WHERE v2.id = ? `,
-   [req.user.id, meaning_id, vote_id], (err, rows, fields) => {
-    if (err) {
-      res.send(err);
-    }
-    else{
-      res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id});
-    }
+  var vote = (await getVoteById(req.body.vote_id))[0];
+
+  if(vote == null){
+    console.log("vote was not found.");
+    res.send("vote was not found.");
+    return;
+  }
+
+  console.log(vote);
+
+  db.query('SELECT * FROM votes WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ?',
+  [req.user.id, vote.book_id, vote.word_id, vote.sentence], (err, rows, fields) => {
+      if (err) {
+          console.log(`Error line 47: ${err}`)
+          res.send(`Here is the error ${err}`);
+          return;
+      }
+      if (rows.length == 0) {
+          // Storing all the attributes in votes table with book id
+          db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `meaning_id`, `sentence`) VALUES (?,?,?,?,?) ',
+              [req.user.id, vote.book_id, vote.word_id, vote.meaning_id, vote.sentence], (err, rows, fields) => {
+                  if (err) {
+                      console.log(`Error line 56: ${err}`)
+                      res.send(`Here is the error ${err}`);
+                      return;
+                  }
+                  console.log("vote details inserted!");
+                  res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id});
+              });
+      } else {
+          // Storing all the attributes in votes table with book id
+          db.query('UPDATE votes SET meaning_id = ? WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ?',
+              [vote.meaning_id, req.user.id, vote.book_id, vote.word_id, vote.sentence], (err, rows, fields) => {
+                  if (err) {
+                      console.log(`Error line 68: ${err}`)
+                      res.send(`Here is the error ${err}`);
+                      return;
+                  }
+                  console.log("vote details updated!");
+                  res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id});
+              });
+      }
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // db.query(`INSERT INTO votes (user_id, book_id, word_id, meaning_id, sentence, freq, updated_on)
+  // SELECT  ?, book_id, word_id, ?, sentence, 1, CURRENT_TIMESTAMP() FROM votes v2 WHERE v2.id = ? `,
+  //  [req.user.id, meaning_id, vote_id], (err, rows, fields) => {
+  //   if (err) {
+  //     res.send(err);
+  //   }
+  //   else{
+  //     res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id});
+  //   }
+  // });
 }
 
 
@@ -77,6 +137,7 @@ async function getVotes(req, res){
   for (i = 0; i < books.length; i++) {
     books[i].votes = await getVotesForBook(req.user.id, books[i].id);
   }
+  console.log(books);
   res.render('inst/votes', { books: books});
 }
 
@@ -97,6 +158,21 @@ async function getAllBooks() {
   });
 }
 
+async function getVoteById(vote_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT * FROM votes WHERE id = ?`, [vote_id],
+    (err, rows, fields) => {
+      if (err) {
+        resolve(null);
+        return;
+      }
+      else {
+        resolve(rows);
+        return;
+      }
+    })
+  });
+}
 
 async function getVotesForBook(user_id, book_id) {
   return new Promise(function (resolve, reject) {
@@ -163,17 +239,18 @@ async function getStudents(req, res){
   })
 }
 
+
 /**
  * GET /student
  * History of instructor votes
  */
-router.get('/student/:userId', (req, res) => {
-  getStudent(req, res);
+router.get('/student/voted/:userId', (req, res) => {
+  getStudentVoted(req, res);
 })
 
-async function getStudent(req, res){
+async function getStudentVoted(req, res){
   const votes = await getStudentVotes(req.params.userId);
-  res.render('inst/student', {user_id: req.params.userId, votes: votes});
+  res.render('inst/student', {user_id: req.params.userId, votes: votes, title: 'Voted words'});
 }
 
 async function getStudentVotes(student_id) {
@@ -181,8 +258,8 @@ async function getStudentVotes(student_id) {
     db.query(`SELECT v.word_id, book_name, word, sentence, meaning, updated_on
     FROM votes v 
     JOIN books b ON v.book_id = b.id
-    JOIN dictionary_meanings dm ON v.word_id = dm.word_id
-    JOIN dictionary_words dw ON dw.id = dm.word_id
+    JOIN dictionary_meanings dm ON v.word_id = dm.word_id AND v.meaning_id = dm.id
+    JOIN dictionary_words dw ON dw.id = v.word_id
     WHERE v.user_id = ?
     GROUP BY v.word_id;`, [student_id],
     (err, rows, fields) => {
@@ -197,5 +274,43 @@ async function getStudentVotes(student_id) {
     })
   });
 }
+
+
+
+
+
+/**
+ * GET /student/lookedup
+ */
+router.get('/student/lookedup/:userId', (req, res) => {
+  getStudentLookedUp(req, res);
+})
+
+async function getStudentLookedUp(req, res){
+  const votes = await getLookedup(req.params.userId);
+  res.render('inst/student', {user_id: req.params.userId, votes: votes, title: 'Looked up words'});
+}
+
+async function getLookedup(student_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT v.word_id, book_name, word, sentence, updated_on
+    FROM votes v 
+    JOIN books b ON v.book_id = b.id
+    JOIN dictionary_words dw ON dw.id = v.word_id
+    WHERE v.user_id = ? AND v.meaning_id IS NULL
+    GROUP BY v.word_id;`, [student_id],
+    (err, rows, fields) => {
+      if (err) {
+        resolve(null);
+        return;
+      }
+      else {
+        resolve(rows);
+        return;
+      }
+    })
+  });
+}
+
 
 module.exports = router;
