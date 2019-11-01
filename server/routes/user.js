@@ -31,7 +31,7 @@ router.post('/', (req,res) => {
         }
         else if (rows.length !== 0 && !err) {
             console.log(`User ID:${rows[0].student_id} already exists in the database `);
-            res.send({user_id: rows[0].student_id});
+            res.send({user_id: rows[0].id});
         }
     })
     
