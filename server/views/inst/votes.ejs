@@ -49,7 +49,7 @@
                 if(!res || typeof res.res === 'undefined' || res.res != 'success'){
                     return;
                 }
-                $('.votemeaning').removeClass("voted");
+                $('#vote'+res.vote_id + ' .votemeaning').removeClass("voted");
                 $('#vote'+res.vote_id+'meaning'+res.meaning_id).addClass("voted");
                 
             }, "json"
