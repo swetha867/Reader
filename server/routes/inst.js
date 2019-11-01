@@ -52,7 +52,7 @@ async function postVote(req, res){
       if (rows.length == 0) {
           // Storing all the attributes in votes table with book id
           db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `meaning_id`, `sentence`) VALUES (?,?,?,?,?) ',
-              [req.user.id, vote.book_id, vote.word_id, vote.meaning_id, vote.sentence], (err, rows, fields) => {
+              [req.user.id, vote.book_id, vote.word_id, meaning_id, vote.sentence], (err, rows, fields) => {
                   if (err) {
                       console.log(`Error line 56: ${err}`)
                       res.send(`Here is the error ${err}`);
