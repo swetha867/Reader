@@ -64,7 +64,7 @@ async function postVote(req, res){
       } else {
           // Storing all the attributes in votes table with book id
           db.query('UPDATE votes SET meaning_id = ? WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ?',
-              [vote.meaning_id, req.user.id, vote.book_id, vote.word_id, vote.sentence], (err, rows, fields) => {
+              [meaning_id, req.user.id, vote.book_id, vote.word_id, vote.sentence], (err, rows, fields) => {
                   if (err) {
                       console.log(`Error line 68: ${err}`)
                       res.send(`Here is the error ${err}`);
@@ -75,21 +75,6 @@ async function postVote(req, res){
               });
       }
   });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   // db.query(`INSERT INTO votes (user_id, book_id, word_id, meaning_id, sentence, freq, updated_on)
