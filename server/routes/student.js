@@ -4,6 +4,10 @@ const router = express.Router();
 const user = require('../model/user');
 
 router.get('/:id', (req,res) => {
+
+    res.send('New surveys are not being accepted at this time.');
+    return;
+
     var id  = req.params.id;
     //timestamp = req.body.timestamp; date.now()
     db.query(`Select word from dictionary_words JOIN votes ON votes.word_id = dictionary_words.id and votes.user_id = ${id}`, (err,rows,fields) => {
