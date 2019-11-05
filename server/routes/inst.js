@@ -298,4 +298,34 @@ async function getLookedup(student_id) {
 }
 
 
+
+router.get('/student/reading/:userId', (req, res) => {
+  getStudentReading(req, res);
+})
+
+async function getStudentReading(req, res){
+  const pages = await getPages(req.params.userId);
+  res.render('inst/student_reading', {user_id: req.params.userId, pages: pages});
+}
+
+async function getPages(user_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT book_name, CAST(page_number AS UNSIGNED) page, seconds, font_size
+    FROM PageTable p 
+    JOIN books b ON p.book_id = b.id
+    WHERE p.user_id = ?
+    ORDER BY book_name, page;`, [user_id],
+    (err, rows, fields) => {
+      if (err) {
+        resolve(null);
+        return;
+      }
+      else {
+        resolve(rows);
+        return;
+      }
+    })
+  });
+}
+
 module.exports = router;

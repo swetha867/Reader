@@ -1,0 +1,38 @@
+<% include partials/head %>
+  <h3>Reading times by student <%= user_id %> <br>
+    <small>Total pages: <%= pages.length %></small>
+  </h3>
+
+  <div class="card" style="margin-bottom: 50px;">
+    <div class="card-body">
+        
+        <% var book = '';
+        for(var i=0; i < pages.length; i++) {
+            if (book == ''){ 
+                book = pages[i].book_name %>
+                <h2><%=  pages[i].book_name %></h2>
+                <table class="table">
+                    <tr>
+                        <td>Page Number</td>
+                        <td>Seconds</td>
+                        <td>Font Size</td>
+                    </tr>
+            <% } %>
+                <tr>
+                    <td><%=pages[i].page %></td>
+                    <td><%=pages[i].seconds %></td>
+                    <td><%=pages[i].font_size %></td>
+                </tr>
+
+
+            <% if(i == pages.length -1 ||  pages[i+1].book_name != book){ 
+                book = ''; %>
+            </table>
+            <br><br>
+            <% } %>
+
+        <% } %>
+    </div>
+</div>
+
+<% include partials/foot %>

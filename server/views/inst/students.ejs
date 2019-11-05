@@ -6,6 +6,7 @@
         <th scope="col">Student ID</th>
         <th scope="col">Voted words</th>
         <th scope="col">Lookedup words</th>
+        <th scope="col">Reading records</th>
       </tr>
     </thead>
     <tbody>
@@ -14,6 +15,7 @@
         <th scope="row"><%= students[i].id %></th>
         <td><a href="/instructor/student/voted/<%= students[i].id %>">View Data</a></td>
         <td><a href="/instructor/student/lookedup/<%= students[i].id %>">View Data</a></td>
+        <td><a href="/instructor/student/reading/<%= students[i].id %>">View Data</a></td>
       </tr>
       <% } %>
     </tbody>
