@@ -8,13 +8,18 @@ router.get('/', (req, res) => {
   res.render('inst/index');
 })
 
-
 router.get('/students', (req, res) => {
   getStudents(req, res);
 });
 
 async function getStudents(req, res){
-  db.query('SELECT * FROM users', [], (err, rows, fields) => {
+  db.query(`SELECT u.id,
+      SUM(CASE WHEN meaning_id IS null THEN 1 ELSE 0 END) lookups,
+      SUM(CASE WHEN meaning_id IS NOT null THEN 1 ELSE 0 END) votes,
+      (SELECT COUNT(*) FROM PageTable WHERE user_id = u.id) pages
+      FROM users u 
+      JOIN votes v ON v.user_id = u.id
+      GROUP BY u.id;`, [], (err, rows, fields) => {
     if (err) {
       res.send(err);
     }
@@ -206,23 +211,6 @@ async function getPendingVotesForBook(book_id) {
   });
 }
 
-/**
- * GET /students
- * List of all students
- */
-router.get('/students', (req, res) => {
-  getStudents(req, res);
-})
-
-async function getStudents(req, res){
-  db.query('SELECT * FROM users', [], (err, rows, fields) => {
-    if (err) {
-      res.send(err);
-    }else{
-      res.render('inst/students', { students: rows});
-    }
-  })
-}
 
 
 /**

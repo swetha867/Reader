@@ -13,9 +13,9 @@
       <% for(var i=0; i < students.length; i++) { %>
       <tr>
         <th scope="row"><%= students[i].id %></th>
-        <td><a href="/instructor/student/voted/<%= students[i].id %>">View Data</a></td>
-        <td><a href="/instructor/student/lookedup/<%= students[i].id %>">View Data</a></td>
-        <td><a href="/instructor/student/reading/<%= students[i].id %>">View Data</a></td>
+        <td><a href="/instructor/student/voted/<%= students[i].id %>">View Data (<%= students[i].votes %>)</a></td>
+        <td><a href="/instructor/student/lookedup/<%= students[i].id %>">View Data (<%= students[i].lookups %>)</a></td>
+        <td><a href="/instructor/student/reading/<%= students[i].id %>">View Data (<%= students[i].pages %>)</a></td>
       </tr>
       <% } %>
     </tbody>
