@@ -5,8 +5,8 @@ const user = require('../model/user');
 
 router.get('/:id', (req,res) => {
 
-    // res.send('New surveys are not being accepted at this time.');
-    // return;
+    res.send('New surveys are not being accepted at this time.');
+    return;
 
     var id  = req.params.id;
     //timestamp = req.body.timestamp; date.now()
@@ -20,86 +20,10 @@ router.get('/:id', (req,res) => {
     });
 });
 
-// router.post('/:id/survey', (req,res) => {
-//     var id  = req.params.id;
-//     console.log('Hey',req.body);
-//     for (var i in req.body) {
-//         console.log('keys',i);
-//         let question_num = i.split(':')[0];
-//         let wordName = i.split(':')[1];
-//         console.log(wordName);
-//         if (question_num === 'Q1') {
-//             let answer = req.body[i];
-//             db.query(`Insert INTO Survey (user_id, word, Q1) VALUES (?,?,?)`,[id, wordName, answer], (err,rows,fields) => {
-//                 if (err) {
-//                     res.send(`Error in entering the question1 ${err}`);
-//                 }
-//                 else console.log('Entered answers for 1');
-//             });
-//         }
-//         if (question_num === 'Q2') {
-//             let answer = req.body[i];
-//             db.query(`Insert INTO Survey (user_id, Q2_Image_Support) VALUES (?,?)`,[id,answer], (err,rows,fields) => {
-//                 if (err) {
-//                     res.send(`Error in entering the question2 ${err}`);
-//                 }
-//                 else console.log('Entered answers for 2');
-//             });
-//         }
-//         if (question_num === 'Q3') {
-//             let answer = req.body[i];
-//             db.query(`Insert into Survey (user_id, Q3_Vote_Support) VALUES (?,?)`,[id,answer], (err,rows,fields) => {
-//                 if (err) {
-//                     res.send(`Error in entering the question2 ${err}`);
-//                 }
-//                 else console.log('Entered answers for 3');
-//             });
-//         }
-//         if (question_num === 'Q4') {
-//             let answer = req.body[i];
-//             db.query(`Insert into Survey (user_id, Q4_Help_Support) VALUES (?,?)`,[id,answer], (err,rows,fields) => {
-//                 if (err) {
-//                     res.send(`Error in entering the question2 ${err}`);
-//                 }
-//                 else console.log('Entered answers for 4');
-//             });
-//         }
-//         if (question_num === 'Q5') {
-//             let answer = req.body[i];
-//             db.query(`Insert into Survey (user_id, Q5_Support) VALUES (?,?)`,[id,answer], (err,rows,fields) => {
-//                 if (err) {
-//                     res.send(`Error in entering the question2 ${err}`);
-//                 }
-//                 else console.log('Entered answers for 5');
-//             });
-//         }
-//         if (question_num === 'Q6') {
-//             let answer = req.body[i];
-//             db.query(`Insert into Survey (user_id, Q6_Feedback) VALUES (?,?)`,[id,answer], (err,rows,fields) => {
-//                 if (err) {
-//                     res.send(`Error in entering the question2 ${err}`);
-//                 }
-//                 else console.log('Entered answers for 6');
-//             });
-//         }
-//         if (question_num === 'Q7') {
-//             let answer = req.body[i];
-//             db.query(`Insert into Survey (user_id, Q7_Feedback) VALUES (?,?)`,[id,answer], (err,rows,fields) => {
-//                 if (err) {
-//                     res.send(`Error in entering the question2 ${err}`);
-//                 }
-//                 else {
-//                     console.log('Entered answers for 7');
-//                 }
-//             });
-//         }
-//     }
-//     res.send('Thank you for your Feedback :)');
-// });
-
-// New Implementation
-
 router.post('/:id/survey', (req,res) => {
+    res.send('New surveys are not being accepted at this time.');
+    return;
+    
     var id = req.params.id;
     console.log('RESPONSE', req.body);
     var lookedUpWordCount = 0;
