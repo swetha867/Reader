@@ -6,15 +6,22 @@
         <th scope="col">Student ID</th>
         <th scope="col">Voted words</th>
         <th scope="col">Lookedup words</th>
+        <th scope="col">Combined</th>
         <th scope="col">Reading records</th>
       </tr>
     </thead>
     <tbody>
       <% for(var i=0; i < students.length; i++) { %>
       <tr>
-        <th scope="row"><%= students[i].id %></th>
+        <th scope="row"><%= students[i].id %> 
+       <small>
+          <%= (students[i].id == 1 || students[i].id == 2 || students[i].id == 3)?'Test Account':'' %>
+          <%= (students[i].id == 4 )?'Instructor Account':'' %>
+        </small>
+         </th>
         <td><a href="/instructor/student/voted/<%= students[i].id %>">View Data (<%= students[i].votes %>)</a></td>
         <td><a href="/instructor/student/lookedup/<%= students[i].id %>">View Data (<%= students[i].lookups %>)</a></td>
+        <td><a href="/instructor/student/votes/<%= students[i].id %>">View Data (<%= students[i].lookups + students[i].votes %>)</a></td>
         <td><a href="/instructor/student/reading/<%= students[i].id %>">View Data (<%= students[i].pages %>)</a></td>
       </tr>
       <% } %>

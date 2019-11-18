@@ -231,7 +231,7 @@ async function getStudentVotes(student_id) {
     db.query(`SELECT v.word_id, book_name, word, sentence, meaning, updated_on
     FROM votes v 
     JOIN books b ON v.book_id = b.id
-    JOIN dictionary_meanings dm ON v.word_id = dm.word_id AND v.meaning_id = dm.id
+    JOIN dictionary_meanings dm ON v.meaning_id = dm.id
     JOIN dictionary_words dw ON dw.id = v.word_id
     WHERE v.user_id = ?
     GROUP BY v.word_id;`, [student_id],
@@ -315,5 +315,43 @@ async function getPages(user_id) {
     })
   });
 }
+
+
+
+
+router.get('/student/votes/:userId', (req, res) => {
+  getStudentVotesNewFunc(req, res);
+})
+
+async function getStudentVotesNewFunc(req, res){
+  const votes = await getStudentVotesNew(req.params.userId);
+  res.render('inst/studentnew', {user_id: req.params.userId, votes: votes, title: 'Voted words'});
+}
+
+async function getStudentVotesNew(student_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT v.word_id, book_name, word, sentence, meaning, updated_on
+    FROM votes v 
+    JOIN books b ON v.book_id = b.id
+    JOIN dictionary_words dw ON dw.id = v.word_id
+    LEFT JOIN dictionary_meanings dm ON v.meaning_id = dm.id
+    WHERE v.user_id = ?
+    GROUP BY v.word_id`, [student_id],
+    (err, rows, fields) => {
+      if (err) {
+        resolve(null);
+        return;
+      }
+      else {
+        resolve(rows);
+        return;
+      }
+    })
+  });
+}
+
+
+
+
 
 module.exports = router;

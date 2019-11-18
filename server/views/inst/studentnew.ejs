@@ -1,0 +1,29 @@
+<% include partials/head %>
+<style>
+    .voted {
+        background-color: rgb(245, 255, 235);
+    }
+    .meaning {color: rgb(5, 148, 0);}
+</style>
+<h3>Votes by student <%= user_id %> - Combined<br>
+    <small>Total words: <%= votes.length %></small>
+</h3>
+
+<div class="card" style="margin-bottom: 50px;">
+    <div class="card-body">
+        <% for(var i=0; i < votes.length; i++) { %>
+        <div class="<%= (votes[i].meaning != null)?'voted':'' %>">
+            <h4 class="card-text"><%= votes[i].word %></h4>
+            <p class="card-text"><b>Book:</b> <%= votes[i].book_name %></p>
+            <p class="card-text"><b>Sentence:</b> <%= votes[i].sentence %></p>
+            <% if(votes[i].meaning != null){ %>
+            <p class="card-text meaning"><b>Selected Meaning:</b> <%= votes[i].meaning %></p>
+            <% } %>
+            <p class="card-text"><b>Time:</b> <%= votes[i].updated_on %></p>
+        </div>
+        <hr>
+        <% } %>
+    </div>
+</div>
+
+<% include partials/foot %>
