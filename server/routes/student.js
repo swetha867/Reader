@@ -4,8 +4,8 @@ const router = express.Router();
 const user = require('../model/user');
 
 router.get('/:id', (req,res) => {
-    // res.send('New surveys are not being accepted at this time.');
-    // return;
+    res.send('New surveys are not being accepted at this time.');
+    return;
 
     var id  = req.params.id;
     //timestamp = req.body.timestamp; date.now()
@@ -23,8 +23,8 @@ router.get('/:id', (req,res) => {
 });
 
 router.post('/:id/survey', (req,res) => {
-    // res.send('New surveys are not being accepted at this time.');
-    // return;
+    res.send('New surveys are not being accepted at this time.');
+    return;
     
     var id = req.params.id;
     console.log('RESPONSE', req.body);
