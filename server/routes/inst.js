@@ -12,34 +12,67 @@ router.get('/students', (req, res) => {
   getStudents(req, res);
 });
 
-async function getStudents(req, res){
-  db.query(`SELECT u.id,
-      SUM(CASE WHEN meaning_id IS null THEN 1 ELSE 0 END) lookups,
-      SUM(CASE WHEN meaning_id IS NOT null THEN 1 ELSE 0 END) votes,
-      (SELECT COUNT(*) FROM PageTable WHERE user_id = u.id) pages
-      FROM users u 
-      JOIN votes v ON v.user_id = u.id
-      GROUP BY u.id;`, [], (err, rows, fields) => {
-    if (err) {
-      res.send(err);
-    }
-    else {
-      res.render('inst/students', { students: rows});
-    }
-  })
+async function getStudents(req, res) {
+  var students = await getStudentsHelper();
+
+  for (var i = 0; i < students.length; i++) {
+    students[i].words = await addWordsToStudents(students[i].id);
+  }
+
+  console.log(students);
+
+  res.render('inst/students', { students: students });
+}
+
+async function getStudentsHelper() {
+  return new Promise(function (success, fail) {
+    db.query(`SELECT u.id,
+    COUNT(*) votes,
+    (SELECT COUNT(*) FROM PageTable WHERE user_id = u.id) pages
+    FROM users u 
+    JOIN votes v ON v.user_id = u.id
+    GROUP BY u.id`, [], (err, students, fields) => {
+      if (err) {
+        console.log(err);
+        fail(err);
+        return;
+      }
+      success(students);
+    })
+  });
+}
+
+
+async function addWordsToStudents(user_id) {
+  return new Promise(function (success, fail) {
+    db.query(`SELECT GROUP_CONCAT(word) words
+    FROM(
+    SELECT word FROM votes v2 JOIN dictionary_words w2 ON v2.word_id = w2.id
+    WHERE v2.user_id = ?
+    ORDER BY v2.id DESC
+    LIMIT 0,10
+    ) w`, [user_id], (err, rows, fields) => {
+      if (err) {
+        console.log(err);
+        fail(err);
+      }
+      console.log(rows[0].words);
+      success(rows[0].words);
+    })
+  });
 }
 
 router.post('/vote', (req, res) => {
   postVote(req, res);
 })
 
-async function postVote(req, res){
+async function postVote(req, res) {
   var vote_id = req.body.vote_id;
   var meaning_id = req.body.meaning_id;
 
   var vote = (await getVoteById(req.body.vote_id))[0];
 
-  if(vote == null){
+  if (vote == null) {
     console.log("vote was not found.");
     res.send("vote was not found.");
     return;
@@ -48,38 +81,38 @@ async function postVote(req, res){
   console.log(vote);
 
   db.query('SELECT * FROM votes WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ?',
-  [req.user.id, vote.book_id, vote.word_id, vote.sentence], (err, rows, fields) => {
+    [req.user.id, vote.book_id, vote.word_id, vote.sentence], (err, rows, fields) => {
       if (err) {
-          console.log(`Error line 47: ${err}`)
-          res.send(`Here is the error ${err}`);
-          return;
+        console.log(`Error line 47: ${err}`)
+        res.send(`Here is the error ${err}`);
+        return;
       }
       if (rows.length == 0) {
-          // Storing all the attributes in votes table with book id
-          db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `meaning_id`, `sentence`) VALUES (?,?,?,?,?) ',
-              [req.user.id, vote.book_id, vote.word_id, meaning_id, vote.sentence], (err, rows, fields) => {
-                  if (err) {
-                      console.log(`Error line 56: ${err}`)
-                      res.send(`Here is the error ${err}`);
-                      return;
-                  }
-                  console.log("vote details inserted!");
-                  res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id});
-              });
+        // Storing all the attributes in votes table with book id
+        db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `meaning_id`, `sentence`) VALUES (?,?,?,?,?) ',
+          [req.user.id, vote.book_id, vote.word_id, meaning_id, vote.sentence], (err, rows, fields) => {
+            if (err) {
+              console.log(`Error line 56: ${err}`)
+              res.send(`Here is the error ${err}`);
+              return;
+            }
+            console.log("vote details inserted!");
+            res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id });
+          });
       } else {
-          // Storing all the attributes in votes table with book id
-          db.query('UPDATE votes SET meaning_id = ? WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ?',
-              [meaning_id, req.user.id, vote.book_id, vote.word_id, vote.sentence], (err, rows, fields) => {
-                  if (err) {
-                      console.log(`Error line 68: ${err}`)
-                      res.send(`Here is the error ${err}`);
-                      return;
-                  }
-                  console.log("vote details updated!");
-                  res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id});
-              });
+        // Storing all the attributes in votes table with book id
+        db.query('UPDATE votes SET meaning_id = ? WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ?',
+          [meaning_id, req.user.id, vote.book_id, vote.word_id, vote.sentence], (err, rows, fields) => {
+            if (err) {
+              console.log(`Error line 68: ${err}`)
+              res.send(`Here is the error ${err}`);
+              return;
+            }
+            console.log("vote details updated!");
+            res.send({ res: 'success', vote_id: vote_id, meaning_id: meaning_id });
+          });
       }
-  });
+    });
 
 
   // db.query(`INSERT INTO votes (user_id, book_id, word_id, meaning_id, sentence, freq, updated_on)
@@ -103,13 +136,13 @@ router.get('/vote', (req, res) => {
   getVote(req, res);
 })
 
-async function getVote(req, res){
+async function getVote(req, res) {
   const books = await getAllBooks();
 
   for (i = 0; i < books.length; i++) {
     books[i].votes = await getPendingVotesForBook(books[i].id);
   }
-  res.render('inst/vote', { books: books});
+  res.render('inst/vote', { books: books });
 }
 
 
@@ -121,46 +154,46 @@ router.get('/votes', (req, res) => {
   getVotes(req, res);
 })
 
-async function getVotes(req, res){
+async function getVotes(req, res) {
   const books = await getAllBooks();
 
   for (i = 0; i < books.length; i++) {
     books[i].votes = await getVotesForBook(req.user.id, books[i].id);
   }
   console.log(books);
-  res.render('inst/votes', { books: books});
+  res.render('inst/votes', { books: books });
 }
 
 
 async function getAllBooks() {
   return new Promise(function (resolve, reject) {
     db.query(`SELECT * FROM books ORDER BY book_name`, [],
-    (err, rows, fields) => {
-      if (err) {
-        resolve(null);
-        return;
-      }
-      else {
-        resolve(rows);
-        return;
-      }
-    })
+      (err, rows, fields) => {
+        if (err) {
+          resolve(null);
+          return;
+        }
+        else {
+          resolve(rows);
+          return;
+        }
+      })
   });
 }
 
 async function getVoteById(vote_id) {
   return new Promise(function (resolve, reject) {
     db.query(`SELECT * FROM votes WHERE id = ?`, [vote_id],
-    (err, rows, fields) => {
-      if (err) {
-        resolve(null);
-        return;
-      }
-      else {
-        resolve(rows);
-        return;
-      }
-    })
+      (err, rows, fields) => {
+        if (err) {
+          resolve(null);
+          return;
+        }
+        else {
+          resolve(rows);
+          return;
+        }
+      })
   });
 }
 
@@ -175,15 +208,15 @@ async function getVotesForBook(user_id, book_id) {
     AND v.book_id = ?
     AND meaning_id != 0 AND meaning_id IS NOT NULL
     GROUP BY v.word_id;`, [user_id, book_id],
-    (err, rows, fields) => {
-      if (err) {
-        resolve(null);
-        return;
-      }else{
-        resolve(rows);
-        return;
-      }
-    })
+      (err, rows, fields) => {
+        if (err) {
+          resolve(null);
+          return;
+        } else {
+          resolve(rows);
+          return;
+        }
+      })
   });
 }
 
@@ -199,15 +232,15 @@ async function getPendingVotesForBook(book_id) {
     AND v.book_id = ?
     GROUP BY v.word_id
     HAVING meaning_teacher IS NULL;`, [book_id],
-    (err, rows, fields) => {
-      if (err) {
-        resolve(null);
-        return;
-      }else{
-        resolve(rows);
-        return;
-      }
-    })
+      (err, rows, fields) => {
+        if (err) {
+          resolve(null);
+          return;
+        } else {
+          resolve(rows);
+          return;
+        }
+      })
   });
 }
 
@@ -217,83 +250,77 @@ async function getPendingVotesForBook(book_id) {
  * GET /student
  * History of instructor votes
  */
-router.get('/student/voted/:userId', (req, res) => {
-  getStudentVoted(req, res);
-})
+// router.get('/student/voted/:userId', (req, res) => {
+//   getStudentVoted(req, res);
+// })
 
-async function getStudentVoted(req, res){
-  const votes = await getStudentVotes(req.params.userId);
-  res.render('inst/student', {user_id: req.params.userId, votes: votes, title: 'Voted words'});
-}
+// async function getStudentVoted(req, res){
+//   const votes = await getStudentVotes(req.params.userId);
+//   res.render('inst/student', {user_id: req.params.userId, votes: votes, title: 'Voted words'});
+// }
 
-async function getStudentVotes(student_id) {
-  return new Promise(function (resolve, reject) {
-    db.query(`SELECT v.word_id, book_name, word, sentence, meaning, updated_on
-    FROM votes v 
-    JOIN books b ON v.book_id = b.id
-    JOIN dictionary_meanings dm ON v.meaning_id = dm.id
-    JOIN dictionary_words dw ON dw.id = v.word_id
-    WHERE v.user_id = ?
-    GROUP BY v.word_id;`, [student_id],
-    (err, rows, fields) => {
-      if (err) {
-        resolve(null);
-        return;
-      }
-      else {
-        resolve(rows);
-        return;
-      }
-    })
-  });
-}
-
-
-
-
+// async function getStudentVotes(student_id) {
+//   return new Promise(function (resolve, reject) {
+//     db.query(`SELECT v.word_id, book_name, word, sentence, meaning, updated_on
+//     FROM votes v 
+//     JOIN books b ON v.book_id = b.id
+//     JOIN dictionary_meanings dm ON v.meaning_id = dm.id
+//     JOIN dictionary_words dw ON dw.id = v.word_id
+//     WHERE v.user_id = ?
+//     GROUP BY v.word_id;`, [student_id],
+//     (err, rows, fields) => {
+//       if (err) {
+//         resolve(null);
+//         return;
+//       }
+//       else {
+//         resolve(rows);
+//         return;
+//       }
+//     })
+//   });
+// }
 
 /**
  * GET /student/lookedup
  */
-router.get('/student/lookedup/:userId', (req, res) => {
-  getStudentLookedUp(req, res);
-})
+// router.get('/student/lookedup/:userId', (req, res) => {
+//   getStudentLookedUp(req, res);
+// })
 
-async function getStudentLookedUp(req, res){
-  const votes = await getLookedup(req.params.userId);
-  res.render('inst/student', {user_id: req.params.userId, votes: votes, title: 'Looked up words'});
-}
+// async function getStudentLookedUp(req, res){
+//   const votes = await getLookedup(req.params.userId);
+//   res.render('inst/student', {user_id: req.params.userId, votes: votes, title: 'Looked up words'});
+// }
 
-async function getLookedup(student_id) {
-  return new Promise(function (resolve, reject) {
-    db.query(`SELECT v.word_id, book_name, word, sentence, updated_on
-    FROM votes v 
-    JOIN books b ON v.book_id = b.id
-    JOIN dictionary_words dw ON dw.id = v.word_id
-    WHERE v.user_id = ? AND v.meaning_id IS NULL
-    GROUP BY v.word_id;`, [student_id],
-    (err, rows, fields) => {
-      if (err) {
-        resolve(null);
-        return;
-      }
-      else {
-        resolve(rows);
-        return;
-      }
-    })
-  });
-}
-
-
+// async function getLookedup(student_id) {
+//   return new Promise(function (resolve, reject) {
+//     db.query(`SELECT v.word_id, book_name, word, sentence, updated_on
+//     FROM votes v 
+//     JOIN books b ON v.book_id = b.id
+//     JOIN dictionary_words dw ON dw.id = v.word_id
+//     WHERE v.user_id = ? AND v.meaning_id IS NULL
+//     GROUP BY v.word_id;`, [student_id],
+//     (err, rows, fields) => {
+//       if (err) {
+//         resolve(null);
+//         return;
+//       }
+//       else {
+//         resolve(rows);
+//         return;
+//       }
+//     })
+//   });
+// }
 
 router.get('/student/reading/:userId', (req, res) => {
   getStudentReading(req, res);
 })
 
-async function getStudentReading(req, res){
+async function getStudentReading(req, res) {
   const pages = await getPages(req.params.userId);
-  res.render('inst/student_reading', {user_id: req.params.userId, pages: pages});
+  res.render('inst/student_reading', { user_id: req.params.userId, pages: pages });
 }
 
 async function getPages(user_id) {
@@ -303,16 +330,16 @@ async function getPages(user_id) {
     JOIN books b ON p.book_id = b.id
     WHERE p.user_id = ?
     ORDER BY book_name, page;`, [user_id],
-    (err, rows, fields) => {
-      if (err) {
-        resolve(null);
-        return;
-      }
-      else {
-        resolve(rows);
-        return;
-      }
-    })
+      (err, rows, fields) => {
+        if (err) {
+          resolve(null);
+          return;
+        }
+        else {
+          resolve(rows);
+          return;
+        }
+      })
   });
 }
 
@@ -323,9 +350,9 @@ router.get('/student/votes/:userId', (req, res) => {
   getStudentVotesNewFunc(req, res);
 })
 
-async function getStudentVotesNewFunc(req, res){
+async function getStudentVotesNewFunc(req, res) {
   const votes = await getStudentVotesNew(req.params.userId);
-  res.render('inst/studentnew', {user_id: req.params.userId, votes: votes, title: 'Voted words'});
+  res.render('inst/studentnew', { user_id: req.params.userId, votes: votes, title: 'Voted words' });
 }
 
 async function getStudentVotesNew(student_id) {
@@ -337,16 +364,16 @@ async function getStudentVotesNew(student_id) {
     LEFT JOIN dictionary_meanings dm ON v.meaning_id = dm.id
     WHERE v.user_id = ?
     GROUP BY v.word_id`, [student_id],
-    (err, rows, fields) => {
-      if (err) {
-        resolve(null);
-        return;
-      }
-      else {
-        resolve(rows);
-        return;
-      }
-    })
+      (err, rows, fields) => {
+        if (err) {
+          resolve(null);
+          return;
+        }
+        else {
+          resolve(rows);
+          return;
+        }
+      })
   });
 }
 
