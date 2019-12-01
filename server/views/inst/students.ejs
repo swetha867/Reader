@@ -1,31 +1,38 @@
 <% include partials/head %>
 
 <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Student ID</th>
-        <th scope="col">Lookedup/Voted</th>
-        <th scope="col">Reading records</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% for(var i=0; i < students.length; i++) { %>
-      <tr>
-        <th scope="row"><%= students[i].id %> 
-       <small>
-          <%= (students[i].id == 1 || students[i].id == 2 || students[i].id == 3)?'Test Account':'' %>
-          <%= (students[i].id == 4 )?'Instructor Account':'' %>
+  <thead>
+    <tr>
+      <th scope="col">Student ID</th>
+      <th scope="col">Lookedup/Voted</th>
+      <th scope="col">Reading records</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(var i=0; i < students.length; i++) { %>
+    <tr>
+      <th scope="row">
+        <% if( students[i].id > 4) { %>
+        <b><%= students[i].id %></b>
+        <% }else{ %>
+        <small>
+          <%= (students[i].id == 1 || students[i].id == 2 || students[i].id == 3)?'Test':'' %>
+          <%= (students[i].id == 4 )?'Instructor':'' %>
         </small>
-         </th>
-        <td>
-          <div><%= students[i].words %></div>
-          <a href="/instructor/student/voted/<%= students[i].id %>">View Data (<%= students[i].votes %>)</a>
-        </td>
-        <td><a href="/instructor/student/reading/<%= students[i].id %>">View Data (<%= students[i].pages %>)</a></td>
-      </tr>
-      <% } %>
-    </tbody>
-  </table>
+        <% } %>
+      </th>
+      <td>
+        <a href="/instructor/student/votes/<%= students[i].id %>">
+          <%= students[i].words %><% if( students[i].votes > 10) { %>,
+          ... (<%= students[i].votes - 10 %> more words).
+          <% } %>
+        </a>
+      </td>
+      <td><a href="/instructor/student/reading/<%= students[i].id %>">View Data (<%= students[i].pages %>)</a></td>
+    </tr>
+    <% } %>
+  </tbody>
+</table>
 
 
 

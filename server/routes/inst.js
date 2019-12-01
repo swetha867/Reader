@@ -19,8 +19,6 @@ async function getStudents(req, res) {
     students[i].words = await addWordsToStudents(students[i].id);
   }
 
-  console.log(students);
-
   res.render('inst/students', { students: students });
 }
 
@@ -42,10 +40,9 @@ async function getStudentsHelper() {
   });
 }
 
-
 async function addWordsToStudents(user_id) {
   return new Promise(function (success, fail) {
-    db.query(`SELECT GROUP_CONCAT(word) words
+    db.query(`SELECT GROUP_CONCAT(word SEPARATOR ', ') words
     FROM(
     SELECT word FROM votes v2 JOIN dictionary_words w2 ON v2.word_id = w2.id
     WHERE v2.user_id = ?
@@ -56,7 +53,6 @@ async function addWordsToStudents(user_id) {
         console.log(err);
         fail(err);
       }
-      console.log(rows[0].words);
       success(rows[0].words);
     })
   });
@@ -160,7 +156,6 @@ async function getVotes(req, res) {
   for (i = 0; i < books.length; i++) {
     books[i].votes = await getVotesForBook(req.user.id, books[i].id);
   }
-  console.log(books);
   res.render('inst/votes', { books: books });
 }
 
@@ -246,10 +241,6 @@ async function getPendingVotesForBook(book_id) {
 
 
 
-/**
- * GET /student
- * History of instructor votes
- */
 // router.get('/student/voted/:userId', (req, res) => {
 //   getStudentVoted(req, res);
 // })
@@ -347,15 +338,15 @@ async function getPages(user_id) {
 
 
 router.get('/student/votes/:userId', (req, res) => {
-  getStudentVotesNewFunc(req, res);
+  getStudentVotes(req, res);
 })
 
-async function getStudentVotesNewFunc(req, res) {
-  const votes = await getStudentVotesNew(req.params.userId);
+async function getStudentVotes(req, res) {
+  const votes = await getStudentVotesHelper(req.params.userId);
   res.render('inst/studentnew', { user_id: req.params.userId, votes: votes, title: 'Voted words' });
 }
 
-async function getStudentVotesNew(student_id) {
+async function getStudentVotesHelper(student_id) {
   return new Promise(function (resolve, reject) {
     db.query(`SELECT v.word_id, book_name, word, sentence, meaning, updated_on
     FROM votes v 
@@ -376,9 +367,5 @@ async function getStudentVotesNew(student_id) {
       })
   });
 }
-
-
-
-
 
 module.exports = router;
