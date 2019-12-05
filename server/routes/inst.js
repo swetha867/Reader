@@ -15,8 +15,11 @@ router.get('/students', (req, res) => {
 async function getStudents(req, res) {
   var students = await getStudentsHelper();
 
+
+
   for (var i = 0; i < students.length; i++) {
     students[i].words = await addWordsToStudents(students[i].id);
+    students[i].pages_normal = await addPageReadToStudents(students[i].id);
   }
 
   res.render('inst/students', { students: students });
@@ -47,13 +50,36 @@ async function addWordsToStudents(user_id) {
     SELECT word FROM votes v2 JOIN dictionary_words w2 ON v2.word_id = w2.id
     WHERE v2.user_id = ?
     ORDER BY v2.id DESC
-    LIMIT 0,10
+    LIMIT 0,7
     ) w`, [user_id], (err, rows, fields) => {
       if (err) {
         console.log(err);
         fail(err);
       }
       success(rows[0].words);
+    })
+  });
+}
+
+async function addPageReadToStudents(user_id) {
+  return new Promise(function (success, fail) {
+    db.query(`SELECT CASE font_size
+    WHEN  90 THEN 2.2
+    WHEN  100 THEN 1.5
+    WHEN  120 THEN 1
+    WHEN  150 THEN 0.65
+    WHEN  200 THEN 0.43
+    ELSE 0
+    END AS mult, COUNT(*) c  FROM PageTable WHERE user_id = ? GROUP BY font_size`, [user_id], (err, rows, fields) => {
+      if (err) {
+        console.log(err);
+        fail(err);
+      }
+      var totalCount = 0;
+      for (i = 0; i < rows.length; i++) {
+        totalCount += rows[i].mult * rows[i].c;
+      }
+      success(Math.round(totalCount));
     })
   });
 }
