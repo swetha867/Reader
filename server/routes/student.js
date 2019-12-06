@@ -9,7 +9,7 @@ router.get('/:id', (req,res) => {
 
     var id  = req.params.id;
     //timestamp = req.body.timestamp; date.now()
-    db.query(`Select word from dictionary_words JOIN votes ON votes.word_id = dictionary_words.id and votes.user_id = ${id} and votes.updated_on >= '2019-11-15'`, (err,rows,fields) => {
+    db.query(`Select word from dictionary_words JOIN votes ON votes.word_id = dictionary_words.id and votes.user_id = ${id} and votes.updated_on >= '2019-11-29'`, (err,rows,fields) => {
         if (err) {
             res.send(`Error in getting words for the user ${id}: ${err}`);
         }
