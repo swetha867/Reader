@@ -5,8 +5,7 @@
     <tr>
       <th scope="col">Student ID</th>
       <th scope="col">Lookedup/Voted</th>
-      <th scope="col">Reading records</th>
-      <th scope="col">Normalized</th>
+      <th scope="col">Pages</th>
     </tr>
   </thead>
   <tbody>
@@ -29,7 +28,6 @@
           <% } %>
         </a>
       </td>
-      <td><a href="/instructor/student/reading/<%= students[i].id %>"><%= students[i].pages %></a></td>
       <td><a href="/instructor/student/reading/<%= students[i].id %>"><%= students[i].pages_normal %></a></td>
     </tr>
     <% } %>
