@@ -15,6 +15,9 @@ const authController = require('./routes/auth');
 const studentSurveyController = require('./routes/student');
 
 
+app.use(express.static('./public'));
+
+
 //logging
 var morgan = require('morgan')
 app.use(morgan('tiny'))

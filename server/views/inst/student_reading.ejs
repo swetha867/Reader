@@ -1,38 +1,106 @@
 <% include partials/head %>
-  <h3>Reading times by student <%= user_id %> <br>
-    <small>Total pages: <%= pages.length %></small>
-  </h3>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/amcharts.js"></script>
+<script type="text/javascript" src="/serial.js"></script>
 
-  <div class="card" style="margin-bottom: 50px;">
+<h3>Reading times by student <%= user_id %> <br>
+    <small>Total pages: <%= pages.length %></small>
+</h3>
+
+<div class="card" style="margin-bottom: 50px;">
     <div class="card-body">
-        
+
         <% var book = '';
+            var chart_id = 0;
         for(var i=0; i < pages.length; i++) {
             if (book == ''){ 
-                book = pages[i].book_name %>
-                <h2><%=  pages[i].book_name %></h2>
-                <table class="table">
-                    <tr>
-                        <td>Page Number</td>
-                        <td>Seconds</td>
-                        <td>Font Size</td>
-                    </tr>
+                book = pages[i].book_name
+                var elementList = []; // for graph
+                chart_id++; %>
+        <h2><%=  pages[i].book_name %></h2>
+
+
+        <div id="chartdiv<%= chart_id %>" style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
+
+        <table class="table">
+            <tr>
+                <td>Page Number</td>
+                <td>Seconds</td>
+                <td>Font Size</td>
+            </tr>
             <% } %>
-                <tr>
-                    <td><%=pages[i].page %></td>
-                    <td><%=pages[i].seconds %></td>
-                    <td><%=pages[i].font_size %></td>
-                </tr>
+
+            <% elementList.push({ "category": pages[i].page, "column-1": pages[i].seconds }); %>
+            <tr>
+                <td><%=pages[i].page %></td>
+                <td><%=pages[i].seconds %></td>
+                <td><%=pages[i].font_size %></td>
+            </tr>
 
 
             <% if(i == pages.length -1 ||  pages[i+1].book_name != book){ 
                 book = ''; %>
-            </table>
-            <br><br>
-            <% } %>
+        </table>
+        <script type="text/javascript">
+            
+
+            AmCharts.makeChart("chartdiv<%= chart_id %>",
+                        {
+                            "type": "serial",
+                            "categoryField": "category",
+                            "autoMarginOffset": 5,
+                            "marginRight": 15,
+                            "marginTop": 20,
+                            "startDuration": 1,
+                            "fontSize": 13,
+                            "theme": "default",
+                            "categoryAxis": {
+                                "startOnAxis": true
+                            },
+                            "chartScrollbar": {
+                                "enabled": true
+                            },
+                            "trendLines": [],
+                            "graphs": [
+                                {
+                                    "balloonText": "[[value]] Seconds on Page [[category]]",
+                                    "bullet": "round",
+                                    "bulletSize": 10,
+                                    "id": "AmGraph-1",
+                                    "lineThickness": 3,
+                                    "title": "graph 1",
+                                    "type": "smoothedLine",
+                                    "valueField": "column-1"
+                                }
+                            ],
+                            "guides": [],
+                            "valueAxes": [
+                                {
+                                    "id": "ValueAxis-1",
+                                    "title": ""
+                                }
+                            ],
+                            "allLabels": [],
+                            "balloon": {},
+                            "titles": [],
+                            "dataProvider": <%- JSON.stringify(elementList) %>
+                        }
+                    );
+        </script>
+
+        <br><br>
+        <% } %>
 
         <% } %>
     </div>
 </div>
+
+
+
+
+
 
 <% include partials/foot %>

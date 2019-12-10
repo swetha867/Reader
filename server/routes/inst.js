@@ -342,7 +342,7 @@ async function getStudentReading(req, res) {
 
 async function getPages(user_id) {
   return new Promise(function (resolve, reject) {
-    db.query(`SELECT book_name, CAST(page_number AS UNSIGNED) page, seconds, font_size
+    db.query(`SELECT book_name, author_name, CAST(page_number AS UNSIGNED) page, seconds, font_size
     FROM PageTable p 
     JOIN books b ON p.book_id = b.id
     WHERE p.user_id = ?
