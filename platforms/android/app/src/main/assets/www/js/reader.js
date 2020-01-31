@@ -4,7 +4,7 @@ EPUBJS.reader.plugins = {}; //-- Attach extra Controllers as plugins (like searc
 var outOfFocusTime = 0;
 var backOnFocusTime = 0;
 
-function getDefaultFont(font){
+function getDefaultFont(){
   // font sizes
   sizes = [];
   sizes["xsmall"] = "90%";
@@ -203,26 +203,28 @@ EPUBJS.Reader = function (bookPath, _options) {
 
           reader.onloadend = function (e) {
             var fulltext = this.result;
-            // console.log(fulltext);
+             //console.log("Fulltext "+fulltext);
             var getUrlPathOfBook = window.mybook.spine[0].url;
             var lastIndexofSlash = getUrlPathOfBook.lastIndexOf('/');
             var baseBookUrlPath = getUrlPathOfBook.substr(0, lastIndexofSlash + 1);
-            var imgSrcIndex = fulltext.lastIndexOf("<img src=");
-            var imgPartText = fulltext.substr(imgSrcIndex + 10, fulltext.length);
+            var imgSrcIndex = fulltext.indexOf("src=");
+            //var imgPartText = fulltext.substr(imgSrcIndex + 10, fulltext.length);
+            var regex = /<img.*?src=['"](.*?)['"]/;
+            var imgPartText;
             if (imgSrcIndex == -1) {
               imgSrcIndex = fulltext.lastIndexOf("xlink:href=");
               imgPartText = fulltext.substr(imgSrcIndex + 12, fulltext.length);
             }
-            // console.log(imgPartText);
+            else{
+              imgPartText = regex.exec(fulltext)[1]+'"';
+            }
 
-            // console.log(imgPartText);
             var lastIndexOfImgTag = imgPartText.indexOf('"');
             var finalImgPath = baseBookUrlPath + imgPartText.substr(0, lastIndexOfImgTag);
-            console.log(finalImgPath);
             var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
             db.transaction(function (tx) {
-              tx.executeSql("Update BooksTable Set name ='" + book.metadata.bookTitle + "' WHERE link='" + localStorage.bookies + "' ");
-              tx.executeSql("Update BooksTable Set author ='" + book.metadata.bookTitle + "' WHERE link='" + localStorage.bookies + "' ");
+              tx.executeSql("Update BooksTable Set name ='" + window.bookKaMeta.bookTitle + "' WHERE link='" + localStorage.bookies + "' ");
+              tx.executeSql("Update BooksTable Set author ='" + window.bookKaMeta.creator + "' WHERE link='" + localStorage.bookies + "' ");
               tx.executeSql("Update BooksTable Set imgpath ='" + finalImgPath + "' WHERE link='" + localStorage.bookies + "' ");
               tx.executeSql("Update BooksTable Set flag = 1 WHERE link='" + localStorage.bookies + "' ");
             }, function (error) {
@@ -230,7 +232,6 @@ EPUBJS.Reader = function (bookPath, _options) {
             }, function () {
               console.log('Changed name');
             });
-
             // console.log("Text is: " + this.result);
           };
 
@@ -300,7 +301,8 @@ EPUBJS.Reader = function (bookPath, _options) {
             page_number: arrayOfPages[0],
             seconds: readingTime,
             book_name: window.bookKaMeta.bookTitle,
-            author_name: window.bookKaMeta.creator 
+            author_name: window.bookKaMeta.creator,
+            font_size: getDefaultFont()
             
           }, 
           success: function(data)
@@ -1431,7 +1433,6 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
   });
   //$(renderer.render.window.frameElement).parent().parent().contents()[5].css( "background-color", "#BADA55" );
   var wrap = $(renderer.render.window.frameElement).parent().parent().contents()[5];
-  var closeSign = document.getElementById("close");
   var definer = $(renderer.render.window.frameElement).parent().parent().contents()[9];
   var cancelus = $(renderer.render.window.frameElement).parent().parent().contents()[11];
   var speaker = $(renderer.render.window.frameElement).parent().parent().contents()[13];
@@ -1591,6 +1592,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               var ogword = t;
               var definitions = '';
               var defNotFound = 0; 
+              var recheck =0;
 
               try {
                 if(dictionaryData.length != 0){
@@ -1598,11 +1600,20 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
                       if(dictionaryData[i].isTeacher==1){
                         definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ "><label id='student' for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
                       }
+                      else if(dictionaryData[i].isUser == 1){
+                        definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ " checked><label for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
+                        recheck = 1;
+                      }
                       else{
                         definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ "><label for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
                       }
                   }
-                  definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' checked><label for='notSure'><b>Not Sure</b></label></span></div>";
+                  if(recheck == 1 ){
+                    definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' ><label for='notSure'><b>Not Sure</b></label></span></div>";
+                  }
+                  else{
+                    definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' checked><label for='notSure'><b>Not Sure</b></label></span></div>";
+                  }
                   definitions += "<input type='hidden' id="+dictionaryData[0].word_id+" name='word_id' value="+ dictionaryData[0].word_id+ ">";
 
                 }
@@ -1620,12 +1631,12 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               $("#close").html("<span>✖</span>");
 
             if (!$.trim(data.queryExpansions)){   
-              $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1>" + ogword + "</h1>");
+              $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 style='padding-left:20px'>" + ogword + "</h1>");
               if(defNotFound != 1)
                 $("#votingForm").html(definitions  + "<br><br><center><input type='submit' value='Vote'></center></form>");
             }
             else{
-                $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.queryExpansions[0].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[1].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[2].thumbnail.thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.queryExpansions[3].thumbnail.thumbnailUrl + " width='300' height='300'/></div><h1>" + ogword.toLocaleUpperCase() + "</h1>");
+                $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='300' height='300'/></div><h1 style='padding-left:20px'>" + ogword.toLocaleUpperCase() + "</h1>");
                 if(defNotFound != 1)
                 $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
               }
@@ -1703,10 +1714,13 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
       };
 
       var hidepope = function () {
-        $('#votingForm').trigger("reset"); 
+        $( "#votingForm" ).unbind();
         $("#close").empty();
+        $("#close").html("<span>✖</span>");
         $("#definitions").empty();
+        $("#definitions").html("<div class='loader'></div>");
         $("#votingForm").empty();
+        $("#votingForm").html();
         wrap.style.display = "none";
         cancelus.style.display = "none";
         definer.style.display = "none";
@@ -1748,7 +1762,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
              });
     });
 
-      closeSign.addEventListener("click", hidepope, false);
+      document.getElementById("close").addEventListener("click", hidepope, false);
 
       cancelus.addEventListener("click", onCancel, false);
 

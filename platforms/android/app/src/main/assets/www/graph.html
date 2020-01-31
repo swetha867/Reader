@@ -13,31 +13,30 @@
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
       var elementList = [];
+      console.log(localStorage.pagestats);
       var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
       db.transaction(function (tx) {
-        var statementToExecute = "SELECT * FROM PageTable Where book='" + localStorage.pagestats + "'";
+        var statementToExecute = "SELECT author FROM BooksTable Where name ='" + localStorage.pagestats + "'";
 
         tx.executeSql(statementToExecute, [], function (tx, rs) {
 
-          for (var i = 0; i < rs.rows.length; i++) {
-
-            var book_name = rs.rows.item(i).book;
-            var page_number = rs.rows.item(i).page;
-            var page_seconds = rs.rows.item(i).seconds;
-            console.log(book_name);
-            console.log(page_number);
-            console.log(page_seconds);
-            elementList.push({"category": page_number, "column-1": page_seconds});
-          }
-        }, function (tx, error) {
-          console.log('SELECT error: ' + error.message);
-        });
-      }, function (error) {
-        console.log('transaction error: ' + error.message);
-      }, function () {
-        console.log('transaction ok');
-        console.log(elementList);
-        AmCharts.makeChart("chartdiv",
+          console.log(rs.rows.item(0).author);
+          $.ajax({
+          type: "POST",
+          url: "http://3.15.37.149:6010/page/statistics",
+          data: {
+            userID: window.localStorage.getItem("reader_user_id"),
+            book_name: localStorage.pagestats,
+            author_name: rs.rows.item(0).author
+          }, 
+          success: function(data)
+          {
+            $.each(data, function(index,item) {        
+              elementList.push({"category": item.page_number, "column-1": item.seconds});
+            });
+          },
+          complete: function (data) {
+            AmCharts.makeChart("chartdiv",
           {
             "type": "serial",
             "categoryField": "category",
@@ -79,6 +78,27 @@
             "dataProvider": elementList
           }
         );
+          }
+        });
+
+         /* for (var i = 0; i < rs.rows.length; i++) {
+
+            var book_name = rs.rows.item(i).book;
+            var page_number = rs.rows.item(i).page;
+            var page_seconds = rs.rows.item(i).seconds;
+            console.log(book_name);
+            console.log(page_number);
+            console.log(page_seconds);
+            elementList.push({"category": page_number, "column-1": page_seconds});
+          }*/
+        }, function (tx, error) {
+          console.log('SELECT error: ' + error.message);
+        });
+      }, function (error) {
+        console.log('transaction error: ' + error.message);
+      }, function () {
+        console.log('transaction ok');
+        console.log(elementList);
       });
 
 

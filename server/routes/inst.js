@@ -346,6 +346,7 @@ async function getPages(user_id) {
     FROM PageTable p 
     JOIN books b ON p.book_id = b.id
     WHERE p.user_id = ?
+    AND seconds < 600 AND seconds > 0
     ORDER BY book_name, page;`, [user_id],
       (err, rows, fields) => {
         if (err) {

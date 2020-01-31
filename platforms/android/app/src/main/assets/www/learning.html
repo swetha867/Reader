@@ -71,28 +71,24 @@
                 return (a.word > b.word) ? 1 : ((b.word > a.word) ? -1 : 0)
               });
             }
-            else if(localStorage.sortWords == 'recent'){
-              data.reverse();
-            }
             else if(localStorage.sortWords == 'frequency'){
               data.sort(function(a, b) {
               return b.freq-a.freq;
               });
             } 
-            else{
-              data.reverse();
-            }
             $.each(data, function(index,item) {        
               console.log(item.word+" "+item.meaning);
+              var meaning = (item.meaning != null) ? item.meaning : "Not Voted" ;
+              
               if(item.meaning_teacher != null){
-                var content = "<div data-role='collapsible'><h3>" + item.word + "<span style='font-size:100%;color:green;''>&nbsp;&nbsp;&starf;</span></h3><p><b>Definition: </b><br/>" +
-                item.meaning + "</p><p><b>Sentence: </b><br/>" + item.sentence + "</p><p><b>Book: </b> " +
+                var content = "<div data-role='collapsible'><h3>" + item.word + "<span style='font-size:100%;color:green;''>&nbsp;&nbsp;&starf;</span></h3><p><b>Voted Definition: </b><br/>" +
+                meaning + "</p><p><b>Sentence: </b><br/>" + item.sentence + "</p><p><b>Book: </b> " +
                 item.book_name + "</p><p><b>Frequency: </b> " + item.freq + "</p><p><b>Teacher's Vote: </b> " + 
                 item.meaning_teacher + "</p></div>";
               }
               else{
-                var content = "<div data-role='collapsible'><h3>" + item.word + "</h3><p><b>Definition: </b><br/>" +
-                item.meaning + "</p><p><b>Sentence: </b><br/>" + item.sentence + "</p><p><b>Book: </b> " +
+                var content = "<div data-role='collapsible'><h3>" + item.word + "</h3><p><b>Voted Definition: </b><br/>" +
+                meaning + "</p><p><b>Sentence: </b><br/>" + item.sentence + "</p><p><b>Book: </b> " +
                 item.book_name + "</p><p><b>Frequency: </b> " + item.freq + "</p></div>";
               } 
             $("#set").append(content).collapsibleset('refresh');
