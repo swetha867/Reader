@@ -4,7 +4,7 @@ EPUBJS.reader.plugins = {}; //-- Attach extra Controllers as plugins (like searc
 var outOfFocusTime = 0;
 var backOnFocusTime = 0;
 
-function getDefaultFont(){
+function getDefaultFont() {
   // font sizes
   sizes = [];
   sizes["xsmall"] = "90%";
@@ -19,13 +19,13 @@ function getDefaultFont(){
 document.addEventListener("pause", onPause, false);
 
 function onPause() {
-    outOfFocusTime = Math.floor(Date.now() / 1000);
+  outOfFocusTime = Math.floor(Date.now() / 1000);
 }
 
 document.addEventListener("resume", onResume, false);
 
 function onResume() {
-    backOnFocusTime = Math.floor(Date.now() / 1000);  
+  backOnFocusTime = Math.floor(Date.now() / 1000);
 }
 
 
@@ -103,10 +103,10 @@ EPUBJS.Reader = function (bookPath, _options) {
   }
 
   forceGenerate = false;
-  if(this.settings.styles && this.settings.styles.fontSize !=  getDefaultFont()){
+  if (this.settings.styles && this.settings.styles.fontSize != getDefaultFont()) {
     forceGenerate = true;
   }
-  this.settings.styles = {fontSize: getDefaultFont()}
+  this.settings.styles = { fontSize: getDefaultFont() }
 
   // this.settings.styles = this.settings.styles || {
   //   fontSize: "100%"
@@ -154,7 +154,7 @@ EPUBJS.Reader = function (bookPath, _options) {
     var totalPages = document.getElementById("totalpg");
     var slider = document.createElement("input");
     var pageList;
-    var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+    var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
     window.arrayOfTimes = [];
     window.arrayOfPages = [];
     var slide = function () {
@@ -203,7 +203,7 @@ EPUBJS.Reader = function (bookPath, _options) {
 
           reader.onloadend = function (e) {
             var fulltext = this.result;
-             //console.log("Fulltext "+fulltext);
+            //console.log("Fulltext "+fulltext);
             var getUrlPathOfBook = window.mybook.spine[0].url;
             var lastIndexofSlash = getUrlPathOfBook.lastIndexOf('/');
             var baseBookUrlPath = getUrlPathOfBook.substr(0, lastIndexofSlash + 1);
@@ -215,8 +215,8 @@ EPUBJS.Reader = function (bookPath, _options) {
               imgSrcIndex = fulltext.lastIndexOf("xlink:href=");
               imgPartText = fulltext.substr(imgSrcIndex + 12, fulltext.length);
             }
-            else{
-              imgPartText = regex.exec(fulltext)[1]+'"';
+            else {
+              imgPartText = regex.exec(fulltext)[1] + '"';
             }
 
             var lastIndexOfImgTag = imgPartText.indexOf('"');
@@ -291,8 +291,7 @@ EPUBJS.Reader = function (bookPath, _options) {
       if (arrayOfTimes.length == 2) {
         var downTime = backOnFocusTime - outOfFocusTime;
         var readingTime = arrayOfTimes[1] - arrayOfTimes[0] - downTime;
-        if(readingTime > 1200)
-          readingTime = 1200;
+        if (readingTime > 600) return;
         $.ajax({
           type: "POST",
           url: "http://3.15.37.149:6010/page",
@@ -303,17 +302,15 @@ EPUBJS.Reader = function (bookPath, _options) {
             book_name: window.bookKaMeta.bookTitle,
             author_name: window.bookKaMeta.creator,
             font_size: getDefaultFont()
-            
-          }, 
-          success: function(data)
-          {
-              console.log(data); 
+          },
+          success: function (data) {
+            console.log(data);
           },
           complete: function (data) {
             arrayOfTimes[0] = arrayOfTimes[1];
             arrayOfPages[0] = arrayOfPages[1];
-            outOfFocusTime =0;
-            backOnFocusTime =0;
+            outOfFocusTime = 0;
+            backOnFocusTime = 0;
           }
         });
 
@@ -360,14 +357,9 @@ EPUBJS.Reader = function (bookPath, _options) {
           });
         });*/
       }
-
-
-
-
       // console.log(location.pageRange)
     });
   }, 500);
-
 
   reader.ReaderController = EPUBJS.reader.ReaderController.call(reader, book);
   reader.SettingsController = EPUBJS.reader.SettingsController.call(reader, book);
@@ -1391,7 +1383,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
   var ultimate = window.mybook;
   var gettingcfi = ultimate.getCurrentLocationCfi();
-   console.log($(renderer.render.window.frameElement).parent().parent().contents());
+  console.log($(renderer.render.window.frameElement).parent().parent().contents());
   // console.log($(renderer.render.window.frameElement).parent().parent().parent().parent().parent().parent().contents());
   var mc = new Hammer(renderer.doc);
 
@@ -1573,15 +1565,15 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
           console.log(data);
 
           var output = $.ajax({
-						url: 'http://3.15.37.149:6010/lookup',
-            type: 'POST', 
+            url: 'http://3.15.37.149:6010/lookup',
+            type: 'POST',
             data: {
-              word : t,
+              word: t,
               user_id: window.localStorage.getItem("reader_user_id"),
-              sentence : localStorage.sentence,
+              sentence: localStorage.sentence,
               book_name: window.bookKaMeta.bookTitle,
               author_name: window.bookKaMeta.creator
-            }, 
+            },
             dataType: 'json',
             success: function (dictionaryData) {
 
@@ -1591,33 +1583,33 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
               meanings[2] = "";
               var ogword = t;
               var definitions = '';
-              var defNotFound = 0; 
-              var recheck =0;
+              var defNotFound = 0;
+              var recheck = 0;
 
               try {
-                if(dictionaryData.length != 0){
+                if (dictionaryData.length != 0) {
                   for (var i = 0; i < dictionaryData.length; i++) {
-                      if(dictionaryData[i].isTeacher==1){
-                        definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ "><label id='student' for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
-                      }
-                      else if(dictionaryData[i].isUser == 1){
-                        definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ " checked><label for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
-                        recheck = 1;
-                      }
-                      else{
-                        definitions += "<div class='aaa'><span class='ccc' ><label>"+dictionaryData[i].count+"</label></span><span class='bbb'><input type='radio' id="+dictionaryData[i].id+" name = 'meaning_id' value="+dictionaryData[i].id+ "><label for="+dictionaryData[i].id+"><b> " +  dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl  + "</label></span></div>";
-                      }
+                    if (dictionaryData[i].isTeacher == 1) {
+                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + "><label id='student' for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+                    }
+                    else if (dictionaryData[i].isUser == 1) {
+                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + " checked><label for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+                      recheck = 1;
+                    }
+                    else {
+                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + "><label for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+                    }
                   }
-                  if(recheck == 1 ){
+                  if (recheck == 1) {
                     definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' ><label for='notSure'><b>Not Sure</b></label></span></div>";
                   }
-                  else{
+                  else {
                     definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' checked><label for='notSure'><b>Not Sure</b></label></span></div>";
                   }
-                  definitions += "<input type='hidden' id="+dictionaryData[0].word_id+" name='word_id' value="+ dictionaryData[0].word_id+ ">";
+                  definitions += "<input type='hidden' id=" + dictionaryData[0].word_id + " name='word_id' value=" + dictionaryData[0].word_id + ">";
 
                 }
-                else{
+                else {
                   definitions += "<h2>Definition not found</h2>"
                   defNotFound = 1;
                 }
@@ -1630,15 +1622,15 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
               $("#close").html("<span>✖</span>");
 
-            if (!$.trim(data.queryExpansions)){   
-              $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 style='padding-left:20px'>" + ogword + "</h1>");
-              if(defNotFound != 1)
-                $("#votingForm").html(definitions  + "<br><br><center><input type='submit' value='Vote'></center></form>");
-            }
-            else{
+              if (!$.trim(data.queryExpansions)) {
+                $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 style='padding-left:20px'>" + ogword + "</h1>");
+                if (defNotFound != 1)
+                  $("#votingForm").html(definitions + "<br><br><center><input type='submit' value='Vote'></center></form>");
+              }
+              else {
                 $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='300' height='300'/></div><h1 style='padding-left:20px'>" + ogword.toLocaleUpperCase() + "</h1>");
-                if(defNotFound != 1)
-                $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
+                if (defNotFound != 1)
+                  $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
               }
 
             },
@@ -1714,7 +1706,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
       };
 
       var hidepope = function () {
-        $( "#votingForm" ).unbind();
+        $("#votingForm").unbind();
         $("#close").empty();
         $("#close").html("<span>✖</span>");
         $("#definitions").empty();
@@ -1733,34 +1725,33 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
         definer.style.display = "none";
       };
 
-      $("#votingForm").one('submit',function(e) {
-        e.preventDefault(); 
-        var result = { };
-        $.each($(this).serializeArray(), function() {
-            result[this.name] = this.value;
+      $("#votingForm").one('submit', function (e) {
+        e.preventDefault();
+        var result = {};
+        $.each($(this).serializeArray(), function () {
+          result[this.name] = this.value;
         });
 
-      console.log('meaning = ' + result.meaning_id + ', Word Id = ' + result.word_id);
+        console.log('meaning = ' + result.meaning_id + ', Word Id = ' + result.word_id);
         $.ajax({
-               type: "POST",
-               url: "http://3.15.37.149:6010/votes",
-               data: {
-                 user_id: window.localStorage.getItem('reader_user_id'),
-                 meaning_id: result.meaning_id,
-                 word_id: result.word_id,
-                 sentence: localStorage.sentence,
-                 book_name: window.bookKaMeta.bookTitle,
-                 author_name: window.bookKaMeta.creator
-               }, 
-               success: function(data)
-               {
-                   alert("Vote Saved"); 
-               },
-               complete: function (data) {
-                hidepope(); 
-               }
-             });
-    });
+          type: "POST",
+          url: "http://3.15.37.149:6010/votes",
+          data: {
+            user_id: window.localStorage.getItem('reader_user_id'),
+            meaning_id: result.meaning_id,
+            word_id: result.word_id,
+            sentence: localStorage.sentence,
+            book_name: window.bookKaMeta.bookTitle,
+            author_name: window.bookKaMeta.creator
+          },
+          success: function (data) {
+            alert("Vote Saved");
+          },
+          complete: function (data) {
+            hidepope();
+          }
+        });
+      });
 
       document.getElementById("close").addEventListener("click", hidepope, false);
 
