@@ -1,7 +1,9 @@
 const express = require('express');
 const mysqlConnection = require('../database/db');
+const book = require('../database/book');
+const { Reading } = require('../model/reading');
+var moment = require('moment');
 const router = express.Router();
-
 
 router.get('/', (req, res) => {
     mysqlConnection.query('Select * from PageTable', (err, rows, field) => {
@@ -13,7 +15,6 @@ router.get('/', (req, res) => {
         }
     });
 });
-var bookID;
 
 router.post('/statistics', (req, res) => {
     var userID = req.body.userID;
@@ -28,7 +29,6 @@ router.post('/statistics', (req, res) => {
             res.send('Book not in the database');
         }
         else {
-            console.log(result[0].id);
             mysqlConnection.query('Select * from PageTable where user_id=? and book_id=?;', [userID, result[0].id], (err, result, fields) => {
                 if (err) {
                     res.send('Error getting page stats for book', err);
@@ -42,61 +42,66 @@ router.post('/statistics', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-
-    var userID = req.body.userID;
-    var page_number = req.body.page_number;
-    var seconds = req.body.seconds;
-    var book_name = req.body.book_name;
-    var author_name = req.body.author_name;
-    var font_size = req.body.font_size;
-
-    mysqlConnection.query(`Select id from books where book_name=? and author_name=?;`, [book_name, author_name], (err, result, fields) => {
-        if (err) {
-            res.send('Error is in finding book id', err);
-            return;
-        }
-        if (result.length === 0) {
-            mysqlConnection.query('Insert into books (`book_name`, `author_name`) VALUES (?,?);', [book_name, author_name], (err, result, fields) => {
-                if (err) {
-                    res.send('Error is in inserting book name and author of that book', err);
-                }
-                bookID = result.insertId;
-                saveIntoPageTable(res, userID, bookID, page_number, seconds, font_size);
-            });
-        }
-        else if (result.length !== 0) {
-            bookID = result[0].id;
-            saveIntoPageTable(res, userID, bookID, page_number, seconds, font_size);
-
-        }
-    });
+    handlePostPage(req).then(results => res.send(results));
 });
 
-function saveIntoPageTable(res, userID, bookID, page_number, seconds, font_size) {
-    mysqlConnection.query(`Select id from PageTable where user_id=? and book_id=? and page_number=?`, [userID, bookID, page_number], (err, result, fields) => {
-        if (err) {
-            res.send('Error getting id from pagetable', err);
-        }
-        if (result.length === 0) {
-            mysqlConnection.query('Insert into PageTable (`user_id`,`book_id`,`page_number`,`seconds`,`font_size`) VALUES (?,?,?,?,?);', [userID, bookID, page_number, seconds, font_size], (err, result, fields) => {
-                if (err) {
-                    res.send('Error in inserting the page statistics', err);
-                }
-                else {
-                    res.send('Page stats are inserted successfully');
-                }
-            });
-        }
-        else if (result.length !== 0) {
-            mysqlConnection.query(`Update PageTable set seconds=seconds + ${seconds}`, (err, result, fields) => {
-                if (err) {
-                    res.send(`Error in updating the Page Table seconds with ${err}`);
-                }
-                res.send('Seconds Updated');
-            })
-        }
-    })
+async function handlePostPage(req) {
 
+    var bookID = await book.getBookId(req.body.book_name, req.body.author_name);
+    var userID = parseInt(req.body.userID);
+    var page_number = parseInt(req.body.page_number);
+    var seconds = parseInt(req.body.seconds);
+    var font_size = req.body.font_size;
+    var end = moment().format('YYYY-MM-DD HH:mm:ss');
+    var start = moment().subtract(seconds, 'seconds').format('YYYY-MM-DD HH:mm:ss');
+    var session = await Reading.getSessionId(userID, start);
+
+    return new Promise(function (resolve, reject) {
+        if (seconds < 1 || seconds > 600) {
+            resolve({ res: 'Invalid seconds range' });
+            return;
+        }
+
+        if (!bookID || bookID == NaN || userID == NaN || page_number == NaN || seconds == NaN) {
+            resolve({ res: 'Invalid inputs.' });
+            return;
+        }
+
+        mysqlConnection.query('INSERT INTO readings (`user_id`,`book_id`,`page_number`,`seconds`,`font_size`, `start`, `end`, `session`) VALUES (?,?,?,?,?,?,?,?);',
+            [userID, bookID, page_number, seconds, font_size, start, end, session], (err, result, fields) => {
+                if (err) {
+                    resolve({ res: 'Error in inserting the page statistics' });
+                    return;
+                }
+                resolve({ res: 'Page stats are inserted successfully' });
+            });
+
+        // mysqlConnection.query(`SELECT id FROM readings WHERE user_id=? AND book_id=? AND page_number=? AND session=?`,
+        //     [userID, bookID, page_number, session], (err, result, fields) => {
+        //         if (err) {
+        //             resolve({ res: 'Error getting id from pagetable' });
+        //             return;
+        //         }
+        //         if (result.length === 0) {
+        //             mysqlConnection.query('INSERT INTO readings (`user_id`,`book_id`,`page_number`,`seconds`,`font_size`, session) VALUES (?,?,?,?,?,?);',
+        //                 [userID, bookID, page_number, seconds, font_size, session], (err, result, fields) => {
+        //                     if (err) {
+        //                         resolve({ res: 'Error in inserting the page statistics' });
+        //                         return;
+        //                     }
+        //                     resolve({ res: 'Page stats are inserted successfully' });
+        //                 });
+        //         } else if (result.length !== 0) {
+        //             mysqlConnection.query(`UPDATE readings set seconds=seconds + ${seconds} WHERE id = ${result[0].id}`, (err, result, fields) => {
+        //                 if (err) {
+        //                     resolve({ res: `Error in updating the Page Table seconds with ${err}` });
+        //                     return;
+        //                 }
+        //                 resolve({ res: 'Seconds updated' });
+        //             })
+        //         }
+        //     })
+    });
 }
 
 module.exports = router;
