@@ -3,6 +3,7 @@ const db = require('../database/db');
 const passport = require('passport');
 const dic = require('../api/dictionary');
 const router = express.Router();
+const util = require('util')
 
 router.get('/', (req, res) => {
   res.render('inst/index');
@@ -14,8 +15,6 @@ router.get('/students', (req, res) => {
 
 async function getStudents(req, res) {
   var students = await getStudentsHelper();
-
-
 
   for (var i = 0; i < students.length; i++) {
     students[i].words = await addWordsToStudents(students[i].id);
@@ -335,19 +334,57 @@ router.get('/student/reading/:userId', (req, res) => {
   getStudentReading(req, res);
 })
 
+function newBook(name, author) {
+  return { title: name, author: author, pages: new Map() };
+}
+
 async function getStudentReading(req, res) {
-  const pages = await getPages(req.params.userId);
+  const rows = await getPages(req.params.userId);
+  var books = [];
+  var book = '';
+  // reuslt must be sorted by book_name
+  for (var i = 0; i < rows.length; i++) {
+    if (book == '') { // first time
+      book = newBook(rows[i].book_name, rows[i].author_name)      
+    }
+    var current_seconds = rows[i].seconds.split(',');
+    var current_pages = rows[i].pages.split(',');
+    for (var j = 0; j < current_seconds.length; j++) {
+      // check if there is exsiting data
+      if (!book.pages.has(current_pages[j])) {
+        book.pages.set(current_pages[j], { 'page': current_pages[j] });
+      }
+      var pageObject = book.pages.get(current_pages[j]);
+      pageObject["s" + rows[i].session] = current_seconds[j]
+      book.pages.set(current_pages[j], pageObject);
+    }
+    if(i == rows.length - 1 || book.title != rows[i+1].book_name){
+      books.push(book);
+      book = newBook(rows[i].book_name, rows[i].author_name);
+    }
+  }
+  console.log(util.inspect(books, false, null, true /* enable colors */))
+
+  // console.log(books);
+  return;
+  // var mapAsc = new Map([...map.entries()].sort());
+
+
+
+  console.log(pages);
   res.render('inst/student_reading', { user_id: req.params.userId, pages: pages });
 }
 
 async function getPages(user_id) {
   return new Promise(function (resolve, reject) {
-    db.query(`SELECT book_name, author_name, CAST(page_number AS UNSIGNED) page, seconds, font_size
-    FROM PageTable p 
-    JOIN books b ON p.book_id = b.id
-    WHERE p.user_id = ?
-    AND seconds < 600 AND seconds > 0
-    ORDER BY book_name, page;`, [user_id],
+    db.query(`SELECT book_name, author_name, font_size, session,
+      GROUP_CONCAT(seconds ORDER BY page_number ASC) as seconds,
+      GROUP_CONCAT(page_number ORDER BY page_number ASC) as pages
+      FROM readings r 
+      JOIN books b ON r.book_id = b.id
+      WHERE r.user_id = ?
+      GROUP BY session
+      ORDER BY book_name DESC;`, [user_id],
       (err, rows, fields) => {
         if (err) {
           resolve(null);
@@ -360,9 +397,6 @@ async function getPages(user_id) {
       })
   });
 }
-
-
-
 
 router.get('/student/votes/:userId', (req, res) => {
   getStudentVotes(req, res);

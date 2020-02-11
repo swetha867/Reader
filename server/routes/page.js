@@ -46,7 +46,6 @@ router.post('/', (req, res) => {
 });
 
 async function handlePostPage(req) {
-
     var bookID = await book.getBookId(req.body.book_name, req.body.author_name);
     var userID = parseInt(req.body.userID);
     var page_number = parseInt(req.body.page_number);
