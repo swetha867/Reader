@@ -335,7 +335,7 @@ router.get('/student/reading/:userId', (req, res) => {
 })
 
 function newBook(name, author) {
-  return { title: name, author: author, pages: new Map() };
+  return { title: name, author: author, sessions: new Set(), pages: new Map() };
 }
 
 async function getStudentReading(req, res) {
@@ -345,8 +345,9 @@ async function getStudentReading(req, res) {
   // reuslt must be sorted by book_name
   for (var i = 0; i < rows.length; i++) {
     if (book == '') { // first time
-      book = newBook(rows[i].book_name, rows[i].author_name)      
+      book = newBook(rows[i].book_name, rows[i].author_name)
     }
+    book.sessions.add("s" + rows[i].session);
     var current_seconds = rows[i].seconds.split(',');
     var current_pages = rows[i].pages.split(',');
     for (var j = 0; j < current_seconds.length; j++) {
@@ -358,21 +359,29 @@ async function getStudentReading(req, res) {
       pageObject["s" + rows[i].session] = current_seconds[j]
       book.pages.set(current_pages[j], pageObject);
     }
-    if(i == rows.length - 1 || book.title != rows[i+1].book_name){
+    if (i == rows.length - 1 || book.title != rows[i + 1].book_name) {
       books.push(book);
       book = newBook(rows[i].book_name, rows[i].author_name);
     }
   }
-  console.log(util.inspect(books, false, null, true /* enable colors */))
-
-  // console.log(books);
-  return;
-  // var mapAsc = new Map([...map.entries()].sort());
-
-
-
-  console.log(pages);
-  res.render('inst/student_reading', { user_id: req.params.userId, pages: pages });
+  // console.log(util.inspect(books, false, null, true /* enable colors */))
+  /*
+  Sample Data for books:
+  [
+  {
+    title: 'Test Book',
+    author: 'Sol',
+    sessions: Set(5) { 's0', 's1', 's2', 's3', 's4' },
+    pages: Map(4) {
+      '1' => { page: '1', s0: '15', s1: '15', s2: '15', s3: '15' },
+      '2' => { page: '2', s3: '20' },
+      '3' => { page: '3', s3: '12' },
+      '4' => { page: '4', s3: '22', s4: '22' }
+    }
+  }
+  ]
+  */
+  res.render('inst/student_reading', { user_id: req.params.userId, books: books });
 }
 
 async function getPages(user_id) {

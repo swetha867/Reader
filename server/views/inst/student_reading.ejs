@@ -12,36 +12,14 @@
 
 <div class="card" style="margin-bottom: 50px;">
     <div class="card-body">
-        <% var book = '';
-        var chart_id = 0;
-        for (var i=0; i < pages.length; i++) {
-            if (book == ''){
-                book = pages[i].book_name
-                var elementList = []; // for graph
-                chart_id++; %>
-        <h2><%=  pages[i].book_name %></h2>
-        <div id="chartdiv<%= chart_id %>" style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
-        <table class="table">
-            <tr>
-                <td>Page Number</td>
-                <td>Seconds</td>
-                <td>Font Size</td>
-            </tr>
-            <% } %>
-            <% elementList.push({ "category": pages[i].page, "column-1": pages[i].seconds }); %>
-            <tr>
-                <td><%=pages[i].page %></td>
-                <td><%=pages[i].seconds %></td>
-                <td><%=pages[i].font_size %></td>
-            </tr>
-            <% if(i == pages.length -1 ||  pages[i+1].book_name != book){ 
-                book = ''; %>
-        </table>
+        <% for (var i=0; i < books.length; i++) { %>
+        <h2><%= books[i].title %> <small><%= books[i].author %></small></h2>
+        <div id="chartdiv<%= i %>" style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
         <script type="text/javascript">
-            AmCharts.makeChart("chartdiv<%= chart_id %>",
+            AmCharts.makeChart("chartdiv<%= i %>",
                         {
                             "type": "serial",
-                            "categoryField": "date",
+                            "categoryField": "page",
                             "autoMarginOffset": 5,
                             "marginRight": 15,
                             "marginTop": 20,
@@ -56,115 +34,35 @@
                             },
                             "trendLines": [],
                             "graphs": [
+
+                            <% books[i].sessions.forEach(function(value, key, set) { %>
                             {
-                                "id": "AmGraph-1",
-                                    "balloonText": "[[value]] Seconds on Page [[category]]",
-                                    "bullet": "round",
-                                    "bulletSize": 10,
-                                    "lineThickness": 3,
-                                    "title": "graph 1",
-                                    "type": "smoothedLine",
-                                    "valueField": "value"
-                                },
-                                {
-                                    "id": "AmGraph-2",
-                                    "balloonText": "[[value2]] Seconds on Page [[category]]",
-                                    "bullet": "round",
-                                    "bulletSize": 10,
-                                    "lineThickness": 3,
-                                    "title": "graph 2",
-                                    "type": "smoothedLine",
-                                    "valueField": "value2"
-                                }
+                            "id": "AmGraph-<%=value%>",
+                            "balloonText": "[[<%=value%>]] Seconds on Page [[page]]",
+                            "bullet": "round",
+                            "bulletSize": 10,
+                            "lineThickness": 3,
+                            "title": "graph 1",
+                            "type": "smoothedLine",
+                            "valueField": "<%=value%>"
+                            },
+
+                            <% }); %>
                             ],
                             "guides": [],
-                            "valueAxes": [
-                            {
-                                    "id": "ValueAxis-1",
-                                    "title": ""
-                                },
-                                {
-                                    "id": "ValueAxis-2",
-                                    "title": ""
-                                },
-                            ],
                             "allLabels": [],
                             "balloon": {},
                             "titles": [],
-                            "dataProvider": [{
-            "date": "2012-07-27",
-            "value": 13,
-            "value2": 10
-        }, {
-            "date": "2012-07-28",
-            "value": 11,
-            "value2": 12
-        }, {
-            "date": "2012-07-29",
-            "value": 15,
-            "value2": 20
-        }, {
-            "date": "2012-07-30",
-            "value": 16,
-            "value2": 14
-        }, {
-            "date": "2012-07-31",
-            "value": 18,
-            "value2": 16
-        }, {
-            "date": "2012-08-01",
-            "value": 13,
-            "value2": 13
-        }, {
-            "date": "2012-08-02",
-            "value": 22
-        }, {
-            "date": "2012-08-03",
-            "value": 23
-        }, {
-            "date": "2012-08-04",
-            "value": 20
-        }, {
-            "date": "2012-08-05",
-            "value": 17
-        }, {
-            "date": "2012-08-06",
-            "value": 16
-        }, {
-            "date": "2012-08-07",
-            "value": 18
-        }, {
-            "date": "2012-08-08",
-            "value": 21
-        }, {
-            "date": "2012-08-09",
-            "value": 26
-        }, {
-            "date": "2012-08-10",
-            "value": 24
-        }, {
-            "date": "2012-08-11",
-            "value": 29
-        }, {
-            "date": "2012-08-12",
-            "value": 32
-        }, {
-            "date": "2012-08-13",
-            "value": 18
-        }, {
-            "date": "2012-08-14",
-            "value": 24
-        }, {
-            "date": "2012-08-15",
-            "value2": 22
-        }]
+                            "dataProvider":<%
+                            resArr = [];
+                            books[i].pages.forEach(function(value, key, map) {
+                                resArr.push(value);
+                            }); %><%- JSON.stringify(resArr); %>
                         }
                     );
         </script>
 
         <br><br>
-        <% } %>
-
         <% } %>
     </div>
 </div>
