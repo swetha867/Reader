@@ -335,6 +335,7 @@ router.get('/student/reading/:userId', (req, res) => {
 })
 
 function newBook(name, author) {
+  console.log("new book : " + name);
   return { title: name, author: author, sessions: new Set(), pages: new Map() };
 }
 
@@ -360,11 +361,17 @@ async function getStudentReading(req, res) {
       book.pages.set(current_pages[j], pageObject);
     }
     if (i == rows.length - 1 || book.title != rows[i + 1].book_name) {
+      book.pages = new Map([...book.pages.entries()].sort(
+        function (a, b) {
+          return parseInt(a) - parseInt(b);
+        }
+      ));
       books.push(book);
-      book = newBook(rows[i].book_name, rows[i].author_name);
+      book = '';
     }
   }
-  // console.log(util.inspect(books, false, null, true /* enable colors */))
+
+  console.log(util.inspect(books, false, null, true /* enable colors */))
   /*
   Sample Data for books:
   [
@@ -392,8 +399,8 @@ async function getPages(user_id) {
       FROM readings r 
       JOIN books b ON r.book_id = b.id
       WHERE r.user_id = ?
-      GROUP BY session
-      ORDER BY book_name DESC;`, [user_id],
+      GROUP BY book_id, session
+      ORDER BY book_name ASC;`, [user_id],
       (err, rows, fields) => {
         if (err) {
           resolve(null);

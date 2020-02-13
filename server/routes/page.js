@@ -1,12 +1,12 @@
 const express = require('express');
-const mysqlConnection = require('../database/db');
+const db = require('../database/db');
 const book = require('../database/book');
 const { Reading } = require('../model/reading');
 var moment = require('moment');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    mysqlConnection.query('Select * from PageTable', (err, rows, field) => {
+    db.query('Select * from PageTable', (err, rows, field) => {
         if (err) {
             res.send('Error fetching from the Page Table', err);
         }
@@ -21,7 +21,7 @@ router.post('/statistics', (req, res) => {
     var book_name = req.body.book_name;
     var author_name = req.body.author_name;
 
-    mysqlConnection.query('Select id from books where book_name=? and author_name=?;', [book_name, author_name], (err, result, fields) => {
+    db.query('Select id from books where book_name=? and author_name=?;', [book_name, author_name], (err, result, fields) => {
         if (err) {
             res.send('error in selecting book id for stats call', err);
         }
@@ -29,7 +29,7 @@ router.post('/statistics', (req, res) => {
             res.send('Book not in the database');
         }
         else {
-            mysqlConnection.query('Select * from PageTable where user_id=? and book_id=?;', [userID, result[0].id], (err, result, fields) => {
+            db.query('Select * from PageTable where user_id=? and book_id=?;', [userID, result[0].id], (err, result, fields) => {
                 if (err) {
                     res.send('Error getting page stats for book', err);
                 }
@@ -52,7 +52,13 @@ async function handlePostPage(req) {
     var seconds = parseInt(req.body.seconds);
     var font_size = req.body.font_size;
     var end = moment().format('YYYY-MM-DD HH:mm:ss');
-    var start = moment().subtract(seconds, 'seconds').format('YYYY-MM-DD HH:mm:ss');
+
+    return handlePostPageHelper(bookID, userID, page_number, seconds, font_size, end)
+}
+
+
+async function handlePostPageHelper(bookID, userID, page_number, seconds, font_size, end) {
+    var start = moment(end).subtract(seconds, 'seconds').format('YYYY-MM-DD HH:mm:ss');
     var session = await Reading.getSessionId(userID, start);
 
     return new Promise(function (resolve, reject) {
@@ -66,7 +72,7 @@ async function handlePostPage(req) {
             return;
         }
 
-        mysqlConnection.query('INSERT INTO readings (`user_id`,`book_id`,`page_number`,`seconds`,`font_size`, `start`, `end`, `session`) VALUES (?,?,?,?,?,?,?,?);',
+        db.query('INSERT INTO readings (`user_id`,`book_id`,`page_number`,`seconds`,`font_size`, `start`, `end`, `session`) VALUES (?,?,?,?,?,?,?,?);',
             [userID, bookID, page_number, seconds, font_size, start, end, session], (err, result, fields) => {
                 if (err) {
                     resolve({ res: 'Error in inserting the page statistics' });
@@ -74,32 +80,32 @@ async function handlePostPage(req) {
                 }
                 resolve({ res: 'Page stats are inserted successfully' });
             });
+    });
+}
 
-        // mysqlConnection.query(`SELECT id FROM readings WHERE user_id=? AND book_id=? AND page_number=? AND session=?`,
-        //     [userID, bookID, page_number, session], (err, result, fields) => {
-        //         if (err) {
-        //             resolve({ res: 'Error getting id from pagetable' });
-        //             return;
-        //         }
-        //         if (result.length === 0) {
-        //             mysqlConnection.query('INSERT INTO readings (`user_id`,`book_id`,`page_number`,`seconds`,`font_size`, session) VALUES (?,?,?,?,?,?);',
-        //                 [userID, bookID, page_number, seconds, font_size, session], (err, result, fields) => {
-        //                     if (err) {
-        //                         resolve({ res: 'Error in inserting the page statistics' });
-        //                         return;
-        //                     }
-        //                     resolve({ res: 'Page stats are inserted successfully' });
-        //                 });
-        //         } else if (result.length !== 0) {
-        //             mysqlConnection.query(`UPDATE readings set seconds=seconds + ${seconds} WHERE id = ${result[0].id}`, (err, result, fields) => {
-        //                 if (err) {
-        //                     resolve({ res: `Error in updating the Page Table seconds with ${err}` });
-        //                     return;
-        //                 }
-        //                 resolve({ res: 'Seconds updated' });
-        //             })
-        //         }
-        //     })
+
+
+router.get('/reload', (req, res) => {
+    handleReload().then(results => res.send(results));
+});
+
+async function handleReload() {
+    return new Promise(function (resolve, reject) {
+
+        db.query('SELECT * FROM PageTable ORDER BY id ASC', (err, rows, fields) => {
+            if (err) {
+                resolve({ res: 'DB error.' });
+                return;
+            }
+            (async function (rows) {
+                for (i = 0; i < rows.length; i++) {
+                    var end = moment(rows[i].timestamp).format('YYYY-MM-DD HH:mm:ss');
+                    await handlePostPageHelper(rows[i].book_id, rows[i].user_id, rows[i].page_number, rows[i].seconds, rows[i].font_size, end);
+                }
+
+                resolve({ res: rows.length + ' rows inserted.' });
+            })(rows)
+        })
     });
 }
 
