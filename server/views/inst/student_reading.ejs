@@ -1,4 +1,15 @@
 <% include partials/head %>
+<style>
+    .my-custom-scrollbar {
+        position: relative;
+        height: 200px;
+        overflow: auto;
+    }
+
+    .table-wrapper-scroll-y {
+        display: block;
+    }
+</style>
 <script
   src="https://code.jquery.com/jquery-3.4.1.min.js"
   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -61,6 +72,31 @@
                         }
                     );
         </script>
+
+<div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+    <table class="table table-bordered table-striped mb-0">
+      <thead>
+        <tr>
+          <th scope="col">#Page</th>
+          <th scope="col">Seconds</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% books[i].pages.forEach(function(value, key, map) { %>
+        <% for (var prop in value) { %>
+        <% if (prop != 'page' && Object.prototype.hasOwnProperty.call(value, prop)) { %>
+        <tr>
+          <th scope="row"><%= key %></th>
+          <td><%= value[prop] %></td>
+        </tr>
+        <% } %>
+        <% } %>
+        <% }); %>
+      </tbody>
+    </table>
+  
+  </div>
 
         <br><br>
         <% } %>
