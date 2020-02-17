@@ -4,9 +4,9 @@ var moment = require('moment');
 class Reading {
     static limit = 3600; // 1 hour limit to make a new session
 
-    static async getSessionId(user_id, start_ts) {
+    static async getSessionId(user_id, start_ts, page_number) {
         return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM readings WHERE user_id = ? ORDER BY end DESC', [user_id]
+            db.query('SELECT * FROM readings WHERE user_id = ? ORDER BY end DESC, page_number DESC', [user_id]
                 , (err, rows, fields) => {
                     if (err || !rows) {
                         reject(err);
@@ -17,7 +17,8 @@ class Reading {
                         resolve(0);
                         return;
                     }
-                    if (moment(start_ts).diff(moment(rows[0].end), 'seconds') < Reading.limit) {
+                    if (page_number == rows[0].page_number + 1 && moment(start_ts).diff(moment(rows[0].end), 'seconds') < Reading.limit) {
+                        console.log(rows[0].page_number + "  " + page_number);
                         resolve(rows[0].session);
                         return;
                     }

@@ -59,7 +59,7 @@ async function handlePostPage(req) {
 
 async function handlePostPageHelper(bookID, userID, page_number, seconds, font_size, end) {
     var start = moment(end).subtract(seconds, 'seconds').format('YYYY-MM-DD HH:mm:ss');
-    var session = await Reading.getSessionId(userID, start);
+    var session = await Reading.getSessionId(userID, start, page_number);
 
     return new Promise(function (resolve, reject) {
         if (seconds < 1 || seconds > 600) {
