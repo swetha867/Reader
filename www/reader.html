@@ -1,4 +1,5 @@
 <html class="no-js">
+
 <head>
   <title>Epub</title>
   <meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui, maximum-scale=1">
@@ -13,7 +14,7 @@
   <script src="js/hammer.js"></script>
   <script src="js/jszip.min.js"></script>
   <script type="text/javascript" src="js/tipped.js"></script>
-  <link rel="stylesheet" type="text/css" href="css/tipped.css"/>
+  <link rel="stylesheet" type="text/css" href="css/tipped.css" />
 
   <!--<script src="js/selectingword.js"></script>-->
 
@@ -43,17 +44,17 @@
         AndroidFullScreen.immersiveMode();
 
         window.recognition = new SpeechRecognition();
-        window.recognition.onresult = function(event) {
+        window.recognition.onresult = function (event) {
           if (event.results.length > 0) {
-//          q.value = event.results[0][0].transcript;
-//          q.form.submit();
+            //          q.value = event.results[0][0].transcript;
+            //          q.form.submit();
             console.log(event);
             console.log(event.results[0][0].transcript);
-            if(event.results[0][0].transcript=='next'){
+            if (event.results[0][0].transcript == 'next') {
               console.log('Next Page');
               window.mybook.nextPage();
             }
-            if(event.results[0][0].transcript=='previous'){
+            if (event.results[0][0].transcript == 'previous') {
               console.log('Previous Page');
               window.mybook.prevPage();
             }
@@ -91,7 +92,6 @@
 
     #sidebar {
       width: 50%
-
     }
 
     .hilite {
@@ -109,7 +109,7 @@
       display: none;
     }
 
-    #controls > input[type=range] {
+    #controls>input[type=range] {
       width: 40vw;
     }
 
@@ -124,94 +124,281 @@
   </style>
 
 </head>
+
 <body>
-<div id="sidebar">
-  <div id="panels">
-    <a id="show-Toc" class="show_view icon-list-1 active" data-view="Toc">TOC</a>
-    <a id="show-Bookmarks" class="show_view icon-bookmark" data-view="Bookmarks">Bookmarks</a>
-    <!--<a id="gohome" class="show_view icon-edit" data-view="Notes">Notes</a>-->
-    <!--<a id="show-Notes" class="show_view icon-edit" data-view="Notes">Notes</a>-->
-  </div>
-  <div id="tocView" class="view">
-  </div>
-
-  <div id="bookmarksView" class="view">
-    <ul id="bookmarks"></ul>
-  </div>
-
-</div>
-<div id="hypothesis"></div>
-<div id="main">
-  <div id="titlebar">
-    <div id="opener">
-      <a id="slider" class="fa fa-bars"></a>
+  <div id="sidebar">
+    <div id="panels">
+      <a id="show-Toc" class="show_view icon-list-1 active" data-view="Toc">TOC</a>
+      <a id="show-Bookmarks" class="show_view icon-bookmark" data-view="Bookmarks">Bookmarks</a>
+      <!--<a id="gohome" class="show_view icon-edit" data-view="Notes">Notes</a>-->
+      <!--<a id="show-Notes" class="show_view icon-edit" data-view="Notes">Notes</a>-->
     </div>
-    <div id="metainfo">
-      <span id="book-title"></span>
-      <span id="title-seperator">&nbsp;&nbsp;–&nbsp;&nbsp;</span>
-      <span id="chapter-title"></span>
+    <div id="tocView" class="view">
     </div>
-    <div id="title-controls">
-      <a id="bookmark" class="fa fa-bookmark-o">Bookmark</a>
+
+    <div id="bookmarksView" class="view">
+      <ul id="bookmarks"></ul>
     </div>
-  </div>
 
-  <div id="viewer"></div>
+  </div>
+  <div id="hypothesis"></div>
+  <div id="main">
+    <div id="titlebar">
+      <div id="opener">
+        <a id="slider" class="fa fa-bars"></a>
+      </div>
+      <div id="metainfo">
+        <span id="book-title"></span>
+        <span id="title-seperator">&nbsp;&nbsp;–&nbsp;&nbsp;</span>
+        <span id="chapter-title"></span>
+      </div>
+      <div id="title-controls">
+        <a id="bookmark" class="fa fa-bookmark-o">Bookmark</a>
+      </div>
+    </div>
 
-  <div id="popes">
-    <span id="close"><span>✖</span></span>
-    <div id="definitions"><div class="loader"></div></div>
-    <form id='votingForm' action=""  style='padding-left:2%'>
-  </div>
-  <a id="screener" class="fa fa-times"></a>
-  <div id="myPopup" class="definepop">
-    <a id="opendefinition" class="button button-rounded button-primary">Define</a>
-  </div>
-  <a id="canceler" class="icon-cancel-circled"></a>
-  <i id="speaker" class="fa fa-volume-up"></i>
-  <i id="shutter" class="fa fa-volume-off"></i>
-  <i id="listener" class="fa fa-microphone"></i>
-  <div id="controls">
-    <input id="currentpg" size="3" maxlength="3"/> / <span id="totalpg">0</span><br/>
-  </div>
-  
-  <!-- <div id="font-controls">
+    <div id="viewer"></div>
+
+    <div id="popes">
+      <span id="close" onclick="closePopes()"><span>✖</span></span>
+      <div id="definitions">
+        <div class="loader"></div>
+      </div>
+      <form id='votingForm' action="" style='padding-left:2%'></form>
+    </div>
+    <a id="screener" class="fa fa-times"></a>
+    <div id="myPopup" class="definepop">
+      <a id="opendefinition" class="button button-rounded button-primary">Define</a>
+    </div>
+    <a id="canceler" class="icon-cancel-circled"></a>
+    <i id="speaker" class="fa fa-volume-up"></i>
+    <i id="shutter" class="fa fa-volume-off"></i>
+    <i id="listener" class="fa fa-microphone"></i>
+    <div id="controls">
+      <input id="currentpg" size="3" maxlength="3" /> / <span id="totalpg">0</span><br />
+    </div>
+
+    <div id="font-controls">
+      <i id="define-icon" class="fa fa-book fa-lg"></i>
+    </div>
+
+
+    <!-- <div id="font-controls">
     <i id="font-small" class="fa fa-font fa-sm"></i>
     <i id="font-big" class="fa fa-font fa-lg"></i>
   </div> -->
 
-  <div
-    id="loadingscreen"><img src="img/loader.gif"><p style="text-align: center">Generating page numbers...</p><p
-    style="text-align: center; font-size: small">(Only occurs when book is added for the first time.)</p></div>
-</div>
-<div id="notes">
-  <textarea id="note-pad" width="80%" height="80%"></textarea>
-  <center><button id="noter" width="30%">Save</button></center>
-</div>
+    <div id="loadingscreen"><img src="img/loader.gif">
+      <p style="text-align: center">Generating page numbers...</p>
+      <p style="text-align: center; font-size: small">(Only occurs when book is added for the first time.)</p>
+    </div>
+  </div>
+  <div id="notes">
+    <textarea id="note-pad" width="80%" height="80%"></textarea>
+    <center><button id="noter" width="30%">Save</button></center>
+  </div>
 
 
-<div id="loader"><img src="img/loader.gif"></div>
-</div>
-<div class="overlay"></div>
+  <div id="loader"><img src="img/loader.gif"></div>
+  </div>
+  <div class="overlay"></div>
 
-<script type="text/javascript">
-  // used for font size change in the reader page -- removed
-  // $( "#font-small" ).click(function() {
-  //   console.log("Decreasing font");
-  //   fontSize = parseInt(mybook.settings.styles.fontSize.slice(0, -1));
-  //   console.log("Current font size: " + fontSize);
-  //   mybook.setStyle("fontSize", (fontSize - 10) + "%");
-  //   mybook.generatePagination();
-  // });
+  <script type="text/javascript">
+  function closePopes(){
+    $('#popes').hide();
+  }
 
 
-  // $( "#font-big" ).click(function() {
-  //   console.log("Increasing font");
-  //   fontSize = parseInt(mybook.settings.styles.fontSize.slice(0, -1));
-  //   console.log("Current font size: " + fontSize);
-  //   mybook.setStyle("fontSize", (fontSize + 10) + "%");
-  //   mybook.generatePagination();
-  // });
-</script>
+  function openPopes(){
+    $('#definitions').html('<div class="loader"></div>');
+    $("#votingForm").html('');
+    $('#popes').show();
+  }
+
+    // used for font size change in the reader page -- removed
+    // $( "#font-small" ).click(function() {
+    //   console.log("Decreasing font");
+    //   fontSize = parseInt(mybook.settings.styles.fontSize.slice(0, -1));
+    //   console.log("Current font size: " + fontSize);
+    //   mybook.setStyle("fontSize", (fontSize - 10) + "%");
+    //   mybook.generatePagination();
+    // });
+
+
+    // $( "#font-big" ).click(function() {
+    //   console.log("Increasing font");
+    //   fontSize = parseInt(mybook.settings.styles.fontSize.slice(0, -1));
+    //   console.log("Current font size: " + fontSize);
+    //   mybook.setStyle("fontSize", (fontSize + 10) + "%");
+    //   mybook.generatePagination();
+    // });
+
+
+    $("#define-icon").click(function () {
+      var word = mybook.renderer.render.window.getSelection().toString();
+      if (word.length < 2) {
+        alert("Please make a selection by long pressing on a word and sliding your finger.");
+        return;
+      }
+      // alert(word);
+
+      var contextSelection = mybook.renderer.render.window.getSelection();
+      contextSelection.modify('extend', 'backward', 'sentence');
+      var context = contextSelection.toString();
+      contextSelection.modify('extend', 'forward', 'sentence');
+      var context = context + contextSelection.toString();
+      contextSelection.removeAllRanges();
+      // alert(context);
+
+      // alert(window.bookKaMeta.bookTitle);
+      // alert(window.bookKaMeta.creator);
+
+
+      // return;
+      openPopes();
+
+
+      var outputs = $.ajax({
+        url: encodeURI('https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + word),
+        type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
+        data: {}, // Additional parameters here
+        dataType: 'json',
+        success: function (data) {
+          var output = $.ajax({
+            url: 'http://3.15.37.149:6010/lookup',
+            type: 'POST',
+            data: {
+              word: word,
+              user_id: window.localStorage.getItem("reader_user_id"),
+              sentence: context,
+              book_name: window.bookKaMeta.bookTitle,
+              author_name: window.bookKaMeta.creator
+            },
+            dataType: 'json',
+            success: function (dictionaryData) {
+              var meanings = [];
+              meanings[0] = "Definition not found";
+              meanings[1] = "";
+              meanings[2] = "";
+              var ogword = word;
+              var definitions = '';
+              var defNotFound = 0;
+              var recheck = 0;
+
+              try {
+                if (dictionaryData.length != 0) {
+                  for (var i = 0; i < dictionaryData.length; i++) {
+                    if (dictionaryData[i].isTeacher == 1) {
+                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + "><label id='student' for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+                    }
+                    else if (dictionaryData[i].isUser == 1) {
+                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + " checked><label for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+                      recheck = 1;
+                    }
+                    else {
+                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + "><label for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+                    }
+                  }
+                  if (recheck == 1) {
+                    definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' ><label for='notSure'><b>Not Sure</b></label></span></div>";
+                  }
+                  else {
+                    definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' checked><label for='notSure'><b>Not Sure</b></label></span></div>";
+                  }
+                  definitions += "<input type='hidden' id=" + dictionaryData[0].word_id + " name='word_id' value=" + dictionaryData[0].word_id + ">";
+
+                }
+                else {
+                  definitions += "<h2>Definition not found</h2>"
+                  defNotFound = 1;
+                }
+
+              } catch (err) {
+                meanings[0] = "Definition not found";
+              }
+
+              localStorage.meaning = meanings[0];
+
+              $("#close").html("<span>✖</span>");
+
+              if (!$.trim(data.queryExpansions)) {
+                $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 style='padding-left:20px'>" + ogword + "</h1>");
+                if (defNotFound != 1)
+                  $("#votingForm").html(definitions + "<br><br><center><input type='submit' value='Vote'></center></form>");
+              }
+              else {
+                $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='300' height='300'/></div><h1 style='padding-left:20px'>" + ogword.toLocaleUpperCase() + "</h1>");
+                if (defNotFound != 1)
+                  $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
+              }
+
+            },
+            complete: function () {
+              if (localStorage.meaning.length > 1 && localStorage.meaning != "Definition not found") {
+                var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
+
+                db.transaction(function (tx) {
+                  tx.executeSql('CREATE TABLE IF NOT EXISTS WordsTable (word, meaning, sentence, frequency, book)');
+                  tx.executeSql("SELECT count(*) AS mycount FROM WordsTable where word='" + localStorage.word + "' ", [], function (tx, rs) {
+                    console.log('Record count : ' + rs.rows.item(0).mycount);
+                    console.log(rs);
+                    if (rs.rows.item(0).mycount == 0) {
+                      db.transaction(function (tx) {
+                        //tx.executeSql('DROP TABLE IF EXISTS WordsTable');
+                        tx.executeSql('INSERT INTO WordsTable VALUES (?,?,?,?,?)', [localStorage.word, localStorage.meaning, localStorage.sentence, 1, window.bookKaMeta.bookTitle]);
+                      }, function (error) {
+                        console.log('Transaction ERROR: ' + error.message);
+                      }, function () {
+                        console.log('Inserted');
+                      });
+                    }
+                    else {
+                      db.transaction(function (tx) {
+                        tx.executeSql("Update WordsTable Set frequency = frequency + 1 WHERE word='" + localStorage.word + "' ");
+                      }, function (error) {
+                        console.log('Transaction ERROR: ' + error.message);
+                      }, function () {
+                        console.log('Incremented');
+                      });
+                    }
+                  }, function (tx, error) {
+                    console.log('SELECT error: ' + error.message);
+                  }, function () {
+                    console.log('Recorded');
+                  });
+                });
+              }
+            },
+            error: function (err) {
+              alert(err);
+            }
+          });
+        },
+        error: function (err) {
+          alert(err);
+        },
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "457dba72ab0347b28f31e688d4a332e5");
+          //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");// Enter here your Mashape key
+        }
+
+      });
+
+      // var elements = mybook.renderer.doc.querySelectorAll('p'),
+      //   //Perform actions on each of the elements. Each item is paragraph in book html
+      //   items = Array.prototype.slice.call(elements);
+      // items.forEach(function (item) {
+      //   var array_of_sentences = (item.innerText.split("."));
+      //   for (var i = 0; i < array_of_sentences.length; i++) {
+      //     var single = array_of_sentences[i];
+      //     alert(single);
+      //     // if (single.includes(t))
+      //     //   localStorage.sentence = array_of_sentences[i];
+      //   }
+      // });
+    });
+
+  </script>
 </body>
+
 </html>

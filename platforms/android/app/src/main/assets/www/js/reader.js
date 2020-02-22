@@ -294,7 +294,7 @@ EPUBJS.Reader = function (bookPath, _options) {
         if (readingTime > 600) return;
         $.ajax({
           type: "POST",
-          url: "http://10.0.2.2:6010/page",
+          url: "http://3.15.37.149:6010/page",
           data: {
             userID: window.localStorage.getItem("reader_user_id"),
             page_number: arrayOfPages[0],
@@ -1492,273 +1492,273 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
   var elements = renderer.doc.querySelectorAll('p'),
     //Perform actions on each of the elements. Each item is paragraph in book html
     items = Array.prototype.slice.call(elements);
-  items.forEach(function (item) {
-    $(item).on('dblclick', function () {
-      localStorage.sentence = '';
-      localStorage.meaning = '';
-      localStorage.word = '';
+  // items.forEach(function (item) {
+  //   $(item).on('dblclick', function () {
+  //     localStorage.sentence = '';
+  //     localStorage.meaning = '';
+  //     localStorage.word = '';
 
-      var elems = renderer.doc.querySelectorAll(".hilite");
-      //
-      [].forEach.call(elems, function (el) {
-        el.classList.remove("hilite");
-      });
+  //     var elems = renderer.doc.querySelectorAll(".hilite");
+  //     //
+  //     [].forEach.call(elems, function (el) {
+  //       el.classList.remove("hilite");
+  //     });
 
-      //get the word when user double taps on screen
-      var t = '';
-      if (window.getSelection && (sel = window.getSelection()).modify) {
-        // Webkit, Gecko
-        var s = renderer.render.window.getSelection();
-        if (s.isCollapsed) {
-          s.modify('move', 'forward', 'character');
-          s.modify('move', 'backward', 'word');
-          s.modify('extend', 'forward', 'word');
-          t = s.toString();
-          s.modify('move', 'forward', 'character'); //clear selection
-        }
-        else {
-          t = s.toString();
-        }
-      } else if ((sel = document.selection) && sel.type != "Control") {
-        // IE 4+
-        var textRange = sel.createRange();
-        if (!textRange.text) {
-          textRange.expand("word");
-        }
-        // Remove trailing spaces
-        while (/\s$/.test(textRange.text)) {
-          textRange.moveEnd("character", -1);
-        }
-        t = textRange.text;
+  //     //get the word when user double taps on screen
+  //     var t = '';
+  //     if (window.getSelection && (sel = window.getSelection()).modify) {
+  //       // Webkit, Gecko
+  //       var s = renderer.render.window.getSelection();
+  //       if (s.isCollapsed) {
+  //         s.modify('move', 'forward', 'character');
+  //         s.modify('move', 'backward', 'word');
+  //         s.modify('extend', 'forward', 'word');
+  //         t = s.toString(); 
+  //         s.modify('move', 'forward', 'character'); //clear selection
+  //       }
+  //       else {
+  //         t = s.toString();
+  //       }
+  //     } else if ((sel = document.selection) && sel.type != "Control") {
+  //       // IE 4+
+  //       var textRange = sel.createRange();
+  //       if (!textRange.text) {
+  //         textRange.expand("word");
+  //       }
+  //       // Remove trailing spaces
+  //       while (/\s$/.test(textRange.text)) {
+  //         textRange.moveEnd("character", -1);
+  //       }
+  //       t = textRange.text;
 
-      }
-      // Define replaceAll
-      String.prototype.replaceAll = function (target, replacement) {
-        return this.split(target).join(replacement);
-      };
-      var replacee = " " + t;
-      var replacer = " <b class='hilite'>" + t + "</b>";
+  //     }
+  //     // Define replaceAll
+  //     String.prototype.replaceAll = function (target, replacement) {
+  //       return this.split(target).join(replacement);
+  //     };
+  //     var replacee = " " + t;
+  //     var replacer = " <b class='hilite'>" + t + "</b>";
 
-      var temp = item.innerHTML;
-      var temper = item.innerHTML.replaceAll(replacee, replacer);
-      item.innerHTML = temper;
-      // Display Define block and cancel circle
-      definer.style.display = "block";
-      cancelus.style.display = "block";
+  //     var temp = item.innerHTML;
+  //     var temper = item.innerHTML.replaceAll(replacee, replacer);
+  //     item.innerHTML = temper;
+  //     // Display Define block and cancel circle
+  //     definer.style.display = "block";
+  //     cancelus.style.display = "block";
 
-      localStorage.word = t;
+  //     localStorage.word = t;
 
-      var array_of_sentences = (item.innerText.split("."));
-      for (var i = 0; i < array_of_sentences.length; i++) {
+  //     var array_of_sentences = (item.innerText.split("."));
+  //     for (var i = 0; i < array_of_sentences.length; i++) {
 
-        var single = array_of_sentences[i];
-        if (single.includes(t))
-          localStorage.sentence = array_of_sentences[i];
-      }
+  //       var single = array_of_sentences[i];
+  //       if (single.includes(t))
+  //         localStorage.sentence = array_of_sentences[i];
+  //     }
 
-      var outputs = $.ajax({
-        url: 'https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + t + '',
-        type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
-        data: {}, // Additional parameters here
-        dataType: 'json',
-        success: function (data) {
-          console.log(data);
+  //     var outputs = $.ajax({
+  //       url: 'https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + t + '',
+  //       type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
+  //       data: {}, // Additional parameters here
+  //       dataType: 'json',
+  //       success: function (data) {
+  //         console.log(data);
 
-          var output = $.ajax({
-            url: 'http://3.15.37.149:6010/lookup',
-            type: 'POST',
-            data: {
-              word: t,
-              user_id: window.localStorage.getItem("reader_user_id"),
-              sentence: localStorage.sentence,
-              book_name: window.bookKaMeta.bookTitle,
-              author_name: window.bookKaMeta.creator
-            },
-            dataType: 'json',
-            success: function (dictionaryData) {
+  //         var output = $.ajax({
+  //           url: 'http://3.15.37.149:6010/lookup',
+  //           type: 'POST',
+  //           data: {
+  //             word: t,
+  //             user_id: window.localStorage.getItem("reader_user_id"),
+  //             sentence: localStorage.sentence,
+  //             book_name: window.bookKaMeta.bookTitle,
+  //             author_name: window.bookKaMeta.creator
+  //           },
+  //           dataType: 'json',
+  //           success: function (dictionaryData) {
 
-              var meanings = [];
-              meanings[0] = "Definition not found";
-              meanings[1] = "";
-              meanings[2] = "";
-              var ogword = t;
-              var definitions = '';
-              var defNotFound = 0;
-              var recheck = 0;
+  //             var meanings = [];
+  //             meanings[0] = "Definition not found";
+  //             meanings[1] = "";
+  //             meanings[2] = "";
+  //             var ogword = t;
+  //             var definitions = '';
+  //             var defNotFound = 0;
+  //             var recheck = 0;
 
-              try {
-                if (dictionaryData.length != 0) {
-                  for (var i = 0; i < dictionaryData.length; i++) {
-                    if (dictionaryData[i].isTeacher == 1) {
-                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + "><label id='student' for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
-                    }
-                    else if (dictionaryData[i].isUser == 1) {
-                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + " checked><label for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
-                      recheck = 1;
-                    }
-                    else {
-                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + "><label for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
-                    }
-                  }
-                  if (recheck == 1) {
-                    definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' ><label for='notSure'><b>Not Sure</b></label></span></div>";
-                  }
-                  else {
-                    definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' checked><label for='notSure'><b>Not Sure</b></label></span></div>";
-                  }
-                  definitions += "<input type='hidden' id=" + dictionaryData[0].word_id + " name='word_id' value=" + dictionaryData[0].word_id + ">";
+  //             try {
+  //               if (dictionaryData.length != 0) {
+  //                 for (var i = 0; i < dictionaryData.length; i++) {
+  //                   if (dictionaryData[i].isTeacher == 1) {
+  //                     definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + "><label id='student' for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+  //                   }
+  //                   else if (dictionaryData[i].isUser == 1) {
+  //                     definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + " checked><label for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+  //                     recheck = 1;
+  //                   }
+  //                   else {
+  //                     definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + "><label for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+  //                   }
+  //                 }
+  //                 if (recheck == 1) {
+  //                   definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' ><label for='notSure'><b>Not Sure</b></label></span></div>";
+  //                 }
+  //                 else {
+  //                   definitions += "<div class='aaa'><span class='ccc' ><label><b>?</b></label></span><span class='bbb'><input type='radio' id='notSure' name = 'meaning_id' value='0' checked><label for='notSure'><b>Not Sure</b></label></span></div>";
+  //                 }
+  //                 definitions += "<input type='hidden' id=" + dictionaryData[0].word_id + " name='word_id' value=" + dictionaryData[0].word_id + ">";
 
-                }
-                else {
-                  definitions += "<h2>Definition not found</h2>"
-                  defNotFound = 1;
-                }
+  //               }
+  //               else {
+  //                 definitions += "<h2>Definition not found</h2>"
+  //                 defNotFound = 1;
+  //               }
 
-              } catch (err) {
-                meanings[0] = "Definition not found";
-              }
+  //             } catch (err) {
+  //               meanings[0] = "Definition not found";
+  //             }
 
-              localStorage.meaning = meanings[0];
+  //             localStorage.meaning = meanings[0];
 
-              $("#close").html("<span>✖</span>");
+  //             $("#close").html("<span>✖</span>");
 
-              if (!$.trim(data.queryExpansions)) {
-                $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 style='padding-left:20px'>" + ogword + "</h1>");
-                if (defNotFound != 1)
-                  $("#votingForm").html(definitions + "<br><br><center><input type='submit' value='Vote'></center></form>");
-              }
-              else {
-                $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='300' height='300'/></div><h1 style='padding-left:20px'>" + ogword.toLocaleUpperCase() + "</h1>");
-                if (defNotFound != 1)
-                  $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
-              }
+  //             if (!$.trim(data.queryExpansions)) {
+  //               $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 style='padding-left:20px'>" + ogword + "</h1>");
+  //               if (defNotFound != 1)
+  //                 $("#votingForm").html(definitions + "<br><br><center><input type='submit' value='Vote'></center></form>");
+  //             }
+  //             else {
+  //               $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='300' height='300'/></div><h1 style='padding-left:20px'>" + ogword.toLocaleUpperCase() + "</h1>");
+  //               if (defNotFound != 1)
+  //                 $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
+  //             }
 
-            },
-            complete: function () {
-              if (localStorage.meaning.length > 1 && localStorage.meaning != "Definition not found") {
-                var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
+  //           },
+  //           complete: function () {
+  //             if (localStorage.meaning.length > 1 && localStorage.meaning != "Definition not found") {
+  //               var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
 
-                db.transaction(function (tx) {
-                  tx.executeSql('CREATE TABLE IF NOT EXISTS WordsTable (word, meaning, sentence, frequency, book)');
-                  tx.executeSql("SELECT count(*) AS mycount FROM WordsTable where word='" + localStorage.word + "' ", [], function (tx, rs) {
-                    console.log('Record count : ' + rs.rows.item(0).mycount);
-                    console.log(rs);
-                    if (rs.rows.item(0).mycount == 0) {
-                      db.transaction(function (tx) {
-                        //tx.executeSql('DROP TABLE IF EXISTS WordsTable');
-                        tx.executeSql('INSERT INTO WordsTable VALUES (?,?,?,?,?)', [localStorage.word, localStorage.meaning, localStorage.sentence, 1, window.bookKaMeta.bookTitle]);
-                      }, function (error) {
-                        console.log('Transaction ERROR: ' + error.message);
-                      }, function () {
-                        console.log('Inserted');
-                      });
-                    }
-                    else {
-                      db.transaction(function (tx) {
-                        tx.executeSql("Update WordsTable Set frequency = frequency + 1 WHERE word='" + localStorage.word + "' ");
-                      }, function (error) {
-                        console.log('Transaction ERROR: ' + error.message);
-                      }, function () {
-                        console.log('Incremented');
-                      });
-                    }
-                  }, function (tx, error) {
-                    console.log('SELECT error: ' + error.message);
-                  }, function () {
-                    console.log('Recorded');
-                  });
-                });
+  //               db.transaction(function (tx) {
+  //                 tx.executeSql('CREATE TABLE IF NOT EXISTS WordsTable (word, meaning, sentence, frequency, book)');
+  //                 tx.executeSql("SELECT count(*) AS mycount FROM WordsTable where word='" + localStorage.word + "' ", [], function (tx, rs) {
+  //                   console.log('Record count : ' + rs.rows.item(0).mycount);
+  //                   console.log(rs);
+  //                   if (rs.rows.item(0).mycount == 0) {
+  //                     db.transaction(function (tx) {
+  //                       //tx.executeSql('DROP TABLE IF EXISTS WordsTable');
+  //                       tx.executeSql('INSERT INTO WordsTable VALUES (?,?,?,?,?)', [localStorage.word, localStorage.meaning, localStorage.sentence, 1, window.bookKaMeta.bookTitle]);
+  //                     }, function (error) {
+  //                       console.log('Transaction ERROR: ' + error.message);
+  //                     }, function () {
+  //                       console.log('Inserted');
+  //                     });
+  //                   }
+  //                   else {
+  //                     db.transaction(function (tx) {
+  //                       tx.executeSql("Update WordsTable Set frequency = frequency + 1 WHERE word='" + localStorage.word + "' ");
+  //                     }, function (error) {
+  //                       console.log('Transaction ERROR: ' + error.message);
+  //                     }, function () {
+  //                       console.log('Incremented');
+  //                     });
+  //                   }
+  //                 }, function (tx, error) {
+  //                   console.log('SELECT error: ' + error.message);
+  //                 }, function () {
+  //                   console.log('Recorded');
+  //                 });
+  //               });
 
 
-              }
-            },
-            error: function (err) {
-              console.log(err);
-            }
+  //             }
+  //           },
+  //           error: function (err) {
+  //             console.log(err);
+  //           }
 
-          });
-        },
-        error: function (err) {
-          console.log(err);
-        },
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "457dba72ab0347b28f31e688d4a332e5");
-          //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");// Enter here your Mashape key
-        }
+  //         });
+  //       },
+  //       error: function (err) {
+  //         console.log(err);
+  //       },
+  //       beforeSend: function (xhr) {
+  //         xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "457dba72ab0347b28f31e688d4a332e5");
+  //         //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");// Enter here your Mashape key
+  //       }
 
-      });
+  //     });
 
-      var openwrap = function () {
+  //     var openwrap = function () {
 
-        wrap.style.display = "block";
-        definer.style.display = "none";
-        cancelus.style.display = "none";
-        item.innerHTML = temp;
+  //       wrap.style.display = "block";
+  //       definer.style.display = "none";
+  //       cancelus.style.display = "none";
+  //       item.innerHTML = temp;
 
-      };
+  //     };
 
-      definer.addEventListener("click", openwrap, false);
+  //     definer.addEventListener("click", openwrap, false);
 
-      var onCancel = function () {
-        cancelus.style.display = "none";
-        definer.style.display = "none";
-        item.innerHTML = temp;
-      };
+  //     var onCancel = function () {
+  //       cancelus.style.display = "none";
+  //       definer.style.display = "none";
+  //       item.innerHTML = temp;
+  //     };
 
-      var hidepope = function () {
-        $("#votingForm").unbind();
-        $("#close").empty();
-        $("#close").html("<span>✖</span>");
-        $("#definitions").empty();
-        $("#definitions").html("<div class='loader'></div>");
-        $("#votingForm").empty();
-        $("#votingForm").html();
-        wrap.style.display = "none";
-        cancelus.style.display = "none";
-        definer.style.display = "none";
-        item.innerHTML = temp;
-      };
+  //     var hidepope = function () {
+  //       $("#votingForm").unbind();
+  //       $("#close").empty();
+  //       $("#close").html("<span>✖</span>");
+  //       $("#definitions").empty();
+  //       $("#definitions").html("<div class='loader'></div>");
+  //       $("#votingForm").empty();
+  //       $("#votingForm").html();
+  //       wrap.style.display = "none";
+  //       cancelus.style.display = "none";
+  //       definer.style.display = "none";
+  //       item.innerHTML = temp;
+  //     };
 
-      var clearHighlights = function () {
-        item.innerHTML = temp;
-        cancelus.style.display = "none";
-        definer.style.display = "none";
-      };
+  //     var clearHighlights = function () {
+  //       item.innerHTML = temp;
+  //       cancelus.style.display = "none";
+  //       definer.style.display = "none";
+  //     };
 
-      $("#votingForm").one('submit', function (e) {
-        e.preventDefault();
-        var result = {};
-        $.each($(this).serializeArray(), function () {
-          result[this.name] = this.value;
-        });
+  //     $("#votingForm").one('submit', function (e) {
+  //       e.preventDefault();
+  //       var result = {};
+  //       $.each($(this).serializeArray(), function () {
+  //         result[this.name] = this.value;
+  //       });
 
-        console.log('meaning = ' + result.meaning_id + ', Word Id = ' + result.word_id);
-        $.ajax({
-          type: "POST",
-          url: "http://3.15.37.149:6010/votes",
-          data: {
-            user_id: window.localStorage.getItem('reader_user_id'),
-            meaning_id: result.meaning_id,
-            word_id: result.word_id,
-            sentence: localStorage.sentence,
-            book_name: window.bookKaMeta.bookTitle,
-            author_name: window.bookKaMeta.creator
-          },
-          success: function (data) {
-            alert("Vote Saved");
-          },
-          complete: function (data) {
-            hidepope();
-          }
-        });
-      });
+  //       console.log('meaning = ' + result.meaning_id + ', Word Id = ' + result.word_id);
+  //       $.ajax({
+  //         type: "POST",
+  //         url: "http://3.15.37.149:6010/votes",
+  //         data: {
+  //           user_id: window.localStorage.getItem('reader_user_id'),
+  //           meaning_id: result.meaning_id,
+  //           word_id: result.word_id,
+  //           sentence: localStorage.sentence,
+  //           book_name: window.bookKaMeta.bookTitle,
+  //           author_name: window.bookKaMeta.creator
+  //         },
+  //         success: function (data) {
+  //           alert("Vote Saved");
+  //         },
+  //         complete: function (data) {
+  //           hidepope();
+  //         }
+  //       });
+  //     });
 
-      document.getElementById("close").addEventListener("click", hidepope, false);
+  //     document.getElementById("close").addEventListener("click", hidepope, false);
 
-      cancelus.addEventListener("click", onCancel, false);
+  //     cancelus.addEventListener("click", onCancel, false);
 
-    });
-  });
+  //   });
+  // });
 
   if (callback) callback();
 };
