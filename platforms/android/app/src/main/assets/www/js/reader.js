@@ -1705,53 +1705,12 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
   //       item.innerHTML = temp;
   //     };
 
-  //     var hidepope = function () {
-  //       $("#votingForm").unbind();
-  //       $("#close").empty();
-  //       $("#close").html("<span>✖</span>");
-  //       $("#definitions").empty();
-  //       $("#definitions").html("<div class='loader'></div>");
-  //       $("#votingForm").empty();
-  //       $("#votingForm").html();
-  //       wrap.style.display = "none";
-  //       cancelus.style.display = "none";
-  //       definer.style.display = "none";
-  //       item.innerHTML = temp;
-  //     };
-
   //     var clearHighlights = function () {
   //       item.innerHTML = temp;
   //       cancelus.style.display = "none";
   //       definer.style.display = "none";
   //     };
 
-  //     $("#votingForm").one('submit', function (e) {
-  //       e.preventDefault();
-  //       var result = {};
-  //       $.each($(this).serializeArray(), function () {
-  //         result[this.name] = this.value;
-  //       });
-
-  //       console.log('meaning = ' + result.meaning_id + ', Word Id = ' + result.word_id);
-  //       $.ajax({
-  //         type: "POST",
-  //         url: "http://3.15.37.149:6010/votes",
-  //         data: {
-  //           user_id: window.localStorage.getItem('reader_user_id'),
-  //           meaning_id: result.meaning_id,
-  //           word_id: result.word_id,
-  //           sentence: localStorage.sentence,
-  //           book_name: window.bookKaMeta.bookTitle,
-  //           author_name: window.bookKaMeta.creator
-  //         },
-  //         success: function (data) {
-  //           alert("Vote Saved");
-  //         },
-  //         complete: function (data) {
-  //           hidepope();
-  //         }
-  //       });
-  //     });
 
   //     document.getElementById("close").addEventListener("click", hidepope, false);
 
