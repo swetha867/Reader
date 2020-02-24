@@ -77,18 +77,19 @@
 
     <table class="table table-bordered table-striped mb-0">
       <thead>
-        <tr>
+        <tr style="text-align: center;">
           <th scope="col">#Page</th>
-          <th scope="col">Seconds</th>
+          <th scope="col">Minutes</th>
         </tr>
       </thead>
       <tbody>
         <% books[i].pages.forEach(function(value, key, map) { %>
         <% for (var prop in value) { %>
         <% if (prop != 'page' && Object.prototype.hasOwnProperty.call(value, prop)) { %>
-        <tr>
+        <tr style="text-align: center;">
           <th scope="row"><%= key %></th>
-          <td><%= value[prop] %></td>
+          <% var minutes = Math.round(value[prop]/60); %>
+          <td><%= minutes %></td>
         </tr>
         <% } %>
         <% } %>
