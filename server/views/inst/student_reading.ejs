@@ -88,7 +88,8 @@
         <% if (prop != 'page' && Object.prototype.hasOwnProperty.call(value, prop)) { %>
         <tr style="text-align: center;">
           <th scope="row"><%= key %></th>
-          <% var minutes = Math.round(value[prop]/60); %>
+          <% var minutes =value[prop]/60; %>
+          <% minutes = minutes.toFixed(2); %>
           <td><%= minutes %></td>
         </tr>
         <% } %>
