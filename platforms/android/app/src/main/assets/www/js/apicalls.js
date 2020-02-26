@@ -36,6 +36,7 @@ function doIt() {
 function dontIt() {
   var output = $.ajax({
     url: 'https://api.cognitive.microsoft.com/bing/v5.0/images/search?q=' + damn + '', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
+    //url: 'https://www.googleapis.com/customsearch/v1?q=' + damn + '',
     //url: 'https://api.cognitive.microsoft.com/bing/v5.0/images/search?q='+damn+'', // The URL to the API. You can get this by clicking on "Show CURL example" from an API profile
     type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
     data: {}, // Additional parameters here

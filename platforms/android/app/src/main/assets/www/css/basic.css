@@ -64,5 +64,39 @@ body {
   top: 0;
   left: 0;
 }
-
-
+.readerSearch {
+  width: 99%;
+  display: inline;
+  text-align: center;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.bookTitle {
+  /* position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  color: whitesmoke;
+  font-weight: bold;
+  font-size: larger;   */
+  
+  height: 40px;
+  /* display: flex; */
+  position: absolute;
+  font-size: x-large;
+}
+.GoSearchButton {
+  width: 20%;
+  display: inline;
+  text-align: center;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.homeSearch {
+  width: 100%;
+}
+div.ui-btn.ui-btn-up-c.ui-shadow.ui-btn-corner-all {
+  width: fit-content;
+  margin: 0.35em 4px;
+}

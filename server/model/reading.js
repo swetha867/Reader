@@ -2,7 +2,7 @@ const db = require('../database/db');
 var moment = require('moment');
 
 class Reading {
-    static limit = 3600; // 1 hour limit to make a new session
+    //static limit = 3600; // 1 hour limit to make a new session
 
     static async getSessionId(user_id, start_ts, page_number) {
         return new Promise((resolve, reject) => {

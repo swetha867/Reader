@@ -603,7 +603,7 @@ input:-moz-placeholder {
   padding: 5px 0;
 }
 
-.md-content button {
+.md-content  {
   display: block;
   margin: 0 auto;
   font-size: 0.8em;
@@ -701,7 +701,7 @@ input:-moz-placeholder {
   #titlebar {
     /* font-size: 16px; */
     /* margin: 0 50px 0 50px; */
-  }
+  /* } */
   
   #metainfo {
     font-size: 10px;
@@ -715,11 +715,10 @@ input:-moz-placeholder {
     font-size: 12px;
   }
   
-  #tocView > ul{
+  #tocView > ul {
     padding-left: 10px;
-    webkit-padding-start:;
   }
-} */
+
 
 
 /* For iPad portrait layouts only */

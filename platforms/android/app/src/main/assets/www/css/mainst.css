@@ -574,7 +574,7 @@ input:-ms-placeholder {
   padding: 5px 0;
 }
 
-.md-content button {
+.md-content {
   display: block;
   margin: 0 auto;
   font-size: 0.8em;

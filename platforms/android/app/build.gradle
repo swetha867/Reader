@@ -26,10 +26,11 @@ buildscript {
             url "https://maven.google.com"
         }
         jcenter()
+        google()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.5.3'
     }
 }
 
@@ -145,7 +146,7 @@ cdvBuildRelease.dependsOn {
     return computeBuildTargetName(false)
 }
 
-task cdvPrintProps << {
+task cdvPrintProps doLast {
     println('cdvCompileSdkVersion=' + cdvCompileSdkVersion)
     println('cdvBuildToolsVersion=' + cdvBuildToolsVersion)
     println('cdvVersionCode=' + cdvVersionCode)

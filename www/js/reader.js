@@ -314,7 +314,7 @@ EPUBJS.Reader = function (bookPath, _options) {
           }
         });
 
-        /*db.transaction(function (tx) {
+        db.transaction(function (tx) {
           tx.executeSql('CREATE TABLE IF NOT EXISTS PageTable (book, page, seconds)');
           var stat = "SELECT count(*) AS mycount FROM PageTable WHERE page='" + arrayOfPages[0] + "' AND book='" + book.metadata.bookTitle + "';";
           tx.executeSql(stat, [], function (tx, rs) {
@@ -355,8 +355,7 @@ EPUBJS.Reader = function (bookPath, _options) {
           }, function () {
             console.log('Recorded');
           });
-        });*/
-      }
+        });
       // console.log(location.pageRange)
     });
   }, 500);
