@@ -258,17 +258,16 @@
       // return;
       openPopes();
 
+
       var outputs = $.ajax({
         url: encodeURI('https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + word),
         type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
-        timeout: 5000,
         data: {}, // Additional parameters here
         dataType: 'json',
         success: function (data) {
           var output = $.ajax({
             url: 'http://3.15.37.149:6010/lookup',
             type: 'POST',
-            timeout: 5000,
             data: {
               word: word,
               user_id: window.localStorage.getItem("reader_user_id"),
@@ -371,16 +370,12 @@
               }
             },
             error: function (err) {
-              if (err.statusText == 'timeout') alert('Sorry, No definition found!');
-              else alert("Error loading! Are you connected to the internet?");
-              closePopes();
+              alert(err);
             }
           });
         },
         error: function (err) {
-          if (err.statusText == 'timeout') alert('Sorry, No definition found!');
-          else alert("Error loading! Are you connected to the internet?");
-          closePopes();
+          alert(err);
         },
         beforeSend: function (xhr) {
           xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "457dba72ab0347b28f31e688d4a332e5");
