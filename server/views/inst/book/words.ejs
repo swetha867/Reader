@@ -1,24 +1,32 @@
 <% include ../partials/head %>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Book ID</th>
-            <th scope="col">Book Name</th>
-            <th scope="col">Author</th>
-            <th scope="col">Readings</th>
-            <th scope="col">Words</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for(var i=0; i < books.length; i++) { %>
-        <tr>
-            <td><%= books[i].id %></td>
-            <td><%= books[i].book_name %></td>
-            <td><%= books[i].author_name %></td>
-            <td><a href="/instructor/book/<%= books[i].id %>/readings/">View</a></td>
-            <td><a href="/instructor/book/<%= books[i].id %>/words/">View</a></td>
-        </tr>
+<style>
+    .voted {
+        background-color: rgb(245, 255, 235);
+    }
+    .meaning {color: rgb(5, 148, 0);}
+</style>
+<h2><%= votes[0].book_name  %></h2>
+<h3>Combined lookup and Votes by student <%= user_id %><br>
+    <small>Total words: <%= votes.length %></small>
+</h3>
+
+<div class="card" style="margin-bottom: 50px;">
+    <div class="card-body">
+        <% for(var i=0; i < votes.length; i++) { %>
+        <div class="<%= (votes[i].meaning != null)?'voted':'' %>">
+            <h4 class="card-text"><%= votes[i].word %> <br>
+            <small>Looked up <%= votes[i].totalFreq %> times</small></h4>
+            <p class="card-text"><b>Sentence:</b> <%= votes[i].sentence %></p>
+            <% if(votes[i].meanings != null){
+                meanings = votes[i].meanings.split("@@@");
+                for(var j=0; j < meanings.length; j++) { %>
+            <p class="card-text meaning"><b>Selected Meaning:</b> <%= meanings[j] %></p>
+            <% }} %>
+            <p class="card-text"><b>Last Time:</b> <%= votes[i].updated_on %></p>
+        </div>
+        <hr>
         <% } %>
-    </tbody>
-</table>
+    </div>
+</div>
+
 <% include ../partials/foot %>

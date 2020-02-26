@@ -89,25 +89,64 @@ async function getPagesByBook(book_id) {
 }
 
 
-router.get('/book/:userId/words', (req, res) => {
+router.get('/book/:bookId/words', (req, res) => {
   getBookWords(req, res);
 });
 
 async function getBookWords(req, res) {
-  db.query(`SELECT b.id, book_name, author_name,
-    (SELECT COUNT(*) FROM PageTable WHERE book_id = b.id) readings,
-    (SELECT COUNT(*) FROM votes WHERE book_id = b.id) votes
-    FROM books b 
-    ORDER BY b.id`, [], (err, books, fields) => {
-    if (err) {
-      res.send(err);
-      return;
-    }
-    res.render('inst/book/words', { books: books });
-  });
-
-  
+  const votes = await getBookWordsHelper(req.params.bookId);
+  res.render('inst/book/words', { user_id: req.params.userId, votes: votes, title: 'Combined words from all students' });
 }
+
+async function getBookWordsHelper(book_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT book_name, v.word_id, word, GROUP_CONCAT(DISTINCT meaning SEPARATOR '@@@') as meanings,
+    sentence, updated_on, SUM(freq) totalFreq
+    FROM votes v 
+    JOIN books ON book_id = books.id
+    JOIN dictionary_words dw ON dw.id = v.word_id
+    LEFT JOIN dictionary_meanings dm ON v.meaning_id = dm.id
+    WHERE book_id = ?
+    GROUP BY v.word_id, sentence
+    ORDER BY totalFreq DESC`, [book_id],
+      (err, rows, fields) => {
+        if (err) {
+          resolve(null);
+          return;
+        }
+        else {
+          resolve(rows);
+          return;
+        }
+      })
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.get('/students', (req, res) => {
   getStudents(req, res);
