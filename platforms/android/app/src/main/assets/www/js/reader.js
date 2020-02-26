@@ -314,14 +314,15 @@ EPUBJS.Reader = function (bookPath, _options) {
           }
         });
 
-        /*db.transaction(function (tx) {
-          tx.executeSql('CREATE TABLE IF NOT EXISTS PageTable (book, page, seconds)');
+        db.transaction(function (tx) {
+          tx.executeSql('CREATE TABLE IF NOT EXISTS PageTable (book, page, seconds, timestamp)');
+          var timestamp = new Date();
           var stat = "SELECT count(*) AS mycount FROM PageTable WHERE page='" + arrayOfPages[0] + "' AND book='" + book.metadata.bookTitle + "';";
           tx.executeSql(stat, [], function (tx, rs) {
             // console.log('Record count : ' + rs.rows.item(0).mycount);
             if (rs.rows.item(0).mycount == 0) {
               db.transaction(function (tx) {
-                tx.executeSql('INSERT INTO PageTable VALUES (?,?,?)', [book.metadata.bookTitle, arrayOfPages[0], arrayOfTimes[1] - arrayOfTimes[0]]);
+                tx.executeSql('INSERT INTO PageTable VALUES (?,?,?,?)', [book.metadata.bookTitle, arrayOfPages[0], arrayOfTimes[1] - arrayOfTimes[0], timestamp]);
 
               }, function (error) {
                 console.log('Transaction ERROR: ' + error.message);
@@ -355,7 +356,7 @@ EPUBJS.Reader = function (bookPath, _options) {
           }, function () {
             console.log('Recorded');
           });
-        });*/
+        });
       }
       // console.log(location.pageRange)
     });
@@ -1398,21 +1399,21 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
     }
   });
 
-  // var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
-  // db.transaction(function (tx) {
-  //
-  // 	tx.executeSql("Select * from PageTable", [], function (tx, rs) {
-  //
-  // 		for (var i = 0; i < rs.rows.length; i++) {
-  // 			console.log('book: ' +  ' ' + rs.rows.item(i).book);
-  // 			console.log('page: ' +  ' ' + rs.rows.item(i).page);
-  // 			console.log('seconds : ' + ' ' + rs.rows.item(i).seconds);
-  // 			console.log("----------------------------------------------");
-  // 		}
-  // 	}, function (tx, error) {
-  // 		console.log('SELECT error: ' + error.message);
-  // 	});
-  // });
+  var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+  db.transaction(function (tx) {
+  
+  	tx.executeSql("Select * from PageTable", [], function (tx, rs) {
+  
+  		for (var i = 0; i < rs.rows.length; i++) {
+  			console.log('book: ' +  ' ' + rs.rows.item(i).book);
+  			console.log('page: ' +  ' ' + rs.rows.item(i).page);
+  			console.log('seconds : ' + ' ' + rs.rows.item(i).seconds);
+  			console.log("----------------------------------------------");
+  		}
+  	}, function (tx, error) {
+  		console.log('SELECT error: ' + error.message);
+  	});
+  });
 
   mc.on("panright", function () {
     if (didPan) {
@@ -1558,6 +1559,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
 
       var outputs = $.ajax({
         url: 'https://api.cognitive.microsoft.com/bing/v7.0/images/search?q=' + t + '',
+        //url: 'https://www.googleapis.com/customsearch/v1?q=' + t + '',
         type: 'GET', // The HTTP Method, can be GET POST PUT DELETE etc
         data: {}, // Additional parameters here
         dataType: 'json',
@@ -1683,6 +1685,7 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
         },
         beforeSend: function (xhr) {
           xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "457dba72ab0347b28f31e688d4a332e5");
+          //xhr.setRequestHeader("Ocp-Apim-Subscription-Key", "AIzaSyBHaVlG7ZJCvr6DNARwvBciLHjyyplGZkc");
           //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");// Enter here your Mashape key
         }
 

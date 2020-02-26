@@ -29,6 +29,11 @@
   <script type="text/javascript" src="cordova.js"></script>
 
   <script>
+    //var searchActive = false;
+    
+    
+
+
 
     //        if(localStorage.prevPage=='learning')
     //        {
@@ -37,17 +42,24 @@
     //        }
 
     document.addEventListener("deviceready", onDeviceReady, false);
+    document.addEventListener("searchbuttondown", clickForSearch, false);
     function onDeviceReady() {
 
       AndroidFullScreen.showSystemUI();
 
+    
+
+      // END OF SEARCHING THE BOOK
       // Open database to access all books in BooksTable of database
       var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+      //if (searchActive == false) {
       db.transaction(function(tx) {
         //Get all row information from BooksTable
         tx.executeSql('SELECT * FROM BooksTable', [], function(tx, rs) {
           // gallery is the div in the DOM to which the frames of books are appended dynamically
           var mydiv = document.getElementById("mydiv");
+          //var bookTitle = document.getElementById("bookTitle");
+          //var bookTitle = document.getElementById("bookTitle");
           // Loop through each row in BooksTable
           for(var i=0; i<rs.rows.length;i++) {
             // Use the book name, book link, book author and book image path
@@ -58,26 +70,42 @@
             var bookStatusImgPath = rs.rows.item(i).imgpath;
             //Create the book element
             var bookTag = document.createElement('div');
+            var nameOfTheBook = document.createElement('p');
             bookTag.className = "frame";
+            nameOfTheBook.className = "bookTitle";
             // Add name and link metadata to tag
             bookTag.setAttribute('data-bname', bname);
             bookTag.setAttribute('data-blink', blink);
+            //console.log("Book Name is:", rs);
             if(bookStatusFlag == 0) {
-              bookTag.innerHTML = "<div data-blink='" + blink + "' class='innerText'>" + bname + "</div>";
+              bookTag.innerHTML = "<div data-blink='" + blink + "' class='innerBookTitle' style='height: 100%;width: 100%;overflow-wrap: break-word;word-break: break-all;'>" + bname + "</div>";
+              // <div class='bookTitle'> " +bname+" <div>"
+              nameOfTheBook.innerHTML ="<p> " +bname+ " </p>"; 
+              //nameOfTheBook.innerHTML = "<div> " + bname + "</div>";
+              
             }
-            else{
+            else {
               // Set the cover image of the frame from the book image path
               bookTag.innerHTML =
-                "<div data-blink='" + blink + "'><img data-blink='" + blink +
-                "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'></div>";
+                "<  div data-blink='" + blink + "'><img data-blink='" + blink +
+                "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'>";
+              
+               //nameOfTheBook.innerHTML = bname; 
+               //nameOfTheBook.innerHTML = "<div> "  + bname + "</div>";
+                //nameOfTheBook.innerHTML = "<p> " + bname + "</p>";  
+                nameOfTheBook.innerHTML ="<p> " +bname+ " </p>"; 
             }
             // append the book element to the GALLERY
             mydiv.appendChild(bookTag);
+            mydiv.appendChild(nameOfTheBook);
+           // mydiv.appendChild(nameOfTheBook);
+            //bookTag.innerHTML = "<div> "+ bname +"  </div>";
           }
         }, function(tx, error) {
           console.log('SELECT error: ' + error.message);
         });
       });
+      
 
 
       function doChange(newPage) {
@@ -222,8 +250,6 @@
         });
       });
 
-
-
       //When Add book button is clicked, the filechooser plugin opens device library
       $('#fileinput').click(function () {
         fileChooser.open(function (furi) {
@@ -346,6 +372,65 @@
         window.location.href = "settings.html";
       });
     }
+
+      // SEARCH THE BOOK
+
+    function clickForSearch () {
+      //searchActive = true;
+      //alert('Hey this is my search');
+      var bookToBeSearched  = document.getElementById('bookSearch').value;
+      //alert(bookToBeSearched);
+      var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+      db.transaction(function(tx) {
+        //Get all row information from BooksTable
+        tx.executeSql("SELECT * FROM BooksTable WHERE name = ?", [bookToBeSearched], function querySuccess(tx, results) {
+        //alert('Result obtained');
+        // console.log('results',results);
+        // console.log('Response is:', results.rows.item(i));
+        var searchedBookdiv = document.getElementById("searchedBookdiv");
+          //var bookTitle = document.getElementById("bookTitle");
+          // Loop through each row in BooksTable
+          mydiv.parentNode.removeChild(mydiv);
+          //alert('Removed Div');
+         // searchedBookdiv = document.getElementById("searchedBookdiv");
+         
+          console.log('Count:',results.rows.item.name);
+          for(var i=0; i<=results.rows.length;i++) {
+            // Use the book name, book link, book author and book image path
+            //mydiv.appendChild(mydiv);
+            //alert('Added Div');
+            var bname = results.rows.item(i).name;
+            //alert(bname);
+            var blink = results.rows.item(i).link;
+            var bookStatusFlag = results.rows.item(i).flag;
+            var bookStatusAuthor = results.rows.item(i).author; 
+            var bookStatusImgPath = results.rows.item(i).imgpath;
+            //Create the book element
+            var bookSearchTag = document.createElement('div');
+            bookSearchTag.className = "frame";
+            // Add name and link metadata to tag
+            bookSearchTag.setAttribute('data-bname', bname);
+            bookSearchTag.setAttribute('data-blink', blink);
+            //console.log("Book Name is:", rs);
+            if(bookStatusFlag == 0) {
+              bookSearchTag.innerHTML = "<div data-blink='" + blink + "' class='innerText'>" + bname + "</div>";
+            }
+            else {
+              // Set the cover image of the frame from the book image path
+              bookSearchTag.innerHTML =
+                "<  div data-blink='" + blink + "'><img data-blink='" + blink +
+                "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'>";                
+            }
+            // append the book element to the GALLERY
+            searchedBookdiv.appendChild(bookSearchTag); 
+          }
+      },function error(tx, err) {
+        console.log('Error is:', err);
+        alert('No Book Found!');
+        });
+      });
+    }
+
   </script>
 </head>
 
@@ -379,16 +464,29 @@
     <a id="fileinput" data-icon="plus" class="ui-btn-right">Add Books</a>
   </div>
 
+  <div style="display: inline-flex; width: 100%;">
+  <div class="homeSearch"> 
+    <input class="readerSearch" type="text" id="bookSearch" placeholder="Search" ></input> 
+  </div>
+  <div>
+    <button onclick= "clickForSearch()">GO</button>
+  </div>
+  <!-- <button class="GoSearchButton" onclick="clickForSearch()">Go</button> -->
+  </div>
   <div data-role="content">
 
-
+    <div>
     <div id="mydiv">
-
+      <!-- <p id="bookTitle"></p> -->
     </div>
-
+    <div>
+      <div id="searchedBookdiv">
+    </div>
+  </div>
 
 
   </div>
+  
   <!--the footer bar-->
   <!--<i id="screener" class="fa fa-compress fa-2x"></i>-->
   <div id = "readerfoot" data-role="footer" data-position="fixed" data-tap-toggle="false">

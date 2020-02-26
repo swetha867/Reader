@@ -98,7 +98,7 @@
           }
         });
 
-      /*var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+      var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
 
       db.transaction(function (tx) {
         var statementToExecute = "SELECT * FROM WordsTable";
@@ -140,7 +140,7 @@
         }, function (tx, error) {
           console.log('SELECT error: ' + error.message);
         });
-      });*/
+      });
 
       function doChange(newPage) {
 //                $.mobile.changePage(newPage, {transition: "none", reloadPage: true, allowSamePageTransition: true });

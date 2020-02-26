@@ -11,7 +11,7 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 
-public class FileChooser extends CordovaPlugin {
+public class    FileChooser extends CordovaPlugin {
 
     private static final String TAG = "FileChooser";
     private static final String ACTION_OPEN = "open";
@@ -26,7 +26,7 @@ public class FileChooser extends CordovaPlugin {
             return true;
         }
 
-        return false;
+        return false; 
     }
 
     public void chooseFile(CallbackContext callbackContext) {
