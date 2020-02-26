@@ -1,0 +1,115 @@
+<% include ../partials/head %>
+<style>
+    .my-custom-scrollbar {
+        position: relative;
+        height: 200px;
+        overflow: auto;
+    }
+
+    .table-wrapper-scroll-y {
+        display: block;
+    }
+</style>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/amcharts.js"></script>
+<script type="text/javascript" src="/serial.js"></script>
+
+<h3>Combined Reading Chart</h3>
+
+<div class="card" style="margin-bottom: 50px;">
+    <div class="card-body">
+        <% for (var i=0; i < books.length; i++) { %>
+        <h2><%= books[i].title %> <small><%= books[i].author %></small></h2>
+        <div id="chartdiv<%= i %>" style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
+        <script type="text/javascript">
+            AmCharts.makeChart("chartdiv<%= i %>",
+                        {
+                            "type": "serial",
+                            "categoryField": "page",
+                            "autoMarginOffset": 5,
+                            "marginRight": 15,
+                            "marginTop": 20,
+                            // "startDuration": 1, // animation
+                            "fontSize": 13,
+                            "theme": "default",
+                            "categoryAxis": {
+                                "startOnAxis": true
+                            },
+                            "chartScrollbar": {
+                                "enabled": true
+                            },
+                            "trendLines": [],
+                            "graphs": [
+
+                            <% books[i].sessions.forEach(function(value, key, set) { %>
+                            {
+                            "id": "AmGraph-<%=value%>",
+                            "balloonText": "[[<%=value%>]] Seconds on Page [[page]]",
+                            "bullet": "round",
+                            "bulletSize": 10,
+                            "lineThickness": 3,
+                            "title": "graph 1",
+                            "type": "smoothedLine",
+                            "valueField": "<%=value%>"
+                            },
+
+                            <% }); %>
+                            ],
+                            "guides": [],
+                            "allLabels": [],
+                            "balloon": {},
+                            "titles": [],
+                            "dataProvider":<%
+                            resArr = [];
+                            books[i].pages.forEach(function(value, key, map) {
+                                resArr.push(value);
+                            }); %><%- JSON.stringify(resArr); %>
+                        }
+                    );
+        </script>
+
+<div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+    <table class="table table-bordered table-striped mb-0">
+      <thead>
+        <tr style="text-align: center;">
+          <th scope="col">#Page</th>
+          <th scope="col">Minutes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% books[i].pages.forEach(function(value, key, map) { 
+            count = 0;
+            total = 0;
+            for (var prop in value) {
+                if (prop != 'page' && Object.prototype.hasOwnProperty.call(value, prop)) {
+                    count++;
+                    total += parseInt(value[prop]);
+                }
+            } %>
+
+            <tr style="text-align: center;">
+                <th scope="row"><%= key %></th>
+                <% var minutes = ((total/count)/60).toFixed(1); %>
+                <td><%= minutes %> min, <%= count %> point(s)</td>
+            </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  
+  </div>
+
+        <br><br>
+        <% } %>
+    </div>
+</div>
+
+
+
+
+
+
+<% include ../partials/foot %>

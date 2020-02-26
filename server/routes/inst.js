@@ -27,6 +27,88 @@ async function getBooks(req, res) {
   });
 }
 
+router.get('/book/:bookId/readings', (req, res) => {
+  getBookReadings(req, res);
+});
+
+async function getBookReadings(req, res) {
+  const rows = await getPagesByBook(req.params.bookId);
+  var books = [];
+  var book = '';
+  // reuslt must be sorted by book_name
+  for (var i = 0; i < rows.length; i++) {
+    if (book == '') { // first time
+      book = newBook(rows[i].book_name, rows[i].author_name)
+    }
+    book.sessions.add("u" + rows[i].user_id + "s" + rows[i].session);
+    var current_seconds = rows[i].seconds.split(',');
+    var current_pages = rows[i].pages.split(',');
+    for (var j = 0; j < current_seconds.length; j++) {
+      // check if there is exsiting data
+      if (!book.pages.has(current_pages[j])) {
+        book.pages.set(current_pages[j], { 'page': current_pages[j] });
+      }
+      var pageObject = book.pages.get(current_pages[j]);
+      pageObject["u" + rows[i].user_id + "s" + rows[i].session] = current_seconds[j]
+      book.pages.set(current_pages[j], pageObject);
+    }
+    if (i == rows.length - 1 || book.title != rows[i + 1].book_name) {
+      book.pages = new Map([...book.pages.entries()].sort(
+        function (a, b) {
+          return parseInt(a) - parseInt(b);
+        }
+      ));
+      books.push(book);
+      book = '';
+    }
+  }
+  res.render('inst/book/readings', { books: books });
+}
+
+async function getPagesByBook(book_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT book_name, author_name, font_size, user_id, session,
+    GROUP_CONCAT(seconds ORDER BY page_number ASC) as seconds,
+    GROUP_CONCAT(page_number ORDER BY page_number ASC) as pages
+    FROM readings r 
+    JOIN books b ON r.book_id = b.id
+    WHERE book_id = ?
+    GROUP BY user_id, session
+    ORDER BY book_name ASC;`, [book_id],
+      (err, rows, fields) => {
+        if (err) {
+          resolve(null);
+          return;
+        }
+        else {
+          resolve(rows);
+          return;
+        }
+      })
+  });
+}
+
+
+router.get('/book/:userId/words', (req, res) => {
+  getBookWords(req, res);
+});
+
+async function getBookWords(req, res) {
+  db.query(`SELECT b.id, book_name, author_name,
+    (SELECT COUNT(*) FROM PageTable WHERE book_id = b.id) readings,
+    (SELECT COUNT(*) FROM votes WHERE book_id = b.id) votes
+    FROM books b 
+    ORDER BY b.id`, [], (err, books, fields) => {
+    if (err) {
+      res.send(err);
+      return;
+    }
+    res.render('inst/book/words', { books: books });
+  });
+
+  
+}
+
 router.get('/students', (req, res) => {
   getStudents(req, res);
 });

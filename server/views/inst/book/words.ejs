@@ -1,0 +1,24 @@
+<% include ../partials/head %>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Book ID</th>
+            <th scope="col">Book Name</th>
+            <th scope="col">Author</th>
+            <th scope="col">Readings</th>
+            <th scope="col">Words</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(var i=0; i < books.length; i++) { %>
+        <tr>
+            <td><%= books[i].id %></td>
+            <td><%= books[i].book_name %></td>
+            <td><%= books[i].author_name %></td>
+            <td><a href="/instructor/book/<%= books[i].id %>/readings/">View</a></td>
+            <td><a href="/instructor/book/<%= books[i].id %>/words/">View</a></td>
+        </tr>
+        <% } %>
+    </tbody>
+</table>
+<% include ../partials/foot %>

@@ -6,7 +6,7 @@ class Reading {
 
     static async getSessionId(user_id, start_ts, page_number) {
         return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM readings WHERE user_id = ? ORDER BY end DESC, page_number DESC', [user_id]
+            db.query('SELECT * FROM readings WHERE user_id = ? ORDER BY session DESC, end DESC, page_number DESC', [user_id]
                 , (err, rows, fields) => {
                     if (err || !rows) {
                         reject(err);
