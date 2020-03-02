@@ -291,28 +291,14 @@ EPUBJS.Reader = function (bookPath, _options) {
       if (arrayOfTimes.length == 2) {
         var downTime = backOnFocusTime - outOfFocusTime;
         var readingTime = arrayOfTimes[1] - arrayOfTimes[0] - downTime;
-        if (readingTime > 600) return;
-        $.ajax({
-          type: "POST",
-          url: "http://3.15.37.149:6010/page",
-          data: {
-            userID: window.localStorage.getItem("reader_user_id"),
-            page_number: arrayOfPages[0],
-            seconds: readingTime,
-            book_name: window.bookKaMeta.bookTitle,
-            author_name: window.bookKaMeta.creator,
-            font_size: getDefaultFont()
-          },
-          success: function (data) {
-            console.log(data);
-          },
-          complete: function (data) {
-            arrayOfTimes[0] = arrayOfTimes[1];
-            arrayOfPages[0] = arrayOfPages[1];
-            outOfFocusTime = 0;
-            backOnFocusTime = 0;
-          }
-        });
+
+        // TODO: we should be able to send the exact request so we need following also in the db:
+        // userID: window.localStorage.getItem("reader_user_id") 
+        //         (what if login/logout happens. also we dont want to modify the db content when sending the data.
+        //          if we have everything saved we can just send the whole retrieved data.)
+        // author_name: window.bookKaMeta.creator,
+        // font_size: getDefaultFont()
+        // I think "readingTime" var should be used for seconds it seems its removing the downtime 
 
         db.transaction(function (tx) {
           tx.executeSql('CREATE TABLE IF NOT EXISTS PageTable (book, page, seconds, timestamp)');
@@ -320,37 +306,18 @@ EPUBJS.Reader = function (bookPath, _options) {
           var stat = "SELECT count(*) AS mycount FROM PageTable WHERE page='" + arrayOfPages[0] + "' AND book='" + book.metadata.bookTitle + "';";
           tx.executeSql(stat, [], function (tx, rs) {
             // console.log('Record count : ' + rs.rows.item(0).mycount);
-            if (rs.rows.item(0).mycount == 0) {
-              db.transaction(function (tx) {
-                tx.executeSql('INSERT INTO PageTable VALUES (?,?,?,?)', [book.metadata.bookTitle, arrayOfPages[0], arrayOfTimes[1] - arrayOfTimes[0], timestamp]);
+            db.transaction(function (tx) {
+              tx.executeSql('INSERT INTO PageTable VALUES (?,?,?,?)', [book.metadata.bookTitle, arrayOfPages[0], arrayOfTimes[1] - arrayOfTimes[0], timestamp]);
 
-              }, function (error) {
-                console.log('Transaction ERROR: ' + error.message);
-              }, function () {
-                console.log('Inserted New time and page values');
-                console.log(arrayOfPages[0]);
-                console.log(arrayOfTimes[1] - arrayOfTimes[0]);
-                arrayOfTimes[0] = arrayOfTimes[1];
-                arrayOfPages[0] = arrayOfPages[1];
-              });
-            }
-            else {
-
-              db.transaction(function (tx) {
-                var newtime = arrayOfTimes[1] - arrayOfTimes[0];
-                tx.executeSql("Update PageTable Set seconds = " + newtime + " WHERE" +
-                  " book='" + book.metadata.bookTitle + "' AND" +
-                  " page =" + arrayOfPages[0] + ";");
-              }, function (error) {
-                console.log('Transaction ERROR: ' + error.message);
-              }, function () {
-                console.log('Incremented');
-                console.log(arrayOfPages[0]);
-                console.log(arrayOfTimes[1] - arrayOfTimes[0]);
-                arrayOfTimes[0] = arrayOfTimes[1];
-                arrayOfPages[0] = arrayOfPages[1];
-              });
-            }
+            }, function (error) {
+              console.log('Transaction ERROR: ' + error.message);
+            }, function () {
+              console.log('Inserted New time and page values');
+              console.log(arrayOfPages[0]);
+              console.log(arrayOfTimes[1] - arrayOfTimes[0]);
+              arrayOfTimes[0] = arrayOfTimes[1];
+              arrayOfPages[0] = arrayOfPages[1];
+            });
           }, function (tx, error) {
             console.log('SELECT error: ' + error.message);
           }, function () {
@@ -1399,20 +1366,20 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
     }
   });
 
-  var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
+  var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
   db.transaction(function (tx) {
-  
-  	tx.executeSql("Select * from PageTable", [], function (tx, rs) {
-  
-  		for (var i = 0; i < rs.rows.length; i++) {
-  			console.log('book: ' +  ' ' + rs.rows.item(i).book);
-  			console.log('page: ' +  ' ' + rs.rows.item(i).page);
-  			console.log('seconds : ' + ' ' + rs.rows.item(i).seconds);
-  			console.log("----------------------------------------------");
-  		}
-  	}, function (tx, error) {
-  		console.log('SELECT error: ' + error.message);
-  	});
+
+    tx.executeSql("Select * from PageTable", [], function (tx, rs) {
+
+      for (var i = 0; i < rs.rows.length; i++) {
+        console.log('book: ' + ' ' + rs.rows.item(i).book);
+        console.log('page: ' + ' ' + rs.rows.item(i).page);
+        console.log('seconds : ' + ' ' + rs.rows.item(i).seconds);
+        console.log("----------------------------------------------");
+      }
+    }, function (tx, error) {
+      console.log('SELECT error: ' + error.message);
+    });
   });
 
   mc.on("panright", function () {
