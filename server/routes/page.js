@@ -6,7 +6,7 @@ var moment = require('moment');
 const router = express.Router();
 
 function saveIntoPageTable(userID, bookID, page_number, seconds, font_size, end) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         db.query('Insert into PageTable (`user_id`,`book_id`,`page_number`,`seconds`,`font_size`,`timestamp`) VALUES (?,?,?,?,?,?);', [userID, bookID, page_number, seconds, font_size, end], (err, result, fields) => {
             if (err) {
                 resolve('Error in inserting the page statistics', err);
@@ -71,7 +71,6 @@ async function handlePostPage(req) {
     return handlePostPageHelper(bookID, userID, page_number, seconds, font_size, end)
 }
 
-
 async function handlePostPageHelper(bookID, userID, page_number, seconds, font_size, end) {
     var start = moment(end).subtract(seconds, 'seconds').format('YYYY-MM-DD HH:mm:ss');
     var session = await Reading.getSessionId(userID, start, page_number);
@@ -124,5 +123,41 @@ async function handleReload() {
     });
 }
 
+
+async function handleSyncData(d) {
+    var bookID = await book.getBookId(d.book_name, d.author_name);
+    var userID = parseInt(d.userID);
+    var page_number = parseInt(d.page_number);
+    var seconds = parseInt(d.seconds);
+    var font_size = d.font_size;
+    var tsUnix = Date.parse(d.timestamp);
+    var end = moment(tsUnix).format('YYYY-MM-DD HH:mm:ss');
+
+    // Keep saving into page table as the original data.
+    saveIntoPageTable(userID, bookID, page_number, seconds, font_size, end);
+    return handlePostPageHelper(bookID, userID, page_number, seconds, font_size, end)
+}
+
+router.post('/sync', (req, res) => {
+    handleSync(req).then(results => res.send(results));
+});
+
+async function handleSync(req) {
+    try {
+        syncData = JSON.parse(req.body.syncData);
+        if (!Array.isArray(syncData)) {
+            return ({ res: 'Invalid Data' });
+        }
+    } catch (e) {
+        return ({ res: 'Invalid Data' });
+    }
+
+    for (i = 0; i < syncData.length; i++) {
+        console.log("inserting " + i);
+        console.log(syncData[i]);
+        await handleSyncData(syncData[i]);
+    }
+    return ({ success: true });
+}
 
 module.exports = router;

@@ -18,7 +18,7 @@ function offlineSync() {
                     type: "POST",
                     url: "http://3.15.37.149:6010/page/sync",
                     data: {
-                        syncData: syncResults,
+                        syncData: JSON.stringify(syncResults),
                     },
                     success: function (data) {
                         console.log(data);
