@@ -5,6 +5,19 @@ const { Reading } = require('../model/reading');
 var moment = require('moment');
 const router = express.Router();
 
+function saveIntoPageTable(userID, bookID, page_number, seconds, font_size, end) {
+    return new Promise(function(resolve, reject) {
+        db.query('Insert into PageTable (`user_id`,`book_id`,`page_number`,`seconds`,`font_size`,`timestamp`) VALUES (?,?,?,?,?,?);', [userID, bookID, page_number, seconds, font_size, end], (err, result, fields) => {
+            if (err) {
+                resolve('Error in inserting the page statistics', err);
+            }
+            else {
+                resolve('Page stats are inserted successfully');
+            }
+        });
+    });
+}
+
 router.get('/', (req, res) => {
     db.query('Select * from PageTable', (err, rows, field) => {
         if (err) {
@@ -53,6 +66,8 @@ async function handlePostPage(req) {
     var font_size = req.body.font_size;
     var end = moment().format('YYYY-MM-DD HH:mm:ss');
 
+    // Keep saving into page table as the original data.
+    saveIntoPageTable(userID, bookID, page_number, seconds, font_size, end);
     return handlePostPageHelper(bookID, userID, page_number, seconds, font_size, end)
 }
 
@@ -108,5 +123,6 @@ async function handleReload() {
         })
     });
 }
+
 
 module.exports = router;

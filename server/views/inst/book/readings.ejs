@@ -45,9 +45,11 @@
                             "graphs": [
 
                             <% books[i].sessions.forEach(function(value, key, set) { %>
+                             <% var userIDArray = value.split("s"); %>
+                                <% var userID = userIDArray[0]; %>
                             {
                             "id": "AmGraph-<%=value%>",
-                            "balloonText": "[[<%=value%>]] Seconds on Page [[page]]",
+                            "balloonText": "<%= userID %> [[<%=value%>]] Seconds on Page [[page]]",
                             "bullet": "round",
                             "bulletSize": 10,
                             "lineThickness": 3,
