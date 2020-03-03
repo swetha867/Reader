@@ -96,7 +96,7 @@
             <tr style="text-align: center;">
                 <th scope="row"><%= key %></th>
                 <% var minutes = ((total/count)/60).toFixed(1); %>
-                <td><%= minutes %> min, <%= count %> point(s)</td>
+                <td><%= minutes %> min, <%= count %> Reader(s)</td>
             </tr>
         <% }); %>
       </tbody>
@@ -106,6 +106,30 @@
 
         <br><br>
         <% } %>
+    <h4>Time Spent By Each Reader: </h4>
+
+    <br><br>
+
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+        <table class="table table-bordered table-striped mb-0">
+            <thead>
+                <tr style="text-align: center;">
+                  <th scope="col">Students</th>
+                  <th scope="col">Minutes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% console.log("temp", userReadings); %>
+                <% userReadings.forEach(data => { %>
+                    <tr style="text-align: center;">
+                        <th scope="row"><%= data.user_id %></th>
+                        <% var minutes = (data.seconds/60).toFixed(1); %>
+                        <td><%= minutes %></td>
+                    </tr>
+                <% }); %>
+              </tbody>
+        </table>
+    </div>
     </div>
 </div>
 

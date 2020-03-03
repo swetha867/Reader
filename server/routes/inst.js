@@ -28,11 +28,14 @@ async function getBooks(req, res) {
 }
 
 router.get('/book/:bookId/readings', (req, res) => {
+  getTimePerStudent(req, res);
   getBookReadings(req, res);
+  
 });
 
 async function getBookReadings(req, res) {
   const rows = await getPagesByBook(req.params.bookId);
+  const userReadings = await getTimePerStudent(req.params.bookId);
   var books = [];
   var book = '';
   // reuslt must be sorted by book_name
@@ -62,7 +65,7 @@ async function getBookReadings(req, res) {
       book = '';
     }
   }
-  res.render('inst/book/readings', { books: books });
+  res.render('inst/book/readings', { books: books , userReadings : userReadings });
 }
 
 async function getPagesByBook(book_id) {
@@ -88,6 +91,33 @@ async function getPagesByBook(book_id) {
   });
 }
 
+async function getTimePerStudent(bookID) {
+  return new Promise(function (resolve, reject) {
+    //var bookID = req.params.bookId;
+    var userReadings = [];
+    db.query(`Select user_id, SUM(seconds) as seconds 
+                  From PageTable where book_id = ?
+                  GROUP BY(user_id);`, [bookID], (err, rows, field) => {
+                    if (err) {
+                      console.log("Error in getTimePerStudent:",  err);
+                      resolve(null);
+                      return;
+                    }
+                    else {
+                      
+                      console.log("Result Rows:", rows);
+                      resolve(rows);
+                      
+                      //console.log("Result Rows:", userReadings);
+                      // for (var i = 0; i < rows.length; i++) {
+                      //   userReadings.push(rows[i])
+                      // }
+                      // console.log("Result Rows:", userReadings);
+                      // res.render('inst/book/readings', { userReadings : rows } );
+                    }
+                  });
+  });
+} 
 
 router.get('/book/:bookId/words', (req, res) => {
   getBookWords(req, res);
