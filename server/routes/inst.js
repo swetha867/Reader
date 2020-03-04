@@ -663,7 +663,8 @@ async function getStudentVotesHelper(student_id) {
     JOIN dictionary_words dw ON dw.id = v.word_id
     LEFT JOIN dictionary_meanings dm ON v.meaning_id = dm.id
     WHERE v.user_id = ?
-    GROUP BY v.word_id`, [student_id],
+    GROUP BY v.word_id
+    ORDER BY updated_on DESC`, [student_id],
       (err, rows, fields) => {
         if (err) {
           resolve(null);
