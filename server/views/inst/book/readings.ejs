@@ -106,10 +106,14 @@
 
         <br><br>
         <% } %>
+
+
+
+
+
+        
+
     <h4>Time Spent By Each Reader: </h4>
-
-    <br><br>
-
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
         <table class="table table-bordered table-striped mb-0">
             <thead>
@@ -119,7 +123,6 @@
                 </tr>
               </thead>
               <tbody>
-                <% console.log("temp", userReadings); %>
                 <% userReadings.forEach(data => { %>
                     <tr style="text-align: center;">
                         <th scope="row"><%= data.user_id %></th>
@@ -130,6 +133,112 @@
               </tbody>
         </table>
     </div>
+
+    
+
+        <hr>
+
+<% for (var i=0; i < userReadingsGraph.length; i++) { %>
+        <h2>Reading by user <%= userReadingsGraph[i].user_id %> <br><small><%= userReadingsGraph[i].title %> - <%= userReadingsGraph[i].author %></small></h2>
+        <div id="chartdivR<%= i %>" style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
+        <script type="text/javascript">
+            AmCharts.makeChart("chartdivR<%= i %>",
+                        {
+                            "type": "serial",
+                            "categoryField": "page",
+                            "autoMarginOffset": 5,
+                            "marginRight": 15,
+                            "marginTop": 20,
+                            "startDuration": 0.03, // animation
+                            "fontSize": 13,
+                            "theme": "default",
+                            "categoryAxis": {
+                                "startOnAxis": true
+                            },
+                            "chartScrollbar": {
+                                "enabled": true
+                            },
+                            "trendLines": [],
+                            "graphs": [
+
+                            <% userReadingsGraph[i].sessions.forEach(function(value, key, set) { %>
+                             <% var userIDArray = value.split("s"); %>
+                                <% var userID = userIDArray[0]; %>
+                            {
+                            "id": "AmGraph-<%=value%>",
+                            "balloonText": "<%= userID %> [[<%=value%>]] Seconds on Page [[page]]",
+                            "bullet": "round",
+                            "bulletSize": 10,
+                            "lineThickness": 3,
+                            "title": "graph 1",
+                            "type": "smoothedLine",
+                            "valueField": "<%=value%>"
+                            },
+
+                            <% }); %>
+                            ],
+                            "guides": [],
+                            "allLabels": [],
+                            "balloon": {},
+                            "titles": [],
+                            "dataProvider":<%
+                            resArr = [];
+                            userReadingsGraph[i].pages.forEach(function(value, key, map) {
+                                resArr.push(value);
+                            }); %><%- JSON.stringify(resArr); %>
+                        }
+                    );
+        </script>
+
+<div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+    <table class="table table-bordered table-striped mb-0">
+      <thead>
+        <tr style="text-align: center;">
+          <th scope="col">#Page</th>
+          <th scope="col">Minutes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% userReadingsGraph[i].pages.forEach(function(value, key, map) { 
+            count = 0;
+            total = 0;
+            for (var prop in value) {
+                if (prop != 'page' && Object.prototype.hasOwnProperty.call(value, prop)) {
+                    count++;
+                    total += parseInt(value[prop]);
+                }
+            } %>
+
+            <tr style="text-align: center;">
+                <th scope="row"><%= key %></th>
+                <% var minutes = ((total/count)/60).toFixed(1); %>
+                <td><%= minutes %> min, <%= count %> Reader(s)</td>
+            </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  
+  </div>
+
+        <br><br>
+        <% } %>
+
+
+        <hr>
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
 </div>
 

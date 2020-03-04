@@ -28,14 +28,14 @@ async function getBooks(req, res) {
 }
 
 router.get('/book/:bookId/readings', (req, res) => {
-  getTimePerStudent(req, res);
   getBookReadings(req, res);
-  
 });
 
 async function getBookReadings(req, res) {
   const rows = await getPagesByBook(req.params.bookId);
   const userReadings = await getTimePerStudent(req.params.bookId);
+  const userReadingsGraph = await getBookReading(req.params.bookId);
+
   var books = [];
   var book = '';
   // reuslt must be sorted by book_name
@@ -65,7 +65,11 @@ async function getBookReadings(req, res) {
       book = '';
     }
   }
-  res.render('inst/book/readings', { books: books , userReadings : userReadings });
+
+  console.log(util.inspect(userReadingsGraph, false, null, true /* enable colors */))
+
+
+  res.render('inst/book/readings', { books: books, userReadings: userReadings, userReadingsGraph: userReadingsGraph });
 }
 
 async function getPagesByBook(book_id) {
@@ -98,26 +102,26 @@ async function getTimePerStudent(bookID) {
     db.query(`Select user_id, SUM(seconds) as seconds 
                   From PageTable where book_id = ?
                   GROUP BY(user_id);`, [bookID], (err, rows, field) => {
-                    if (err) {
-                      console.log("Error in getTimePerStudent:",  err);
-                      resolve(null);
-                      return;
-                    }
-                    else {
-                      
-                      console.log("Result Rows:", rows);
-                      resolve(rows);
-                      
-                      //console.log("Result Rows:", userReadings);
-                      // for (var i = 0; i < rows.length; i++) {
-                      //   userReadings.push(rows[i])
-                      // }
-                      // console.log("Result Rows:", userReadings);
-                      // res.render('inst/book/readings', { userReadings : rows } );
-                    }
-                  });
+      if (err) {
+        console.log("Error in getTimePerStudent:", err);
+        resolve(null);
+        return;
+      }
+      else {
+
+        // console.log("Result Rows:", rows);
+        resolve(rows);
+
+        //console.log("Result Rows:", userReadings);
+        // for (var i = 0; i < rows.length; i++) {
+        //   userReadings.push(rows[i])
+        // }
+        // console.log("Result Rows:", userReadings);
+        // res.render('inst/book/readings', { userReadings : rows } );
+      }
+    });
   });
-} 
+}
 
 router.get('/book/:bookId/words', (req, res) => {
   getBookWords(req, res);
@@ -504,7 +508,7 @@ router.get('/student/reading/:userId', (req, res) => {
 })
 
 function newBook(name, author) {
-  console.log("new book : " + name);
+  // console.log("new book : " + name);
   return { title: name, author: author, sessions: new Set(), pages: new Map() };
 }
 
@@ -540,7 +544,7 @@ async function getStudentReading(req, res) {
     }
   }
 
-  console.log(util.inspect(books, false, null, true /* enable colors */))
+  // console.log(util.inspect(books, false, null, true /* enable colors */))
   /*
   Sample Data for books:
   [
@@ -570,6 +574,65 @@ async function getPages(user_id) {
       WHERE r.user_id = ?
       GROUP BY book_id, session
       ORDER BY book_name ASC;`, [user_id],
+      (err, rows, fields) => {
+        if (err) {
+          resolve(null);
+          return;
+        }
+        else {
+          resolve(rows);
+          return;
+        }
+      })
+  });
+}
+
+
+async function getBookReading(book_id) {
+  const rows = await getPagesByBookId(book_id);
+  var books = [];
+  var book = '';
+  // reuslt must be sorted by book_name
+  for (var i = 0; i < rows.length; i++) {
+    if (book == '') { // first time
+      book = newBook(rows[i].book_name, rows[i].author_name)
+      book.user_id = rows[i].user_id
+    }
+    book.sessions.add("s" + rows[i].session);
+    var current_seconds = rows[i].seconds.split(',');
+    var current_pages = rows[i].pages.split(',');
+    for (var j = 0; j < current_seconds.length; j++) {
+      // check if there is exsiting data
+      if (!book.pages.has(current_pages[j])) {
+        book.pages.set(current_pages[j], { 'page': current_pages[j] });
+      }
+      var pageObject = book.pages.get(current_pages[j]);
+      pageObject["s" + rows[i].session] = current_seconds[j]
+      book.pages.set(current_pages[j], pageObject);
+    }
+    if (i == rows.length - 1 || book.user_id != rows[i + 1].user_id) {
+      book.pages = new Map([...book.pages.entries()].sort(
+        function (a, b) {
+          return parseInt(a) - parseInt(b);
+        }
+      ));
+      books.push(book);
+      book = '';
+    }
+  }
+  return (books);
+}
+
+async function getPagesByBookId(book_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT book_name, author_name, font_size, session, user_id,
+      GROUP_CONCAT(seconds ORDER BY page_number ASC) as seconds,
+      GROUP_CONCAT(page_number ORDER BY page_number ASC) as pages
+      FROM readings r 
+      JOIN books b ON r.book_id = b.id
+      WHERE b.id = ?
+      GROUP BY user_id, session
+      ORDER BY user_id ASC;`, [book_id],
       (err, rows, fields) => {
         if (err) {
           resolve(null);
