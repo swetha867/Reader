@@ -108,16 +108,7 @@ async function getTimePerStudent(bookID) {
         return;
       }
       else {
-
-        // console.log("Result Rows:", rows);
         resolve(rows);
-
-        //console.log("Result Rows:", userReadings);
-        // for (var i = 0; i < rows.length; i++) {
-        //   userReadings.push(rows[i])
-        // }
-        // console.log("Result Rows:", userReadings);
-        // res.render('inst/book/readings', { userReadings : rows } );
       }
     });
   });
