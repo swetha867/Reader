@@ -1,6 +1,6 @@
 <% include partials/head %>
 
-<table class="table">
+<table class="table" id="studentsTable">
   <thead>
     <tr>
       <th scope="col">Student ID</th>
@@ -11,7 +11,7 @@
   <tbody>
     <% for(var i=0; i < students.length; i++) { %>
     <tr>
-      <th scope="row">
+      <th scope="row"  data-order="<%= students[i].id %>">
         <% if( students[i].id > 4) { %>
         <b><%= students[i].id %></b>
         <% }else{ %>
@@ -21,7 +21,7 @@
         </small>
         <% } %>
       </th>
-      <td>
+      <td data-order="<%= students[i].votes - 10 %>">
         <a href="/instructor/student/votes/<%= students[i].id %>">
           <%= students[i].words %><% if( students[i].votes > 10) { %>,
           ... (<%= students[i].votes - 10 %> more words).
@@ -35,5 +35,14 @@
 </table>
 
 
+<script>
+  $(document).ready(function () {
+    $('#studentsTable').DataTable({
+      "bPaginate": false,
+      "bInfo": false,
+      "bFilter": false,
+    });
+  });
+</script>
 
 <% include partials/foot %>

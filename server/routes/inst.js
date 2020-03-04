@@ -66,7 +66,7 @@ async function getBookReadings(req, res) {
     }
   }
 
-  console.log(util.inspect(userReadingsGraph, false, null, true /* enable colors */))
+  // console.log(util.inspect(userReadingsGraph, false, null, true /* enable colors */))
 
 
   res.render('inst/book/readings', { books: books, userReadings: userReadings, userReadingsGraph: userReadingsGraph });
