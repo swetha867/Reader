@@ -34,7 +34,7 @@ var dic = {
       https.get(
         {
           host: 'www.dictionaryapi.com',
-          path: '/api/v3/references/learners/json/' + word + '?key=44e0ef0b-a516-4c4d-8fff-12be8779749b'
+          path: '/api/v3/references/learners/json/' + encodeURI(word) + '?key=44e0ef0b-a516-4c4d-8fff-12be8779749b'
       },(resp) => {
 
         var data = '';
