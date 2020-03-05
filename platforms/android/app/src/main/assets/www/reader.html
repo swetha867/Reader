@@ -268,7 +268,7 @@
           var output = $.ajax({
             url: 'http://3.15.37.149:6010/lookup',
             type: 'POST',
-            timeout: 5000,
+            timeout: 8000,
             data: {
               word: word,
               user_id: window.localStorage.getItem("reader_user_id"),
@@ -327,11 +327,13 @@
                 $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 style='padding-left:20px'>" + ogword + "</h1>");
                 if (defNotFound != 1)
                   $("#votingForm").html(definitions + "<br><br><center><input type='submit' value='Vote'></center></form>");
-              }
-              else {
+              } else {
                 $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='300' height='300'/></div><h1 style='padding-left:20px'>" + ogword.toLocaleUpperCase() + "</h1>");
                 if (defNotFound != 1)
                   $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
+              }
+              if(defNotFound == 1){
+                $("#votingForm").html("<b>Definition not found</b>");
               }
             },
             complete: function () {
@@ -371,14 +373,14 @@
               }
             },
             error: function (err) {
-              if (err.statusText == 'timeout') alert('Sorry, No definition found!');
+              if (err.statusText == 'timeout') alert('Connection timeout!');
               else alert("Error loading! Are you connected to the internet?");
               closePopes();
             }
           });
         },
         error: function (err) {
-          if (err.statusText == 'timeout') alert('Sorry, No definition found!');
+          if (err.statusText == 'timeout') alert('Connection timeout!');
           else alert("Error loading! Are you connected to the internet?");
           closePopes();
         },
