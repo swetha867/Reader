@@ -4,17 +4,36 @@ const router = express.Router();
 const user = require('../model/user');
 
 router.get('/:id', (req,res) => {
-    res.send('New surveys are not being accepted at this time.');
-    return;
+    // res.send('New surveys are not being accepted at this time.');
+    // return;
 
     var id  = req.params.id;
     //timestamp = req.body.timestamp; date.now()
-    db.query(`Select word from dictionary_words JOIN votes ON votes.word_id = dictionary_words.id and votes.user_id = ${id} and votes.updated_on >= '2019-11-29'`, (err,rows,fields) => {
+    db.query(`Select word from dictionary_words JOIN votes ON votes.word_id = dictionary_words.id and votes.user_id = ${id} and votes.updated_on >= '2020-01-27'`, (err,rows,fields) => {
         if (err) {
             res.send(`Error in getting words for the user ${id}: ${err}`);
         }
         else if (rows.length >= 10){
-            res.render('../views/student-survey/index.ejs', {wordsList : rows, id}  );
+            db.query(`Select user_id, SUM(seconds) as seconds 
+            From PageTable where user_id = ${id} and timestamp >= '2020-1-27'
+            GROUP BY(user_id);`, (err, result, fields) => {
+                if (err) {
+                    res.send(`Error in getting words for the user ${id} and seconds: ${err}`);
+                }
+                else if (result.length === 0 || result[0].seconds < 1800) {
+                    //return 'You have spent less than 30 minutes for reading';
+                    console.log("Seconds less than 30 min", result);
+                    res.send('You have spent less than 30 minutes for reading so you are not eligible to take the survey!');
+                }
+                else if (result[0].seconds >= 1800 && result.length >= 1) {
+                    console.log('Rows of user with seconds spent', result);
+                    res.render('../views/student-survey/index.ejs', {wordsList : rows, id}  );
+                }
+                else {
+                    res.send('You are not eligible to take the survey since you have looked up words less than 10 or minutes spent are less than 30.');
+                }
+            })
+            
         }
         else {
              res.send('You are not eligible to take the survey since you have looked up words less than 10 this week.');
@@ -23,8 +42,8 @@ router.get('/:id', (req,res) => {
 });
 
 router.post('/:id/survey', (req,res) => {
-    res.send('New surveys are not being accepted at this time.');
-    return;
+    // res.send('New surveys are not being accepted at this time.');
+    // return;
     
     var id = req.params.id;
     console.log('RESPONSE', req.body);
