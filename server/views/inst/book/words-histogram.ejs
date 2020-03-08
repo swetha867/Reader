@@ -8,10 +8,48 @@
         color: rgb(5, 148, 0);
     }
 </style>
+
+<script type="text/javascript" src="/amcharts.js"></script>
+<script type="text/javascript" src="/serial.js"></script>
+
 <h2><%= votes[0].book_name  %></h2>
 <h3>Words Histogram<br>
     <small>Total words: <%= votes.length %></small>
 </h3>
+<div id="chartdiv" style="width: 100%; height: 15rem;"></div>
+<script>
+
+    var chart = AmCharts.makeChart("chartdiv", {
+        "type": "serial",
+        "theme": "light",
+        "dataProvider": [
+        <% for(var i=0; i < votes.length; i++) { %>
+            {
+            "word": "<%= votes[i].word %>",
+            "count": <%= votes[i].totalFreq %>
+            },
+        <% } %>
+],
+        "graphs": [{
+            "fillAlphas": 0.9,
+            "lineAlpha": 0.2,
+            "type": "column",
+            "valueField": "count"
+        }],
+        "categoryField": "word",
+        "chartCursor": {
+            "fullWidth": true,
+            "cursorAlpha": 0.1,
+            "listeners": [{
+                "event": "changed",
+                "method": function (ev) {
+                        ev.chart.lastCursorPosition = ev.index;
+                }
+            }]
+        },
+    });
+
+</script>
 <table class="table">
     <thead>
         <tr>
