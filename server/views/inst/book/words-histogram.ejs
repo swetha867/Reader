@@ -1,0 +1,35 @@
+<% include ../partials/head %>
+<style>
+    .voted {
+        background-color: rgb(245, 255, 235);
+    }
+
+    .meaning {
+        color: rgb(5, 148, 0);
+    }
+</style>
+<h2><%= votes[0].book_name  %></h2>
+<h3>Words Histogram<br>
+    <small>Total words: <%= votes.length %></small>
+</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Word</th>
+            <th>Count</th>
+            <th>Last Lookedup</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for(var i=0; i < votes.length; i++) { %>
+        <tr>
+            <td><%= votes[i].word_id %></td>
+            <td><%= votes[i].word %></td>
+            <td><%= votes[i].totalFreq %></td>
+            <td><%= moment(votes[i].lastLookedup).format("MM/DD/YYYY") %></td>
+        </tr>
+        <% } %>
+    </tbody>
+</table>
+<% include ../partials/foot %>

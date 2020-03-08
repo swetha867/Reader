@@ -4,6 +4,8 @@ const passport = require('passport');
 const dic = require('../api/dictionary');
 const router = express.Router();
 const util = require('util')
+var moment = require('moment');
+
 
 router.get('/', (req, res) => {
   res.render('inst/index');
@@ -147,7 +149,36 @@ async function getBookWordsHelper(book_id) {
   });
 }
 
+router.get('/book/:bookId/words/histogram', (req, res) => {
+  getBookWordsHistogram(req, res);
+});
 
+async function getBookWordsHistogram(req, res) {
+  const votes = await getBookWordsHistogramHelper(req.params.bookId);
+  res.render('inst/book/words-histogram', { moment:moment, votes: votes, title: 'Combined words from all students' });
+}
+
+async function getBookWordsHistogramHelper(book_id) {
+  return new Promise(function (resolve, reject) {
+    db.query(`SELECT book_name, v.word_id, word, SUM(freq) totalFreq, MAX(updated_on) lastLookedup
+    FROM votes v 
+    JOIN books ON book_id = books.id
+    JOIN dictionary_words dw ON dw.id = v.word_id
+    WHERE book_id = ?
+    GROUP BY v.word_id
+    ORDER BY totalFreq DESC`, [book_id],
+      (err, rows, fields) => {
+        if (err) {
+          resolve(null);
+          return;
+        }
+        else {
+          resolve(rows);
+          return;
+        }
+      })
+  });
+}
 
 
 
