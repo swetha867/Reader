@@ -78,8 +78,10 @@
     <table class="table table-bordered table-striped mb-0">
       <thead>
         <tr style="text-align: center;">
-          <th scope="col">#Page</th>
-          <th scope="col">Minutes</th>
+            <th scope="col">#Page</th>
+            <th scope="col">Readers</th>
+            <th scope="col">Average Minutes</th>
+          <th scope="col">Total Minutes</th>
         </tr>
       </thead>
       <tbody>
@@ -91,12 +93,15 @@
                     count++;
                     total += parseInt(value[prop]);
                 }
-            } %>
+            } 
+            var minutesAverage = ((total/count)/60).toFixed(1);
+            var minutesTotal = ((total)/60).toFixed(1); %>
 
             <tr style="text-align: center;">
                 <th scope="row"><%= key %></th>
-                <% var minutes = ((total/count)/60).toFixed(1); %>
-                <td><%= minutes %> min, <%= count %> Reader(s)</td>
+                <td><%= count %></td>
+                <td><%= minutesAverage %> min</td>
+                <td><%= minutesTotal %> min</td>
             </tr>
         <% }); %>
       </tbody>
@@ -196,7 +201,9 @@
       <thead>
         <tr style="text-align: center;">
           <th scope="col">#Page</th>
-          <th scope="col">Minutes</th>
+          <th scope="col">Times Read</th>
+          <th scope="col">Average Minutes</th>
+        <th scope="col">Total Minutes</th>
         </tr>
       </thead>
       <tbody>
@@ -208,12 +215,16 @@
                     count++;
                     total += parseInt(value[prop]);
                 }
-            } %>
+            }
+            var minutesAverage = ((total/count)/60).toFixed(1);
+            var minutesTotal = ((total/count)/60).toFixed(1);
+            %>
 
             <tr style="text-align: center;">
                 <th scope="row"><%= key %></th>
-                <% var minutes = ((total/count)/60).toFixed(1); %>
-                <td><%= minutes %> min, <%= count %> Reader(s)</td>
+                <td><%= count %></td>
+                <td><%= minutesAverage %> min</td>
+                <td><%= minutesTotal %> min</td>
             </tr>
         <% }); %>
       </tbody>
