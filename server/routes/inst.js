@@ -700,4 +700,28 @@ async function getStudentVotesHelper(student_id) {
   });
 }
 
+// Survey Results
+
+router.get('/results', (req, res) => {
+  // res.send('Survey Results');
+  getSurveyResults(req, res);
+});
+
+async function getSurveyResults(req, res) {
+  return new Promise(function (resolve, reject) {
+    db.query(`Select * from survey2 ORDER BY timestamp DESC`, [], (err, rows, fields) => {
+      if (err) {
+        console.log("Error in fetching survey results");
+        resolve(null);
+        return;
+      }
+      else {
+        console.log("Results", rows);
+        res.render('inst/results', { results : rows });
+        resolve(rows);
+        return;
+      }
+    });
+  });
+}
 module.exports = router;
