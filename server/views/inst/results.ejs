@@ -1,0 +1,61 @@
+<% include partials/head %>
+<style>
+        .shrink-column {
+            width: 3%;
+            text-align: center;
+        }
+        .count-column-data, th {
+            text-align: center;
+        }
+        table, td {
+            word-wrap: break-word;
+            text-align: justify;
+        }
+</style>
+    <h3>Survey Results</h3>
+    
+    <table class="table" style="table-layout: fixed; width: 400%;">
+        <thead>
+            <tr>
+                <th class="shrink-column" scope="col">User ID</th>
+                <th class="shrink-column" scope="col">Total Words</th>
+                <th class="shrink-column" scope="col">Total Skipped Words</th>
+                <th scope="col">Skipped Words</th>
+                <th class="shrink-column" scope="col">Total Looked Up Words</th>
+                <th scope="col">Looked Up Words</th>
+                <th class="shrink-column" scope="col">Total Words Helpful By Images</th>
+                <th scope="col">Words Helpful By Images</th>
+                <th class="shrink-column" scope="col">Total Words Helpful By Votes</th>
+                <th scope="col">Words Helpful By Votes</th>
+                <th class="shrink-column" scope="col">Words Helped Reading</th>
+                <th class="shrink-column" scope="col">Other's Vote Helpful</th>
+                <th scope="col">Reading Experience Feedback</th>
+                <th scope="col">Statistics Feedback</th>
+                <th scope="col">Overall Feedback</th>
+                <th class="shrink-column" scope="col">Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i < results.length; i++) { %>
+                <tr>
+                    <td class="count-column-data"><%= results[i].user_id %></td>
+                    <td class="count-column-data"><%= results[i].total_count %></td>
+                    <td class="count-column-data"><%= results[i].q1_skip_count %></td>
+                    <td><%= results[i].q1_skip_words %></td>
+                    <td class="count-column-data"><%= results[i].q1_lookup_count %></td>
+                    <td><%= results[i].q1_lookup_words %></td>
+                    <td class="count-column-data"><%= results[i].q2_image_count %></td>
+                    <td><%= results[i].q2_image_words %></td>
+                    <td class="count-column-data"><%= results[i].q3_vote_count %></td>
+                    <td><%= results[i].q3_vote_words %></td>
+                    <td class="count-column-data"><%= results[i].q4_help_support %></td>
+                    <td class="count-column-data"><%= results[i].q5_support %></td>
+                    <td><%= results[i].q6_feedback %></td>
+                    <td><%= results[i].q7_feedback %></td>
+                    <td><%= results[i].q8_feedback %></td>
+                    <td><%= results[i].timestamp %></td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+<% include partials/foot %>
