@@ -23,7 +23,7 @@ router.post('/', (req,res) => {
             mysqlConnection.query('INSERT INTO users (`student_id`, `email`) VALUES (?,?) ', 
             [studentID, email], (req,resp) => {
             console.log("Data Inserted " + resp.insertId);
-            res.send({ user_id: resp.insertId });
+            res.send({ user_id: resp.insertId, isTeacher: 0});
             });
         }
         else  if (err) {
@@ -31,7 +31,7 @@ router.post('/', (req,res) => {
         }
         else if (rows.length !== 0 && !err) {
             console.log(`User ID:${rows[0].student_id} already exists in the database `);
-            res.send({user_id: rows[0].id});
+            res.send({user_id: rows[0].id, isTeacher: rows[0].isTeacher});
         }
     })
     
