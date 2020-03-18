@@ -317,7 +317,7 @@
                 }
 
                 if (window.localStorage.getItem("reader_user_is_teacher") == "1") {
-                  definitions += "<div><a href='javascript::addCustomDef()'>Add a custom definition</a>";
+                  definitions += "<div style='padding: 10px 0'><a href='javascript:addCustomDef(" + word + ")'>Add a custom definition</a>";
                 }
 
               } catch (err) {
@@ -438,7 +438,8 @@
       });
     });
 
-    function addCustomDef(word_id) {
+    function addCustomDef(word) {
+      alert(word);
       var def = prompt("Please enter the new definition", "");
       if (def != null && def != "") {
         $.ajax({
@@ -446,7 +447,7 @@
           url: "http://3.15.37.149:6010/votes/custom",
           data: {
             user_id: window.localStorage.getItem('reader_user_id'),
-            word_id: word_id,
+            word: word,
             sentence: localStorage.sentence,
             book_name: window.bookKaMeta.bookTitle,
             author_name: window.bookKaMeta.creator,

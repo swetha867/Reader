@@ -89,18 +89,42 @@ async function handleCustom(req) {
     // var bookID = await book.getBookId(req.body.book_name, req.body.author_name);
     // var userID = req.body.user_id;
     // var sentence = req.body.sentence;
-    var wordID = req.body.word_id;
+    var wordId = await getWordId(req.body.word);
     var def = req.body.def;
 
+    if (wordId == 0 || !def || def == "") {
+        console.log(wordId);
+        console.log(def);
+        return ({ res: 'error' });
+    }
+
     // insert the new meaning and set it on request
-    req.body.meaning_id = insertNewMeaning(wordID, def);
+    req.body.word_id = wordId;
+    req.body.meaning_id = insertNewMeaning(wordId, def);
     return handleVote(req);
+}
+
+
+async function getWordId(word) {
+    return new Promise(function (resolve, reject) {
+        db.query('SELECT * FROM dictionary_words WHERE word = ?', [word], (err, rows, fields) => {
+            if (err || rows.length != 1) {
+                resolve(0);
+                return;
+            }
+            resolve(rows[0].id);
+        });
+    });
 }
 
 async function insertNewMeaning(word_id, def) {
     return new Promise(function (resolve, reject) {
         db.query('INSERT INTO dictionary_meanings (`word_id`,`fl`,`meaning`) VALUES (?,?,?) ',
-            [word_id, "", def], (req, resp) => {
+            [word_id, "", def], (err, rows, fields) => {
+                if (err) {
+                    console.log(`Here is the error ${err}`)
+                    return;
+                }
                 resolve(resp.insertId);
             });
     });
