@@ -97,15 +97,13 @@ async function handlePostPageHelper(bookID, userID, page_number, seconds, font_s
     });
 }
 
-
-
 router.get('/reload', (req, res) => {
     handleReload().then(results => res.send(results));
 });
 
 async function handleReload() {
+    await truncateReading();
     return new Promise(function (resolve, reject) {
-
         db.query('SELECT * FROM PageTable ORDER BY id ASC', (err, rows, fields) => {
             if (err) {
                 resolve({ res: 'DB error.' });
@@ -116,13 +114,11 @@ async function handleReload() {
                     var end = moment(rows[i].timestamp).format('YYYY-MM-DD HH:mm:ss');
                     await handlePostPageHelper(rows[i].book_id, rows[i].user_id, rows[i].page_number, rows[i].seconds, rows[i].font_size, end);
                 }
-
                 resolve({ res: rows.length + ' rows inserted.' });
             })(rows)
         })
     });
 }
-
 
 async function handleSyncData(d) {
     var bookID = await book.getBookId(d.book_name, d.author_name);
@@ -158,6 +154,18 @@ async function handleSync(req) {
         await handleSyncData(syncData[i]);
     }
     return ({ success: true });
+}
+
+async function truncateReading() {
+    return new Promise(function (resolve, reject) {
+        db.execute('TRUNCATE readings', (err, rows, fields) => {
+            if (err) {
+                resolve({ res: 'error' });
+                return;
+            }
+            resolve({ res: 'success' });
+        })
+    });
 }
 
 module.exports = router;
