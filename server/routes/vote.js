@@ -91,16 +91,18 @@ async function handleCustom(req) {
     // var sentence = req.body.sentence;
     var wordId = await getWordId(req.body.word);
     var def = req.body.def;
+    var fl = req.body.fl;
 
-    if (wordId == 0 || !def || def == "") {
-        console.log(wordId);
-        console.log(def);
+    if (wordId == 0 || !def || def == "" || !fl || fl == "") {
         return ({ res: 'error' });
     }
 
     // insert the new meaning and set it on request
     req.body.word_id = wordId;
-    req.body.meaning_id = insertNewMeaning(wordId, def);
+    req.body.meaning_id = insertNewMeaning(wordId, def, fl);
+    if (req.body.meaning_id == 0) {
+        return ({ res: 'error' });
+    }
     return handleVote(req);
 }
 
@@ -117,13 +119,12 @@ async function getWordId(word) {
     });
 }
 
-async function insertNewMeaning(word_id, def) {
+async function insertNewMeaning(word_id, def, fl) {
     return new Promise(function (resolve, reject) {
         db.query('INSERT INTO dictionary_meanings (`word_id`,`fl`,`meaning`) VALUES (?,?,?) ',
-            [word_id, "", def], (err, rows, fields) => {
+            [word_id, fl, def], (err, rows, fields) => {
                 if (err) {
-                    console.log(`Here is the error ${err}`)
-                    return;
+                    resolve(0);
                 }
                 resolve(rows.insertId);
             });

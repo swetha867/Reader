@@ -439,27 +439,34 @@
     });
 
     function addCustomDef(word) {
-      alert(word);
       var def = prompt("Please enter the new definition", "");
       if (def != null && def != "") {
-        $.ajax({
-          type: "POST",
-          url: "http://3.15.37.149:6010/votes/custom",
-          data: {
-            user_id: window.localStorage.getItem('reader_user_id'),
-            word: word,
-            sentence: localStorage.sentence,
-            book_name: window.bookKaMeta.bookTitle,
-            author_name: window.bookKaMeta.creator,
-            def: def
-          },
-          success: function (data) {
-            alert("New definition Saved");
-          },
-          complete: function (data) {
-            closePopes();
-          }
-        });
+        var fl = prompt("Please enter type (noun, verb,...)", "");
+        if (fl != null && fl != "") {
+          $.ajax({
+            type: "POST",
+            url: "http://3.15.37.149:6010/votes/custom",
+            data: {
+              user_id: window.localStorage.getItem('reader_user_id'),
+              word: word,
+              sentence: localStorage.sentence,
+              book_name: window.bookKaMeta.bookTitle,
+              author_name: window.bookKaMeta.creator,
+              def: def,
+              fl: fl
+            },
+            success: function (data) {
+              if (data['err'] != "") {
+                alert(data['err']);
+                return;
+              }
+              alert("New definition Saved");
+            },
+            complete: function (data) {
+              closePopes();
+            }
+          });
+        }
       }
     }
   </script>
