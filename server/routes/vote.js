@@ -44,7 +44,7 @@ async function handleVote(req) {
             [userID, bookID, wordID, sentence], (err, rows, fields) => {
                 if (err) {
                     console.log(`Here is the error ${err}`)
-                    resolve(`Here is the error ${err}`);
+                    resolve({ res: `Error: ${err}` });
                     return;
                 }
                 if (rows.length == 0) {
@@ -53,7 +53,7 @@ async function handleVote(req) {
                         [userID, bookID, wordID, meaningID, sentence], (err, rows, fields) => {
                             if (err) {
                                 console.log(`Here is the error ${err}`)
-                                resolve(`Here is the error ${err}`);
+                                resolve({ res: `Error: ${err}` });
                                 return;
                             }
                             console.log("vote details inserted!");
@@ -65,7 +65,7 @@ async function handleVote(req) {
                         [meaningID, userID, bookID, wordID, sentence], (err, rows, fields) => {
                             if (err) {
                                 console.log(`Here is the error ${err}`)
-                                resolve(`Here is the error ${err}`);
+                                resolve({ res: `Error: ${err}` });
                                 return;
                             }
                             console.log("vote details updated!");
@@ -99,7 +99,7 @@ async function handleCustom(req) {
 
     // insert the new meaning and set it on request
     req.body.word_id = wordId;
-    req.body.meaning_id = insertNewMeaning(wordId, def, fl);
+    req.body.meaning_id = await insertNewMeaning(wordId, def, fl);
     if (req.body.meaning_id == 0) {
         return ({ res: 'error' });
     }

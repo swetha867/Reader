@@ -456,7 +456,7 @@
               fl: fl
             },
             success: function (data) {
-              if (data['err'] != "") {
+              if (typeof data['err'] != undefined && data['err'] != "") {
                 alert(data['err']);
                 return;
               }
