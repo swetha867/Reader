@@ -316,10 +316,6 @@
                   defNotFound = 1;
                 }
 
-                if (window.localStorage.getItem("reader_user_is_teacher") == "1") {
-                  definitions += "<div style='padding: 10px 0'><a href='javascript:addCustomDef(\"" + word + "\")'>Add a custom definition</a>";
-                }
-
               } catch (err) {
                 meanings[0] = "Definition not found";
               }
@@ -342,6 +338,9 @@
               }
             },
             complete: function () {
+              if (window.localStorage.getItem("reader_user_is_teacher") == "1") {
+                $("#votingForm").append("<div style='padding: 10px 0'><a href='javascript:addCustomDef(\"" + word + "\")'>Add a custom definition</a>");
+              }
               if (localStorage.meaning.length > 1 && localStorage.meaning != "Definition not found") {
                 var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
 
