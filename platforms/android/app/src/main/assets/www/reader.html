@@ -456,8 +456,8 @@
               fl: fl
             },
             success: function (data) {
-              if (typeof data['err'] != undefined && data['err'] != "") {
-                alert(data['err']);
+              if (typeof data['err'] != 'undefined' && data['err'] != "") {
+                alert(data['err']);   
                 return;
               }
               alert("New definition Saved");
