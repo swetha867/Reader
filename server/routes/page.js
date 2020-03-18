@@ -158,7 +158,7 @@ async function handleSync(req) {
 
 async function truncateReading() {
     return new Promise(function (resolve, reject) {
-        db.execute('TRUNCATE readings', (err, rows, fields) => {
+        db.query('TRUNCATE readings', (err, rows, fields) => {
             if (err) {
                 resolve({ res: 'error' });
                 return;
