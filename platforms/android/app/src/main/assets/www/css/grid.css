@@ -25,11 +25,12 @@
 
 .frame{
     position:relative;
+    text-align: center;
     padding:0;
     /*margin:0;*/
     border:solid 0.6vh #555;
-    width: 25vw;
-    height: 25vh;
+    width: 27vw;
+    height: 29vh;
     line-height: 25vh;
     margin-bottom: 3vh;
     background-color: white;

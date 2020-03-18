@@ -316,6 +316,10 @@
                   defNotFound = 1;
                 }
 
+                if (window.localStorage.getItem("reader_user_is_teacher") == "1") {
+                  definitions += "<div><a href='javascript::addCustomDef()'>Add a custom definition</a>";
+                }
+
               } catch (err) {
                 meanings[0] = "Definition not found";
               }
@@ -333,7 +337,7 @@
                 if (defNotFound != 1)
                   $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
               }
-              if(defNotFound == 1){
+              if (defNotFound == 1) {
                 $("#votingForm").html("<b>Definition not found</b>");
               }
             },
@@ -413,7 +417,6 @@
         result[this.name] = this.value;
       });
 
-      console.log('meaning = ' + result.meaning_id + ', Word Id = ' + result.word_id);
       $.ajax({
         type: "POST",
         url: "http://3.15.37.149:6010/votes",
@@ -423,7 +426,7 @@
           word_id: result.word_id,
           sentence: localStorage.sentence,
           book_name: window.bookKaMeta.bookTitle,
-          author_name: window.bookKaMeta.creator
+          author_name: window.bookKaMeta.creator,
         },
         success: function (data) {
           console.log(data);
@@ -434,6 +437,30 @@
         }
       });
     });
+
+    function addCustomDef(word_id) {
+      var def = prompt("Please enter the new definition", "");
+      if (def != null && def != "") {
+        $.ajax({
+          type: "POST",
+          url: "http://3.15.37.149:6010/votes/custom",
+          data: {
+            user_id: window.localStorage.getItem('reader_user_id'),
+            word_id: word_id,
+            sentence: localStorage.sentence,
+            book_name: window.bookKaMeta.bookTitle,
+            author_name: window.bookKaMeta.creator,
+            def: def
+          },
+          success: function (data) {
+            alert("New definition Saved");
+          },
+          complete: function (data) {
+            closePopes();
+          }
+        });
+      }
+    }
   </script>
 </body>
 

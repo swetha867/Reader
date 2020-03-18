@@ -291,6 +291,8 @@ EPUBJS.Reader = function (bookPath, _options) {
       if (arrayOfTimes.length == 2) {
         var downTime = backOnFocusTime - outOfFocusTime;
         var readingTime = arrayOfTimes[1] - arrayOfTimes[0] - downTime;
+        console.log("Reading Time: ", readingTime);
+        console.log("Check", arrayOfTimes[1] - arrayOfTimes[0]);
 
         // TODO: we should be able to send the exact request so we need following also in the db:
         // userID: window.localStorage.getItem("reader_user_id") 
@@ -307,7 +309,7 @@ EPUBJS.Reader = function (bookPath, _options) {
           tx.executeSql(stat, [], function (tx, rs) {
             // console.log('Record count : ' + rs.rows.item(0).mycount);
             db.transaction(function (tx) {
-              tx.executeSql('INSERT INTO PageTable VALUES (?,?,?,?)', [book.metadata.bookTitle, arrayOfPages[0], arrayOfTimes[1] - arrayOfTimes[0], timestamp]);
+              tx.executeSql('INSERT INTO PageTable VALUES (?,?,?,?)', [book.metadata.bookTitle, arrayOfPages[0], readingTime, timestamp]);
 
             }, function (error) {
               console.log('Transaction ERROR: ' + error.message);

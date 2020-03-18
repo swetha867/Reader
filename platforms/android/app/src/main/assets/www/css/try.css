@@ -113,33 +113,14 @@
 
 #loadingscreen {
 
-    display: none;
-    position: fixed;
-    z-index: 2;
-    top: 30%;
-    left: 10%;
-    padding-right: 5%;
-    width: 75%;
-    height: 35%;
-    background: #ffffff;
-    border-radius: 1px;
-    outline: 1px solid lightgray;
-    overflow-y: auto;
-}
-
-#loadingscreen {
-
-    display: none;
-    position: fixed;
+    display: block;
+    float: center;
+    text-align: center;
+    position: absolute;
     z-index: 2;
     top: 10%;
-    left: 10%;
-    padding-right: 5%;
-    width: 75%;
-    height: 60%;
-    background: #ffffff;
-    border-radius: 1px;
-    outline: 1px solid lightgray;
+    width: 100%;
+    height: 100%;
     overflow-y: auto;
 }
 
@@ -168,8 +149,12 @@
     height: 30px;
     overflow:auto;
 }
-
-img { 
+.loadingIcon {
+    width: 20% !important; 
+    height: 20% !important; 
+    object-fit: contain; 
+}
+img {  
     width: 100%; 
     height: 100%; 
     object-fit: contain; 
@@ -221,9 +206,6 @@ img:nth-child(4) {
 
 #loadingscreen img{
     animation-delay: 0s;
-    margin-left: 40%;
-    margin-top: 5%;
-
 }
 
 label {

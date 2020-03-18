@@ -59,7 +59,7 @@
         tx.executeSql('SELECT * FROM BooksTable', [], function(tx, rs) {
           // gallery is the div in the DOM to which the frames of books are appended dynamically
           var mydiv = document.getElementById("mydiv");
-          //var bookTitle = document.getElementById("bookTitle");
+          var bookTitle = document.getElementById("bookTitle");
           //var bookTitle = document.getElementById("bookTitle");
           // Loop through each row in BooksTable
           for(var i=0; i<rs.rows.length;i++) {
@@ -70,26 +70,34 @@
             var bookStatusAuthor = rs.rows.item(i).author;
             var bookStatusImgPath = rs.rows.item(i).imgpath;
             //Create the book element
+            var parentDiv = document.createElement('div');
+            parentDiv.className = "wrapperForBookIcon";
             var bookTag = document.createElement('div');
             var nameOfTheBook = document.createElement('p');
             bookTag.className = "frame";
-            nameOfTheBook.className = "bookTitle";
+            //nameOfTheBook.className = "bookTitle";
             // Add name and link metadata to tag
             bookTag.setAttribute('data-bname', bname);
             bookTag.setAttribute('data-blink', blink);
             //console.log("Book Name is:", rs);
             if(bookStatusFlag == 0) {
+              
+              bookTag.innerHTML =
+              // "<  div data-blink='" + blink + "'>
+                // "<img data-blink='" + blink +
+                // "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'><p>' "+bname+" '</p>";
               bookTag.innerHTML = "<div data-blink='" + blink + "' class='innerBookTitle' style='height: 100%;width: 100%;overflow-wrap: break-word;word-break: break-all;'>" + bname + "</div>";
-              // <div class='bookTitle'> " +bname+" <div>"
-              //nameOfTheBook.innerHTML ="<p> " +bname+ " </p>"; 
+              // // <div class='bookTitle'> " +bname+" <div>"
+              nameOfTheBook.innerHTML ="<p> " +bname+ " </p>"; 
               //nameOfTheBook.innerHTML = "<div> " + bname + "</div>";
               
             }
             else {
               // Set the cover image of the frame from the book image path
               bookTag.innerHTML =
-                "<  div data-blink='" + blink + "'><img data-blink='" + blink +
-                "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'>";
+              // "<  div data-blink='" + blink + "'>
+                "<img data-blink='" + blink +
+                "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'><p>' "+bname+" '</p>";
               
                //nameOfTheBook.innerHTML = bname; 
                //nameOfTheBook.innerHTML = "<div> "  + bname + "</div>";
@@ -97,8 +105,9 @@
                 nameOfTheBook.innerHTML ="<p> " +bname+ " </p>"; 
             }
             // append the book element to the GALLERY
-            mydiv.appendChild(bookTag);
-            //mydiv.appendChild(nameOfTheBook);
+            parentDiv.appendChild(bookTag);
+            parentDiv.appendChild(nameOfTheBook);
+            mydiv.appendChild(parentDiv);
            // mydiv.appendChild(nameOfTheBook);
             //bookTag.innerHTML = "<div> "+ bname +"  </div>";
           }
@@ -377,8 +386,7 @@
       // SEARCH THE BOOK
 
     function clickForSearch () {
-      //searchActive = true;
-      //alert('Hey this is my search');
+     
       var bookToBeSearched  = document.getElementById('bookSearch').value;
       //alert(bookToBeSearched);
       var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
@@ -478,7 +486,6 @@
 
     <div>
     <div id="mydiv">
-      <!-- <p id="bookTitle"></p> -->
     </div>
     <div>
       <div id="searchedBookdiv">

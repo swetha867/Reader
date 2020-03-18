@@ -188,9 +188,10 @@
     <i id="font-big" class="fa fa-font fa-lg"></i>
   </div> -->
 
-    <div id="loadingscreen"><img src="img/loader.gif">
-      <p style="text-align: center">Generating page numbers...</p>
-      <p style="text-align: center; font-size: small">(Only occurs when book is added for the first time.)</p>
+    <div id="loadingscreen">
+      <img class="loadingIcon" src="img/loader.gif">
+      <!-- <p style="text-align: center">Generating page numbers...</p>
+      <p style="text-align: center; font-size: small">(Only occurs when book is added for the first time.)</p> -->
     </div>
   </div>
   <div id="notes">
@@ -315,6 +316,9 @@
                   defNotFound = 1;
                 }
 
+                if (window.localStorage.getItem("reader_user_is_teacher") == "1") {
+                  definitions += "<div class='aaa'><span class='ccc' ><label>+</label></span><span class='bbb'><input type='text' id='newDef' name='newDef' placeholder='add a custom definition'></span></div>";
+                }
               } catch (err) {
                 meanings[0] = "Definition not found";
               }
@@ -332,7 +336,7 @@
                 if (defNotFound != 1)
                   $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
               }
-              if(defNotFound == 1){
+              if (defNotFound == 1) {
                 $("#votingForm").html("<b>Definition not found</b>");
               }
             },
@@ -412,6 +416,11 @@
         result[this.name] = this.value;
       });
 
+      var newDef = "";
+      if ($('#newDef').length) {
+        newDef = $('#newDef').value;
+      }
+
       console.log('meaning = ' + result.meaning_id + ', Word Id = ' + result.word_id);
       $.ajax({
         type: "POST",
@@ -422,7 +431,8 @@
           word_id: result.word_id,
           sentence: localStorage.sentence,
           book_name: window.bookKaMeta.bookTitle,
-          author_name: window.bookKaMeta.creator
+          author_name: window.bookKaMeta.creator,
+          newDef: newDef
         },
         success: function (data) {
           console.log(data);

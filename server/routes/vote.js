@@ -74,10 +74,36 @@ async function handleVote(req) {
                 }
             });
     });
-
 }
 
 
 
+// save a new custom definition only by the teacher
+// TODO: make sure the user is the teacher
+router.post('/custom', (req, res) => {
+    handleCustom(req).then(results => res.send(results));
+});
+
+async function handleCustom(req) {
+    // Used in handleVote:
+    // var bookID = await book.getBookId(req.body.book_name, req.body.author_name);
+    // var userID = req.body.user_id;
+    // var sentence = req.body.sentence;
+    var wordID = req.body.word_id;
+    var def = req.body.def;
+
+    // insert the new meaning and set it on request
+    req.body.meaning_id = insertNewMeaning(wordID, def);
+    return handleVote(req);
+}
+
+async function insertNewMeaning(word_id, def) {
+    return new Promise(function (resolve, reject) {
+        db.query('INSERT INTO dictionary_meanings (`word_id`,`fl`,`meaning`) VALUES (?,?,?) ',
+            [word_id, "", def], (req, resp) => {
+                resolve(resp.insertId);
+            });
+    });
+}
 
 module.exports = router;
