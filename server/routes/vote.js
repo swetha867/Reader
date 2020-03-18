@@ -125,7 +125,7 @@ async function insertNewMeaning(word_id, def) {
                     console.log(`Here is the error ${err}`)
                     return;
                 }
-                resolve(resp.insertId);
+                resolve(rows.insertId);
             });
     });
 }
