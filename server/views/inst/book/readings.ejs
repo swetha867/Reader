@@ -18,7 +18,6 @@
 <script type="text/javascript" src="/serial.js"></script>
 
 <h3>Combined Reading Chart</h3>
-
 <div class="card" style="margin-bottom: 50px;">
     <div class="card-body">
         <% for (var i=0; i < books.length; i++) { %>
@@ -45,11 +44,14 @@
                             "graphs": [
 
                             <% books[i].sessions.forEach(function(value, key, set) { %>
-                             <% var userIDArray = value.split("s"); %>
+                                <% var resultArray = value.split('/sessionStart:')%>
+                                <% var userSession = resultArray[0]; %>
+                                <% var sessionStartDate = resultArray[1]; %>
+                                <% var userIDArray = resultArray[0].split("s"); %>
                                 <% var userID = userIDArray[0]; %>
                             {
                             "id": "AmGraph-<%=value%>",
-                            "balloonText": "<%= userID %> [[<%=value%>]] Seconds on Page [[page]]",
+                            "balloonText": "<%= userID %> [[<%=userSession%>]] Seconds on Page [[page]], <%= sessionStartDate%>",
                             "bullet": "round",
                             "bulletSize": 10,
                             "lineThickness": 3,
@@ -111,13 +113,7 @@
 
         <br><br>
         <% } %>
-
-
-
-
-
         
-
     <h4>Time Spent By Each Reader: </h4>
     <div class="table-wrapper-scroll-y my-custom-scrollbar">
         <table class="table table-bordered table-striped mb-0">
@@ -167,11 +163,9 @@
                             "graphs": [
 
                             <% userReadingsGraph[i].sessions.forEach(function(value, key, set) { %>
-                             <% var userIDArray = value.split("s"); %>
-                                <% var userID = userIDArray[0]; %>
                             {
                             "id": "AmGraph-<%=value%>",
-                            "balloonText": "<%= userID %> [[<%=value%>]] Seconds on Page [[page]]",
+                            "balloonText": "[[<%=value%>]] Seconds on Page [[page]]",
                             "bullet": "round",
                             "bulletSize": 10,
                             "lineThickness": 3,

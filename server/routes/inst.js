@@ -45,7 +45,7 @@ async function getBookReadings(req, res) {
     if (book == '') { // first time
       book = newBook(rows[i].book_name, rows[i].author_name)
     }
-    book.sessions.add("u" + rows[i].user_id + "s" + rows[i].session);
+    book.sessions.add("u" + rows[i].user_id + "s" + rows[i].session+ ' ' + '/' + 'sessionStart:' +rows[i].start);
     var current_seconds = rows[i].seconds.split(',');
     var current_pages = rows[i].pages.split(',');
     for (var j = 0; j < current_seconds.length; j++) {
@@ -54,7 +54,7 @@ async function getBookReadings(req, res) {
         book.pages.set(current_pages[j], { 'page': current_pages[j] });
       }
       var pageObject = book.pages.get(current_pages[j]);
-      pageObject["u" + rows[i].user_id + "s" + rows[i].session] = current_seconds[j]
+      pageObject["u" + rows[i].user_id + "s" + rows[i].session+ ' ' + '/' + 'sessionStart:' +rows[i].start] = current_seconds[j]
       book.pages.set(current_pages[j], pageObject);
     }
     if (i == rows.length - 1 || book.title != rows[i + 1].book_name) {
@@ -76,7 +76,7 @@ async function getBookReadings(req, res) {
 
 async function getPagesByBook(book_id) {
   return new Promise(function (resolve, reject) {
-    db.query(`SELECT book_name, author_name, font_size, user_id, session,
+    db.query(`SELECT book_name, author_name, font_size, user_id, session, start,
     GROUP_CONCAT(seconds ORDER BY page_number ASC) as seconds,
     GROUP_CONCAT(page_number ORDER BY page_number ASC) as pages
     FROM readings r 
@@ -531,7 +531,7 @@ router.get('/student/reading/:userId', (req, res) => {
 
 function newBook(name, author) {
   // console.log("new book : " + name);
-  return { title: name, author: author, sessions: new Set(), pages: new Map() };
+  return { title: name, author: author, sessions: new Set(), pages: new Map()};
 }
 
 async function getStudentReading(req, res) {
@@ -614,7 +614,7 @@ async function getBookReading(book_id) {
   const rows = await getPagesByBookId(book_id);
   var books = [];
   var book = '';
-  // reuslt must be sorted by book_name
+  // result must be sorted by book_name
   for (var i = 0; i < rows.length; i++) {
     if (book == '') { // first time
       book = newBook(rows[i].book_name, rows[i].author_name)
@@ -647,7 +647,7 @@ async function getBookReading(book_id) {
 
 async function getPagesByBookId(book_id) {
   return new Promise(function (resolve, reject) {
-    db.query(`SELECT book_name, author_name, font_size, session, user_id,
+    db.query(`SELECT book_name, author_name, font_size, session, user_id, start,
       GROUP_CONCAT(seconds ORDER BY page_number ASC) as seconds,
       GROUP_CONCAT(page_number ORDER BY page_number ASC) as pages
       FROM readings r 
