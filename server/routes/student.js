@@ -4,18 +4,18 @@ const router = express.Router();
 const user = require('../model/user');
 
 router.get('/:id', (req,res) => {
-    res.send('New surveys are not being accepted at this time.');
-    return;
+    // res.send('New surveys are not being accepted at this time.');
+    // return;
 
     var id  = req.params.id;
     //timestamp = req.body.timestamp; date.now()
-    db.query(`Select word from dictionary_words JOIN votes ON votes.word_id = dictionary_words.id and votes.user_id = ${id} and votes.updated_on >= '2020-01-27'`, (err,rows,fields) => {
+    db.query(`Select word from dictionary_words JOIN votes ON votes.word_id = dictionary_words.id and votes.user_id = ${id} and votes.updated_on >= '2020-03-06'`, (err,rows,fields) => {
         if (err) {
             res.send(`Error in getting words for the user ${id}: ${err}`);
         }
         else if (rows.length >= 10){
             db.query(`Select user_id, SUM(seconds) as seconds 
-            From PageTable where user_id = ${id} and timestamp >= '2020-1-27'
+            From PageTable where user_id = ${id} and timestamp >= '2020-03-06'
             GROUP BY(user_id);`, (err, result, fields) => {
                 if (err) {
                     res.send(`Error in getting words for the user ${id} and seconds: ${err}`);
@@ -42,8 +42,8 @@ router.get('/:id', (req,res) => {
 });
 
 router.post('/:id/survey', (req,res) => {
-    res.send('New surveys are not being accepted at this time.');
-    return;
+    // res.send('New surveys are not being accepted at this time.');
+    // return;
     
     var id = req.params.id;
     console.log('RESPONSE', req.body);
