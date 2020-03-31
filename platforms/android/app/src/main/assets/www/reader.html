@@ -48,14 +48,14 @@
           if (event.results.length > 0) {
             //          q.value = event.results[0][0].transcript;
             //          q.form.submit();
-            console.log(event);
-            console.log(event.results[0][0].transcript);
+            // console.log(event);
+            // console.log(event.results[0][0].transcript);
             if (event.results[0][0].transcript == 'next') {
-              console.log('Next Page');
+              // console.log('Next Page');
               window.mybook.nextPage();
             }
             if (event.results[0][0].transcript == 'previous') {
-              console.log('Previous Page');
+              // console.log('Previous Page');
               window.mybook.prevPage();
             }
           }
@@ -243,6 +243,8 @@
       }
       // alert(word);
 
+      highlightElement(mybook.renderer.render.window.document, word);
+
       var contextSelection = mybook.renderer.render.window.getSelection();
       contextSelection.modify('extend', 'backward', 'sentence');
       var context = contextSelection.toString();
@@ -347,8 +349,8 @@
                 db.transaction(function (tx) {
                   tx.executeSql('CREATE TABLE IF NOT EXISTS WordsTable (word, meaning, sentence, frequency, book)');
                   tx.executeSql("SELECT count(*) AS mycount FROM WordsTable where word='" + localStorage.word + "' ", [], function (tx, rs) {
-                    console.log('Record count : ' + rs.rows.item(0).mycount);
-                    console.log(rs);
+                    // console.log('Record count : ' + rs.rows.item(0).mycount);
+                    // console.log(rs);
                     if (rs.rows.item(0).mycount == 0) {
                       db.transaction(function (tx) {
                         //tx.executeSql('DROP TABLE IF EXISTS WordsTable');
@@ -356,7 +358,7 @@
                       }, function (error) {
                         console.log('Transaction ERROR: ' + error.message);
                       }, function () {
-                        console.log('Inserted');
+                        // console.log('Inserted');
                       });
                     }
                     else {
@@ -428,7 +430,7 @@
           author_name: window.bookKaMeta.creator,
         },
         success: function (data) {
-          console.log(data);
+          // console.log(data);
           alert("Vote Saved");
         },
         complete: function (data) {
@@ -456,7 +458,7 @@
             },
             success: function (data) {
               if (typeof data['err'] != 'undefined' && data['err'] != "") {
-                alert(data['err']);   
+                alert(data['err']);
                 return;
               }
               alert("New definition Saved");
@@ -469,21 +471,76 @@
       }
     }
 
-    function highlightSelectedWords(renderer) {
-      words = ['trouble', 'joyless', 'shine', 'getting', 'finger', 'the'];
+    // ['trouble', ...];
+    async function getLookedUpWordsForBook() {
+      return new Promise(resolve => {
+        $.ajax({
+          type: "POST",
+          url: "http://3.15.37.149:6010/votes/getAllForHighlight",
+          data: {
+            user_id: window.localStorage.getItem('reader_user_id'),
+            book_name: window.bookKaMeta.bookTitle,
+            author_name: window.bookKaMeta.creator,
+          },
+          success: function (data) {
+            if (data.res == 'success') {
+              console.log(data.words);
+              resolve(data.words);
+            } else {
+              resolve([]);
+            }
+          },
+          error: function (data) {
+            resolve([]);
+          }
+        })
+      });
+    }
+
+
+    // function highlightElement(el, w) {
+    //   console.log(el);
+    //   console.log($(el).children().length);
+    //   if ($(el).children().length != 0) {
+    //     $(el).children().each(function () {
+    //       highlightElement(this, w);
+    //     });
+    //     return;
+    //   }
+    //   if ($(el).text().includes(w)) {
+    //     $(el).html(function (i, text) {
+    //       var regex = new RegExp(w, "gi");
+    //       return text.replace(regex, '<span style="color: red">' + w + '</span>');
+    //     });
+    //   }
+    // }
+
+    function highlightElement(el, w) {
+      // encode html chars
+      var w = w.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
+        return '&#' + i.charCodeAt(0) + ';';
+      });
+
+      if (w.length < 4) return; // try to avoid getting html elements.
+      var elements = el.querySelectorAll('p'),
+        items = Array.prototype.slice.call(elements);
+      items.forEach(function (item) {
+        if ($(item).text().includes(w)) {
+          // $(item).css('color', 'red');
+          $(item).html(function (i, text) {
+            // console.log(text);
+            var regex = new RegExp(w, "gi");
+            return text.replace(regex, '<span style="color: red">' + w + '</span>');
+          });
+        }
+      });
+    }
+
+    async function highlightSelectedWords(renderer) {
+      words = await getLookedUpWordsForBook();
       var chapter = renderer.currentChapter;
       words.forEach(function (w) {
-        console.log('found spine');
-        var elements = renderer.doc.querySelectorAll('p'),
-          items = Array.prototype.slice.call(elements);
-        items.forEach(function (item) {
-          if ($(item).text().includes(w)) {
-            // $(item).css('color', 'red');
-            $(item).html(function (i, text) {
-              return text.replace(w, "<span style='color: red'>" + w + "</span>");
-            });
-          }
-        });
+        highlightElement(renderer.doc, w);
       });
     }
   </script>

@@ -4,7 +4,7 @@ function offlineSync() {
     var db = window.sqlitePlugin.openDatabase({ name: 'demo.db', location: 'default' });
     db.transaction(function (tx) {
         tx.executeSql("Select * from PageTable", [], function querySuccess(tx, results) {
-            console.log('temp', results.rows.item(1));
+            // console.log('temp', results.rows.item(1));
             if (results.rows.length === 0) {
                 alert('Already Synced with Cloud DB!');
             }
@@ -21,9 +21,9 @@ function offlineSync() {
                         syncData: JSON.stringify(syncResults),
                     },
                     success: function (data) {
-                        console.log(data);
+                        // console.log(data);
                         if (data.hasOwnProperty('success') && data.success == true) {
-                            console.log('deleting all data');
+                            // console.log('deleting all data');
                             tx.executeSql("TRUNCATE PageTable", [], nullHandler, nullHandler);
                         }
                     }

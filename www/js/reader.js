@@ -1375,10 +1375,10 @@ EPUBJS.Hooks.register("beforeChapterDisplay").selectword = function (callback, r
     tx.executeSql("Select * from PageTable", [], function (tx, rs) {
 
       for (var i = 0; i < rs.rows.length; i++) {
-        console.log('book: ' + ' ' + rs.rows.item(i).book);
-        console.log('page: ' + ' ' + rs.rows.item(i).page);
-        console.log('seconds : ' + ' ' + rs.rows.item(i).seconds);
-        console.log("----------------------------------------------");
+        // console.log('book: ' + ' ' + rs.rows.item(i).book);
+        // console.log('page: ' + ' ' + rs.rows.item(i).page);
+        // console.log('seconds : ' + ' ' + rs.rows.item(i).seconds);
+        // console.log("----------------------------------------------");
       }
     }, function (tx, error) {
       console.log('SELECT error: ' + error.message);
