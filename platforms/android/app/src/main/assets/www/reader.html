@@ -468,6 +468,24 @@
         }
       }
     }
+
+    function highlightSelectedWords(renderer) {
+      words = ['trouble', 'joyless', 'shine', 'getting', 'finger', 'the'];
+      var chapter = renderer.currentChapter;
+      words.forEach(function (w) {
+        console.log('found spine');
+        var elements = renderer.doc.querySelectorAll('p'),
+          items = Array.prototype.slice.call(elements);
+        items.forEach(function (item) {
+          if ($(item).text().includes(w)) {
+            // $(item).css('color', 'red');
+            $(item).html(function (i, text) {
+              return text.replace(w, "<span style='color: red'>" + w + "</span>");
+            });
+          }
+        });
+      });
+    }
   </script>
 </body>
 

@@ -131,4 +131,34 @@ async function insertNewMeaning(word_id, def, fl) {
     });
 }
 
+
+
+router.post('/getAllForHighlight', (req, res) => {
+    handleGetAllForHighlight(req).then(results => res.send(results));
+});
+
+async function handleGetAllForHighlight(req) {
+    var bookID = await book.getBookId(req.body.book_name, req.body.author_name);
+    var userID = req.body.user_id;
+    var words = await getAllLookedup(bookID, userID)
+    return { res: 'success', words: words };
+}
+
+async function getAllLookedup(bookID, userID) {
+    return new Promise(function (resolve, reject) {
+        db.query('SELECT DISTINCT(word) FROM votes JOIN dictionary_words ON \
+        word_id = dictionary_words.id WHERE book_id = ? AND user_id = ?', [bookID, userID], (err, rows, fields) => {
+            if (err) {
+                resolve([]);
+                return;
+            }
+            var arr = []
+            rows.forEach(element => {
+                arr.push(element.word);
+            });
+            resolve(arr);
+        });
+    });
+}
+
 module.exports = router;

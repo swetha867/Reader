@@ -1008,6 +1008,7 @@ EPUBJS.reader.NotesController = function () {
 
 
   renderer.registerHook("beforeChapterDisplay", function (callback, renderer) {
+    highlightSelectedWords(renderer);
     var chapter = renderer.currentChapter;
     annotations.forEach(function (note) {
       var cfi = epubcfi.parse(note.anchor);

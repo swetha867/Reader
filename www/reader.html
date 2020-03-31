@@ -456,7 +456,7 @@
             },
             success: function (data) {
               if (typeof data['err'] != 'undefined' && data['err'] != "") {
-                alert(data['err']);   
+                alert(data['err']);
                 return;
               }
               alert("New definition Saved");
@@ -467,6 +467,49 @@
           });
         }
       }
+    }
+
+    // ['trouble', ...];
+    async function getLookedUpWordsForBook() {
+      return new Promise(resolve => {
+        $.ajax({
+          type: "POST",
+          url: "http://3.15.37.149:6010/votes/getAllForHighlight",
+          data: {
+            user_id: window.localStorage.getItem('reader_user_id'),
+            book_name: window.bookKaMeta.bookTitle,
+            author_name: window.bookKaMeta.creator,
+          },
+          success: function (data) {
+            if (data.res == 'success') {
+              resolve(data.words);
+            } else {
+              resolve([]);
+            }
+          },
+          error: function (data) {
+            resolve([]);
+          }
+        })
+      });
+    }
+
+    async function highlightSelectedWords(renderer) {
+      words = await getLookedUpWordsForBook();
+      var chapter = renderer.currentChapter;
+      words.forEach(function (w) {
+        console.log('found spine');
+        var elements = renderer.doc.querySelectorAll('p'),
+          items = Array.prototype.slice.call(elements);
+        items.forEach(function (item) {
+          if ($(item).text().includes(w)) {
+            // $(item).css('color', 'red');
+            $(item).html(function (i, text) {
+              return text.replace(w, "<span style='color: red'>" + w + "</span>");
+            });
+          }
+        });
+      });
     }
   </script>
 </body>
