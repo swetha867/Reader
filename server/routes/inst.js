@@ -42,10 +42,14 @@ async function getBookReadings(req, res) {
   var book = '';
   // reuslt must be sorted by book_name
   for (var i = 0; i < rows.length; i++) {
+    let timestamp='';
     if (book == '') { // first time
       book = newBook(rows[i].book_name, rows[i].author_name)
     }
-    book.sessions.add("u" + rows[i].user_id + "s" + rows[i].session+ ' ' + '/' + 'sessionStart:' +rows[i].start);
+    timestamp = rows[i].start;
+    timestamp = timestamp.toString();
+    var resultTime = timestamp.split('GMT');
+    book.sessions.add("u" + rows[i].user_id + "s" + rows[i].session+ ' ' + '/' + 'sessionStart:' +resultTime[0]);
     var current_seconds = rows[i].seconds.split(',');
     var current_pages = rows[i].pages.split(',');
     for (var j = 0; j < current_seconds.length; j++) {
@@ -54,7 +58,7 @@ async function getBookReadings(req, res) {
         book.pages.set(current_pages[j], { 'page': current_pages[j] });
       }
       var pageObject = book.pages.get(current_pages[j]);
-      pageObject["u" + rows[i].user_id + "s" + rows[i].session+ ' ' + '/' + 'sessionStart:' +rows[i].start] = current_seconds[j]
+      pageObject["u" + rows[i].user_id + "s" + rows[i].session+ ' ' + '/' + 'sessionStart:' +resultTime[0]] = current_seconds[j]
       book.pages.set(current_pages[j], pageObject);
     }
     if (i == rows.length - 1 || book.title != rows[i + 1].book_name) {
