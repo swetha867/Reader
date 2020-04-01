@@ -61,7 +61,8 @@ async function lookupMeaning(user_id, word_id) {
       'ON dictionary_meanings.id = votes.meaning_id ' +
       'LEFT JOIN users ON votes.user_id = users.id ' +
       'WHERE dictionary_meanings.word_id = ? ' +
-      'group by dictionary_meanings.id', [user_id, word_id], (err, rows, fields) => {
+      'group by dictionary_meanings.id ' + 
+      'ORDER BY isTeacher DESC, count DESC ', [user_id, word_id], (err, rows, fields) => {
         if (err) {
           console.log(`Here is the error for votes table:${err}`);
           resolve(err);

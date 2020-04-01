@@ -42,14 +42,14 @@ async function getBookReadings(req, res) {
   var book = '';
   // reuslt must be sorted by book_name
   for (var i = 0; i < rows.length; i++) {
-    let timestamp='';
+    let timestamp = '';
     if (book == '') { // first time
       book = newBook(rows[i].book_name, rows[i].author_name)
     }
     timestamp = rows[i].start;
     timestamp = timestamp.toString();
     var resultTime = timestamp.split('GMT');
-    book.sessions.add("u" + rows[i].user_id + "s" + rows[i].session+ ' ' + '/' + 'sessionStart:' +resultTime[0]);
+    book.sessions.add("u" + rows[i].user_id + "s" + rows[i].session + ' ' + '/' + 'sessionStart:' + resultTime[0]);
     var current_seconds = rows[i].seconds.split(',');
     var current_pages = rows[i].pages.split(',');
     for (var j = 0; j < current_seconds.length; j++) {
@@ -58,7 +58,7 @@ async function getBookReadings(req, res) {
         book.pages.set(current_pages[j], { 'page': current_pages[j] });
       }
       var pageObject = book.pages.get(current_pages[j]);
-      pageObject["u" + rows[i].user_id + "s" + rows[i].session+ ' ' + '/' + 'sessionStart:' +resultTime[0]] = current_seconds[j]
+      pageObject["u" + rows[i].user_id + "s" + rows[i].session + ' ' + '/' + 'sessionStart:' + resultTime[0]] = current_seconds[j]
       book.pages.set(current_pages[j], pageObject);
     }
     if (i == rows.length - 1 || book.title != rows[i + 1].book_name) {
@@ -159,7 +159,7 @@ router.get('/book/:bookId/words/histogram', (req, res) => {
 
 async function getBookWordsHistogram(req, res) {
   const votes = await getBookWordsHistogramHelper(req.params.bookId);
-  res.render('inst/book/words-histogram', { moment:moment, votes: votes, title: 'Combined words from all students' });
+  res.render('inst/book/words-histogram', { moment: moment, votes: votes, title: 'Combined words from all students' });
 }
 
 async function getBookWordsHistogramHelper(book_id) {
@@ -535,7 +535,7 @@ router.get('/student/reading/:userId', (req, res) => {
 
 function newBook(name, author) {
   // console.log("new book : " + name);
-  return { title: name, author: author, sessions: new Set(), pages: new Map()};
+  return { title: name, author: author, sessions: new Set(), pages: new Map() };
 }
 
 async function getStudentReading(req, res) {
@@ -599,20 +599,18 @@ async function getPages(user_id) {
       JOIN books b ON r.book_id = b.id
       WHERE r.user_id = ?
       GROUP BY book_id, session
-      ORDER BY book_name ASC;`, [user_id],
+      ORDER BY book_name ASC`, [user_id],
       (err, rows, fields) => {
         if (err) {
           resolve(null);
           return;
-        }
-        else {
+        } else {
           resolve(rows);
           return;
         }
-      })
+      });
   });
 }
-
 
 async function getBookReading(book_id) {
   const rows = await getPagesByBookId(book_id);
@@ -705,7 +703,6 @@ async function getStudentVotesHelper(student_id) {
 }
 
 // Survey Results
-
 router.get('/results', (req, res) => {
   // res.send('Survey Results');
   getSurveyResults(req, res);
@@ -721,11 +718,30 @@ async function getSurveyResults(req, res) {
       }
       else {
         console.log("Results", rows);
-        res.render('inst/results', { results : rows });
+        res.render('inst/results', { results: rows });
         resolve(rows);
         return;
       }
     });
   });
 }
+
+router.get('/nomeaning', (req, res) => {
+  getNomeaning(req, res);
+});
+
+async function getNomeaning(req, res) {
+  db.query(`SELECT dictionary_words.id, word, COUNT(meaning) as cnt from dictionary_words LEFT JOIN dictionary_meanings
+        ON dictionary_words.id = dictionary_meanings.word_id GROUP BY dictionary_words.id
+        having cnt = 0
+        ORDER BY cnt`, [], (err, rows, fields) => {
+    if (err) {
+      res.render('inst/nomeaning', { results: [] });
+      return;
+    }
+    res.render('inst/nomeaning', { results: rows });
+    return;
+  });
+}
+
 module.exports = router;

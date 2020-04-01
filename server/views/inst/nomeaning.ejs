@@ -1,0 +1,20 @@
+<% include partials/head %>
+<h2>Words without meaning<br>
+    <small>Words that there has been no meaning in the dictionary</small></h2>
+<style>
+    .word {
+        text-transform: capitalize;
+    }
+
+    .voted {
+        color: green;
+        font-weight: bold;
+    }
+</style>
+
+<ul>
+    <% for(var i=0; i < results.length; i++) { %>
+    <li><%= results[i].word %></li>
+    <% } %>
+</ul>
+<% include partials/foot %>
