@@ -39,6 +39,9 @@ async function handleVote(req) {
             resolve({ res: 'error' });
             return;
         }
+        
+        console.log('SELECT * FROM votes WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ?');
+        console.log([userID, bookID, wordID, sentence]);
 
         db.query('SELECT * FROM votes WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ?',
             [userID, bookID, wordID, sentence], (err, rows, fields) => {
@@ -47,6 +50,7 @@ async function handleVote(req) {
                     resolve({ res: `Error: ${err}` });
                     return;
                 }
+                console.log('length ' +rows.length);
                 if (rows.length == 0) {
                     // Storing all the attributes in votes table with book id
                     db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `meaning_id`, `sentence`) VALUES (?,?,?,?,?) ',
