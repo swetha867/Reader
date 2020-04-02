@@ -19,7 +19,7 @@ async function getBooks(req, res) {
   db.query(`SELECT b.id, book_name, author_name,
     (SELECT COUNT(*) FROM PageTable WHERE book_id = b.id) readings,
     (SELECT COUNT(*) FROM votes WHERE book_id = b.id) votes
-    FROM books b 
+    FROM books b where b.id != 34 and b.id!= 35 
     ORDER BY b.id`, [], (err, books, fields) => {
     if (err) {
       res.send(err);
