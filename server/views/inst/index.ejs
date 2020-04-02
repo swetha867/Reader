@@ -1,16 +1,58 @@
 <% include partials/head %>
 
-<div style="margin-top: 5%; min-height: 200px;">
-    <h3>Welcome!</h3>
-    <ul>
-        <li><a href="/instructor/students/">Students</a></li>
-        <li><a href="/instructor/books/">Books</a></li>
-        <li><a href="/instructor/vote/">Word Meanings Pending for voting</a></li>
-        <li><a href="/instructor/votes/">Your Votes History</a></li>
-        <li><a href="/instructor/results/">Survey Results</a></li>
-        <li><a href="/page/reload">Rebuild reading sessions (takes few minutes)</a></li>
-        <li><a href="/instructor/nomeaning">Words without meaning</a></li>
-    </ul>
+<div class="card" style="margin-top: 5%; min-height: 200px;">
+    <h3 style="text-align: center;">Welcome!</h3>
+    <div class="card-body">
+        <table class="table table-bordered table-striped mb-0">
+            <!-- <ul>
+                <tr><li><a href="/instructor/students/">Students</a></li></tr>
+                <li><a href="/instructor/books/">Books</a></li>
+                <li><a href="/instructor/vote/">Word Meanings Pending for voting</a></li>
+                <li><a href="/instructor/votes/">Your Votes History</a></li>
+                <li><a href="/instructor/results/">Survey Results</a></li>
+                <li><a href="/page/reload">Rebuild reading sessions (takes few minutes)</a></li>
+                <li><a href="/instructor/nomeaning">Words without meaning</a></li>
+            </ul> -->
+            <thead>
+            <tr>
+                <th scope="row">
+                    <a href="/instructor/students/">Students</a>
+                </th>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <a href="/instructor/books/">Books</a>
+                </th>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <a href="/instructor/vote/">Word Meanings Pending for voting</a>
+                </th>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <a href="/instructor/votes/">Your Votes History</a>
+                </th>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <a href="/instructor/results/">Survey Results</a>
+                </th>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <a href="/page/reload">Rebuild reading sessions (takes few minutes)</a>
+                </th>
+            </tr>
+            <tr>
+                <th scope="row">
+                    <a href="/instructor/nomeaning">Words without meaning</a>
+                </th>
+            </tr>
+        
+            </thead>
+            </table>
+    </div>
 </div>
 
 <% include partials/foot %>

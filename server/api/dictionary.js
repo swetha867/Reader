@@ -33,17 +33,21 @@ var dic = {
     return new Promise(function(resolve, reject) {
       https.get(
         {
+          // previous api http://www.dictionaryapi.com/api/v3/references/learners/json/semiliterate?key=44e0ef0b-a516-4c4d-8fff-12be8779749b
           host: 'www.dictionaryapi.com',
-          path: '/api/v3/references/learners/json/' + encodeURI(word) + '?key=44e0ef0b-a516-4c4d-8fff-12be8779749b'
+          // new api for school 
+          // MERRIAM-WEBSTER'S SCHOOL DICTIONARY WITH AUDIO (GRADES 9-11)
+          path: '/api/v3/references/sd4/json/' + encodeURI(word) + '?key=6f248551-51e6-44d3-b34e-0576482cc014'
       },(resp) => {
 
         var data = '';
         resp.on('data', function(d) {
+            console.log(d);
             data += d;
         });
         resp.on('end', () => {
           var results = JSON.parse(data);
-          // console.log(results);
+          console.log(results);
           resolve(results) // successfully fill promise
         });
       }).on("error", (err) => {
