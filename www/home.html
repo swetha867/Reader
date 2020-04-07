@@ -30,9 +30,6 @@
   <script type="text/javascript" src="cordova.js"></script>
 
   <script>
-    //var searchActive = false;
-    
-    
 
 
 
@@ -50,7 +47,7 @@
 
     
 
-      // END OF SEARCHING THE BOOK
+     
       // Open database to access all books in BooksTable of database
       var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
       //if (searchActive == false) {
@@ -386,15 +383,18 @@
       // SEARCH THE BOOK
 
     function clickForSearch () {
+      document.getElementById("searchedBookdiv").innerHTML = "";
      
       var bookToBeSearched  = document.getElementById('bookSearch').value;
+      alert(bookToBeSearched);
       //alert(bookToBeSearched);
       var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
       db.transaction(function(tx) {
         //Get all row information from BooksTable
-        tx.executeSql("SELECT * FROM BooksTable WHERE name = ?", [bookToBeSearched], function querySuccess(tx, results) {
-        //alert('Result obtained');
-        // console.log('results',results);
+        //tx.executeSql("SELECT * FROM BooksTable WHERE name like ?", ["'%" + bookToBeSearched + "%'"], function (tx, results) {
+        tx.executeSql(`Select * from BooksTable where name like '%${bookToBeSearched}%'`, [], function(tx, results){
+          //alert('Result obtained');
+        console.log('results',results);
         // console.log('Response is:', results.rows.item(i));
         var searchedBookdiv = document.getElementById("searchedBookdiv");
           //var bookTitle = document.getElementById("bookTitle");
@@ -403,7 +403,7 @@
           //alert('Removed Div');
          // searchedBookdiv = document.getElementById("searchedBookdiv");
          
-          console.log('Count:',results.rows.item.name);
+          
           for(var i=0; i<=results.rows.length;i++) {
             // Use the book name, book link, book author and book image path
             //mydiv.appendChild(mydiv);
@@ -427,7 +427,7 @@
             else {
               // Set the cover image of the frame from the book image path
               bookSearchTag.innerHTML =
-                "<  div data-blink='" + blink + "'><img data-blink='" + blink +
+                "<img data-blink='" + blink +
                 "' style='max-width:100%;max-height:100%;vertical-align: middle' src='"+bookStatusImgPath+"'>";                
             }
             // append the book element to the GALLERY
@@ -438,6 +438,7 @@
         alert('No Book Found!');
         });
       });
+     // bookToBeSearched = '';
     }
 
   </script>
@@ -488,7 +489,7 @@
     <div id="mydiv">
     </div>
     <div>
-      <div id="searchedBookdiv">
+      <div id="searchedBookdiv" class="searchedBookResults">
     </div>
   </div>
 
