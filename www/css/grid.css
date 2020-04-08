@@ -1,4 +1,10 @@
-
+.searchedBookResults {
+    width: 100%;
+    margin: 3vh auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
 
 #mydiv {
 
