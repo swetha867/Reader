@@ -719,6 +719,7 @@ EPUBJS.reader.ControlsController = function (book) {
   });
 
   book.on('book:pageChanged', function (location) {
+    reader.saveSettings();
     // console.log("page", location.page, location.percentage)
   });
 
