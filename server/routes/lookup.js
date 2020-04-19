@@ -10,6 +10,7 @@ router.post('/', (req, res) => {
 })
 
 async function handleLookup(req) {
+  var current_version = 2; // everytime we should the dic api we should increment here as well.
   var book_id = await book.getBookId(req.body.book_name, req.body.author_name);
   var user_id = req.body.user_id;
   var sentence = req.body.sentence;
@@ -32,7 +33,7 @@ async function handleLookup(req) {
       if (rows.length == 0) {
         // Word is not in database. call the Api to insert the word.
         // Need to give dynamic value ${word}
-        dic.lookupAndSave(word).then(lookedUpID => {
+        dic.lookupAndSave(word, current_version).then(lookedUpID => {
           updateFreq(user_id, book_id, lookedUpID, sentence)
           console.log(`Looked up ${lookedUpID}`)
           lookupMeaning(user_id, lookedUpID).then(meanings => {
@@ -41,10 +42,19 @@ async function handleLookup(req) {
           });
         });
       } else { // Should go in else block once the word is already saved in db
-        lookupMeaning(user_id, rows[0].id).then(meanings => {
-          console.log(meanings);
-          resolve(meanings);
-        });
+        // check if we need to update the meanings
+        if (rows[0].version < current_version) {
+          dic.updateMeanings(rows[0].id, word, current_version).then(_ => {
+            lookupMeaning(user_id, rows[0].id).then(meanings => {
+              resolve(meanings);
+            });
+          });
+        } else {
+          lookupMeaning(user_id, rows[0].id).then(meanings => {
+            resolve(meanings);
+          });
+        }
+
         updateFreq(user_id, book_id, rows[0].id, sentence)
       }
     })
@@ -61,12 +71,12 @@ async function lookupMeaning(user_id, word_id) {
       'ON dictionary_meanings.id = votes.meaning_id ' +
       'LEFT JOIN users ON votes.user_id = users.id ' +
       'WHERE dictionary_meanings.word_id = ? ' +
-      'group by dictionary_meanings.id ' + 
+      'group by dictionary_meanings.id ' +
       'ORDER BY isTeacher DESC, count DESC ', [user_id, word_id], (err, rows, fields) => {
         if (err) {
           console.log(`Here is the error for votes table:${err}`);
           resolve(err);
-        }else{
+        } else {
           console.log('Votes Table Information Fetched');
           resolve(rows);
         }
@@ -87,13 +97,13 @@ async function updateFreq(user_id, book_id, word_id, sentence) {
       console.log(word_id);
       console.log(sentence);
       db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `sentence`, `updated_on`) VALUES (?,?,?,?, CURRENT_TIMESTAMP()) ',
-      [user_id, book_id, word_id, sentence], (req,resp) => {
+        [user_id, book_id, word_id, sentence], (req, resp) => {
           console.log("vote details inserted!");
-      }
+        }
       );
     } else { // Already exists, increment the freq
-      db.query('UPDATE votes SET freq = freq + 1 WHERE id = ? ', [rows[0].id], (req,resp) => {
-          console.log("freq increased!");
+      db.query('UPDATE votes SET freq = freq + 1 WHERE id = ? ', [rows[0].id], (req, resp) => {
+        console.log("freq increased!");
       }
       );
     }
