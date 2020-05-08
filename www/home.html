@@ -386,7 +386,7 @@
       document.getElementById("searchedBookdiv").innerHTML = "";
      
       var bookToBeSearched  = document.getElementById('bookSearch').value;
-      alert(bookToBeSearched);
+      // alert(bookToBeSearched);
       //alert(bookToBeSearched);
       var db = window.sqlitePlugin.openDatabase({name: 'demo.db', location: 'default'});
       db.transaction(function(tx) {
