@@ -81,7 +81,10 @@ var dic = {
           host: 'www.dictionaryapi.com',
           // new api for school 
           // MERRIAM-WEBSTER'S SCHOOL DICTIONARY WITH AUDIO (GRADES 9-11)
-          path: '/api/v3/references/sd4/json/' + encodeURI(word) + '?key=6f248551-51e6-44d3-b34e-0576482cc014'
+          // /api/v3/references/sd4/json/?key=6f248551-51e6-44d3-b34e-0576482cc014
+
+          // Merriam-Webster's Collegiate® Dictionary with Audio
+          path : '/api/v3/references/collegiate/json/' + encodeURI(word) + '?key=2fcd2f96-1563-4565-8915-a33a22ca01a1',
         }, (resp) => {
 
           var data = '';
