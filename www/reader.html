@@ -327,11 +327,11 @@
               $("#close").html("<span>✖</span>");
 
               if (!$.trim(data.queryExpansions)) {
-                $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 style='padding-left:20px'>" + ogword + "</h1>");
+                $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 class='remove-whitespace' style='padding-left:20px'>" + ogword + "</h1>");
                 if (defNotFound != 1)
                   $("#votingForm").html(definitions + "<br><br><center><input type='submit' value='Vote'></center></form>");
               } else {
-                $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='300' height='300'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='300' height='300'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='300' height='300'/></div><h1 style='padding-left:20px'>" + ogword.toLocaleUpperCase() + "</h1>");
+                $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='250' height='250'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='250' height='250'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='250' height='250'/></div><h1 class='remove-whitespace'>" + ogword.toLocaleUpperCase() + "</h1>");
                 if (defNotFound != 1)
                   $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
               }
