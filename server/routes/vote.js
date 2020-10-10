@@ -24,6 +24,34 @@ router.post('/', (req, res) => {
 });
 
 
+router.post('/checkUserVote', (req, res) => {
+    getVote(req).then(results => res.send(results));
+});
+
+async function getVote(req) {
+    var bookID = await book.getBookId(req.body.book_name, req.body.author_name);
+    var userID = req.body.user_id;
+   // var wordID = req.body.word_id;
+   // var meaningID = req.body.meaning_id;
+    var sentence = req.body.sentence;
+console.log(bookID);
+    return new Promise(function (resolve, reject) {
+
+      db.query('SELECT * FROM votes WHERE user_id = ? AND book_id = ?  AND sentence = ?',
+      [userID, bookID, sentence], (err, rows, fields) => {
+            if (err) {
+              console.log(`Here is the error for votes table:${err}`);
+              resolve(err);
+            } else {
+              console.log('Votes Table Information Fetched for particular userId , bookid and sentence');
+              resolve(rows);
+            }
+          })
+        })
+    
+       
+
+}
 
 async function handleVote(req) {
 
