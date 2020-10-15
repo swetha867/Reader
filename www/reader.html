@@ -108,15 +108,35 @@
       text-align: center;
       display: none;
     }
+  
 
     #controls>input[type=range] {
       width: 40vw;
     }
+    /* #controls>img{
+      width: 40vw;
+
+    } */
+    #summarize{
+      text-rendering: auto;
+      vertical-align: -15%;
+      text-align: center;
+
+    }
+
 
     #font-controls {
       position: absolute;
       bottom: 2vh;
-      right: 75px;
+      right: 65px;
+      width: 50px;
+      /*margin-left: -200px;*/
+      text-align: center;
+    }
+    #summarize-controls {
+      position: absolute;
+      bottom: 1vh;
+      right: 115px;
       width: 50px;
       /*margin-left: -200px;*/
       text-align: center;
@@ -130,6 +150,7 @@
     <div id="panels">
       <a id="show-Toc" class="show_view icon-list-1 active" data-view="Toc">TOC</a>
       <a id="show-Bookmarks" class="show_view icon-bookmark" data-view="Bookmarks">Bookmarks</a>
+     
       <!--<a id="gohome" class="show_view icon-edit" data-view="Notes">Notes</a>-->
       <!--<a id="show-Notes" class="show_view icon-edit" data-view="Notes">Notes</a>-->
     </div>
@@ -177,8 +198,17 @@
     <div id="controls">
       <input id="currentpg" size="3" maxlength="3" /> / <span id="totalpg">0</span><br />
     </div>
+    
+    <div id="summarize-controls">
+      <i id="summarize-icon">
+        <img src="./img/summarizeicon.png" style="display:block;
+      width:50px;
+      height: 30px;
+      " class="summarize">
+       </i>
+    </div>
+       <div id="font-controls">
 
-    <div id="font-controls">
       <i id="define-icon" class="fa fa-book fa-lg"></i>
     </div>
 
@@ -246,19 +276,32 @@
       highlightElement(mybook.renderer.render.window.document, word);
 
       var contextSelection = mybook.renderer.render.window.getSelection();
-      contextSelection.modify('extend', 'backward', 'sentence');
+      contextSelection.modify('extend', 'backward', 'sentenceboundary');
       var context = contextSelection.toString();
-      contextSelection.modify('extend', 'forward', 'sentence');
+      contextSelection.modify('extend', 'forward', 'sentenceboundary');
       var context = context + contextSelection.toString();
+
+      contextSelection.modify('extend', 'backward', 'paragraphboundary');
+      var contextPara = contextSelection.toString();
+      console.log("contextPara backward"+contextPara);
+      contextSelection.modify('extend', 'forward', 'paragraphboundary');
+      contextPara = contextPara + contextSelection.toString();
+      //console.log("contextPara"+contextPara.toString());
+
       contextSelection.removeAllRanges();
       // alert(context);
       localStorage.sentence = context; // used in voting (legacy)
-
+      localStorage.word=word;
+      localStorage.paragraph=contextPara;
       // alert(window.bookKaMeta.bookTitle);
       // alert(window.bookKaMeta.creator);
 
 
       // return;
+      openDefinitions(word,context);
+    })
+   function openDefinitions(word,sentence) {
+    
       openPopes();
 
       var outputs = $.ajax({
@@ -275,12 +318,26 @@
             data: {
               word: word,
               user_id: window.localStorage.getItem("reader_user_id"),
-              sentence: context,
+              sentence: sentence,
               book_name: window.bookKaMeta.bookTitle,
-              author_name: window.bookKaMeta.creator
+              author_name: window.bookKaMeta.creator,
+              paragraph:localStorage.paragraph,
             },
             dataType: 'json',
             success: function (dictionaryData) {
+             var votedWords= $.ajax({
+             url: "http://3.15.37.149:6010/votes/checkUserVote",
+             type: "POST",
+             data: {
+              user_id: window.localStorage.getItem("reader_user_id"),
+              sentence: sentence,
+              book_name: window.bookKaMeta.bookTitle,
+              author_name: window.bookKaMeta.creator,
+              },
+             dataType: 'json',
+            success: function (votedWordsData) {   
+           
+
               var meanings = [];
               meanings[0] = "Definition not found";
               meanings[1] = "";
@@ -290,13 +347,42 @@
               var defNotFound = 0;
               var recheck = 0;
 
+             let votedMeanings=[];
+             votedWordsData.forEach(votedWord=>votedMeanings.push(votedWord.meaning_id));
+            // console.log(groupBy(dictionaryData, dictionaryData.fl));
+             let groupbyfl=groupBy(dictionaryData, 'fl');
+             let arr=[];
+            
+             
+            let myArray=[];
+
+            console.log(groupbyfl);
+            for (var key in groupbyfl) {
+                for (var i = 0; i < groupbyfl[key].length; i++) {
+                      myArray.push(groupbyfl[key][i]);
+                  }
+             }
+             dictionaryData=myArray;
+                   
+
+
               try {
+                // && votedMeanings.includes(dictionaryData[i].id)
                 if (dictionaryData.length != 0) {
                   for (var i = 0; i < dictionaryData.length; i++) {
-                    if (dictionaryData[i].isTeacher == 1) {
-                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + "><label id='student' for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+                    if (dictionaryData[i].isTeacher == 1 && votedMeanings.includes(dictionaryData[i].id)) {
+                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + " checked><label id='student' for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+                      recheck = 1;
+
                     }
-                    else if (dictionaryData[i].isUser == 1) {
+                    else  if (dictionaryData[i].isTeacher == 1  ) {
+                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + " ><label id='student' for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+                    }
+                    else if (dictionaryData[i].isUser == 1 && votedMeanings.includes(dictionaryData[i].id)) {
+                      definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + " checked><label for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
+                      recheck = 1;
+                    }
+                    else if (votedMeanings.includes(dictionaryData[i].id)){
                       definitions += "<div class='aaa'><span class='ccc' ><label>" + dictionaryData[i].count + "</label></span><span class='bbb'><input type='radio' id=" + dictionaryData[i].id + " name = 'meaning_id' value=" + dictionaryData[i].id + " checked><label for=" + dictionaryData[i].id + "><b> " + dictionaryData[i].meaning + "</b>&nbsp;&nbsp; : " + dictionaryData[i].fl + "</label></span></div>";
                       recheck = 1;
                     }
@@ -327,13 +413,14 @@
               $("#close").html("<span>✖</span>");
 
               if (!$.trim(data.queryExpansions)) {
-                $("#definitions").html("<div class='container'><h1><center>Image Not Found!</center></h1></div><h1 class='remove-whitespace' style='padding-left:20px'>" + ogword + "</h1>");
+                $("#definitions").html("<div class='row'><div class='column left'><div class='container'><h1><center>Image Not Found!</center></h1></div><h2 class='remove-whitespace' style='padding-left:20px'>" + ogword + "</h2></div> <div class='column right'><div><div class='box green'></div>&nbsp;  Teacher Vote</div><br><div><div class='box checkmark active'></div> &nbsp; Your vote</div><br><div><div class='box'></div>&nbsp; Other Student Votes</div><br></div></div>");
+
                 if (defNotFound != 1)
                   $("#votingForm").html(definitions + "<br><br><center><input type='submit' value='Vote'></center></form>");
               } else {
-                $("#definitions").html("<div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='250' height='250'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='250' height='250'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='250' height='250'/></div><h1 class='remove-whitespace'>" + ogword.toLocaleUpperCase() + "</h1>");
+                $("#definitions").html("<div class='row'><div class='column left'><div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='250' height='250'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='250' height='250'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='250' height='250'/></div><h2 class='remove-whitespace'>" + ogword.toLocaleUpperCase() + "</h2></div><div class='column right'><div><div class='box green'></div>&nbsp;  Teacher Vote</div><br><div><div class='box checkmark active'></div> &nbsp; Your vote</div><br><div><div class='box'></div>&nbsp; Other Student Votes</div><br></div></div>");
                 if (defNotFound != 1)
-                  $("#votingForm").html(definitions + "<br><br><center><input id='submit' type='submit' value='Vote'></center></form>");
+                  $("#votingForm").html(definitions + "<br><center><input id='submit' type='submit' value='Vote'></center></form>");
               }
               if (defNotFound == 1) {
                 $("#votingForm").html("<b>Definition not found</b>");
@@ -379,11 +466,18 @@
               }
             },
             error: function (err) {
+          if (err.statusText == 'timeout') alert('Connection timeout!');
+          else alert("Error loading! Are you connected to the internet?");
+          closePopes();
+            }
+          })
+        },
+            error: function (err) {
               if (err.statusText == 'timeout') alert('Connection timeout!');
               else alert("Error loading! Are you connected to the internet?");
               closePopes();
             }
-          });
+          });//output ajax
         },
         error: function (err) {
           if (err.statusText == 'timeout') alert('Connection timeout!');
@@ -395,7 +489,9 @@
           //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");// Enter here your Mashape key
         }
 
-      });
+      
+    
+  })// outputs ajax
 
       // var elements = mybook.renderer.doc.querySelectorAll('p'),
       //   //Perform actions on each of the elements. Each item is paragraph in book html
@@ -409,7 +505,20 @@
       //     //   localStorage.sentence = array_of_sentences[i];
       //   }
       // });
-    });
+    };
+    const groupBy = (array, key) => {
+  // Return the end result
+  return array.reduce((result, currentValue) => {
+    // If an array already present for key, push it to the array. Else create an array and push the object
+    (result[currentValue[key]] = result[currentValue[key]] || []).push(
+      currentValue
+    );
+    // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+    return result;
+  }, {}); // empty object is the initial value for result object
+};
+
+   
 
     $("#votingForm").on('submit', function (e) {
       e.preventDefault();
@@ -434,7 +543,7 @@
           alert("Vote Saved");
         },
         complete: function (data) {
-          closePopes();
+          openDefinitions(localStorage.word,localStorage.sentence) 
         }
       });
     });
@@ -464,6 +573,7 @@
               alert("New definition Saved");
             },
             complete: function (data) {
+              
               closePopes();
             }
           });
@@ -515,7 +625,7 @@
     //   }
     // }
 
-    function highlightElement(el, w) {
+    function  highlightElement(el, w) {
       // encode html chars
       var w = w.replace(/[\u00A0-\u9999<>\&]/gim, function (i) {
         return '&#' + i.charCodeAt(0) + ';';

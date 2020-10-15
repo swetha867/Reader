@@ -14,12 +14,12 @@
     outline: 3px solid rgba(0, 0, 0, 1);
 
 }
-h1.remove-whitespace {
+h2.remove-whitespace {
     margin: 0;
     padding: 0;
     line-height: 30px;
     height: 25px;
-    padding-left:20px
+    /* padding-left:20px */
   }
   
 .definepop{
@@ -168,7 +168,7 @@ img {
 } 
 
 .container {
-    margin: 20px auto;
+    margin: 15px auto;
     width: 200px;
     height: 200px;
     overflow: hidden;
@@ -178,9 +178,30 @@ img {
     border-bottom-color: #856036;
     border-right-color: #5d4426;
     position: relative;
+    float: right;
 
 }
-
+.row {
+    display: flex;
+    height: 260px;
+  }
+  
+  .column {
+    /* flex: 40%; */
+    /* padding: 8px; */
+    /* height: 300px; */ /* Should be removed. Only for demonstration */
+  }
+  .left {
+    /* width: 75%; */
+    margin-left: 10%;
+  }
+  
+  .right {
+    width: 60%;
+    margin-top:50;
+    margin: 40px auto;
+    margin-left: 70;
+  }
 .photo {
     position: absolute;
     animation: round 12s infinite;
@@ -230,17 +251,17 @@ label {
 
   #student {
     border: solid 1px #7c9c84;
-    background-color: #d9f2d8;
+    /* background-color: #d9f2d8; */
   }
 
   input:checked + #student {
-    border: solid 1px #6f9ca8;
-    background-color: #c9e9f2;
+    /* //border: solid 1px #6f9ca8; */
+    /* background-color: #c9e9f2; */
   }
   
   input:checked + label {
-    border: solid 1px #b1b376;
-    background-color: #feffde;
+  /* //  border: solid 1px #b1b376; */
+    /* background-color: #feffde; */
   }
   
   input:checked + label:before {
@@ -288,4 +309,42 @@ label {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+  .box {
+    float: left;
+    height: 20px;
+    width: 20px;
+    margin-bottom: 15px;
+    border: 1px solid black;
+    clear: both;
+  }
   
+  .checkmark {
+	position: relative;
+    display: inline-block;
+    background-color: white;
+	border: 1px solid #ccc;
+    min-width:20px;
+	min-height:20px;
+	border-radius: 4px;
+}
+.checkmark.active {
+    /* background-color: #feffde; */
+    border-color: black;
+}
+
+.checkmark.active:after {
+	position:absolute;
+	content: '✔';
+	right:0;
+	bottom:0;
+	top:0;
+	text-align:center;
+	/* color: white; */
+	font-family: arial;
+}
+  
+  .green {
+    background-color: green;
+  }
+  
+ 
