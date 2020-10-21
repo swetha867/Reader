@@ -24,11 +24,11 @@ router.post('/', (req, res) => {
 });
 
 
-router.post('/checkUserVote', (req, res) => {
-    getVote(req).then(results => res.send(results));
+router.post('/getUserVotes', (req, res) => {
+    getVotes(req).then(results => res.send(results));
 });
 
-async function getVote(req) {
+async function getVotes(req) {
     var bookID = await book.getBookId(req.body.book_name, req.body.author_name);
     var userID = req.body.user_id;
    // var wordID = req.body.word_id;
@@ -37,7 +37,7 @@ async function getVote(req) {
 console.log(bookID);
     return new Promise(function (resolve, reject) {
 
-      db.query('SELECT * FROM votes WHERE user_id = ? AND book_id = ?  AND sentence = ?',
+      db.query('SELECT votes.meaning_id FROM votes WHERE user_id = ? AND book_id = ?  AND sentence = ?',
       [userID, bookID, sentence], (err, rows, fields) => {
             if (err) {
               console.log(`Here is the error for votes table:${err}`);
@@ -60,6 +60,8 @@ async function handleVote(req) {
     var wordID = req.body.word_id;
     var meaningID = req.body.meaning_id;
     var sentence = req.body.sentence;
+    var paragraph=req.body.paragraph;
+    console.log(bookID);
 
     return new Promise(function (resolve, reject) {
 
@@ -81,8 +83,8 @@ async function handleVote(req) {
                 console.log('length ' +rows.length);
                 if (rows.length == 0) {
                     // Storing all the attributes in votes table with book id
-                    db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `meaning_id`, `sentence`) VALUES (?,?,?,?,?) ',
-                        [userID, bookID, wordID, meaningID, sentence], (err, rows, fields) => {
+                    db.query('INSERT INTO votes (`user_id`, `book_id`, `word_id`, `meaning_id`, `sentence`,`paragraph`) VALUES (?,?,?,?,?) ',
+                        [userID, bookID, wordID, meaningID, sentence,paragraph], (err, rows, fields) => {
                             if (err) {
                                 console.log(`Here is the error ${err}`)
                                 resolve({ res: `Error: ${err}` });
@@ -93,13 +95,14 @@ async function handleVote(req) {
                         });
                 } else {
                     // Storing all the attributes in votes table with book id
-                    db.query('UPDATE votes SET meaning_id = ? WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ?',
-                        [meaningID, userID, bookID, wordID, sentence], (err, rows, fields) => {
+                    db.query('UPDATE votes SET meaning_id = ?, paragraph=? WHERE user_id = ? AND book_id = ? AND word_id = ? AND sentence = ? ',
+                        [meaningID,paragraph, userID, bookID, wordID, sentence], (err, rows, fields) => {
                             if (err) {
                                 console.log(`Here is the error ${err}`)
                                 resolve({ res: `Error: ${err}` });
                                 return;
                             }
+                            console.log('length ' +rows);
                             console.log("vote details updated!");
                             resolve({ response: "Vote Details updated!" });
                         });
