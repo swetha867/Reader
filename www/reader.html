@@ -326,7 +326,7 @@
             dataType: 'json',
             success: function (dictionaryData) {
              var votedWords= $.ajax({
-             url: "http://3.15.37.149:6010/votes/checkUserVote",
+             url: "http://3.15.37.149:6010/votes/getUserVotes",
              type: "POST",
              data: {
               user_id: window.localStorage.getItem("reader_user_id"),
@@ -413,12 +413,12 @@
               $("#close").html("<span>✖</span>");
 
               if (!$.trim(data.queryExpansions)) {
-                $("#definitions").html("<div class='row'><div class='column left'><div class='container'><h1><center>Image Not Found!</center></h1></div><h2 class='remove-whitespace' style='padding-left:20px'>" + ogword + "</h2></div> <div class='column right'><div><div class='box green'></div>&nbsp;  Teacher Vote</div><br><div><div class='box checkmark active'></div> &nbsp; Your vote</div><br><div><div class='box'></div>&nbsp; Other Student Votes</div><br></div></div>");
+                $("#definitions").html("<div class='row'><div class='column left'><div class='container'><h1><center>Image Not Found!</center></h1></div></div> <div class='column right'><div><div class='box green'></div>&nbsp;  Teacher Vote</div><br><div><div class='box checkmark active'></div> &nbsp; Your vote</div><br><div><div class='box'></div>&nbsp; Other Student Votes</div><br></div></div><h2 class='remove-whitespace'>" + ogword + "</h2>");
 
                 if (defNotFound != 1)
                   $("#votingForm").html(definitions + "<br><br><center><input type='submit' value='Vote'></center></form>");
               } else {
-                $("#definitions").html("<div class='row'><div class='column left'><div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='250' height='250'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='250' height='250'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='250' height='250'/></div><h2 class='remove-whitespace'>" + ogword.toLocaleUpperCase() + "</h2></div><div class='column right'><div><div class='box green'></div>&nbsp;  Teacher Vote</div><br><div><div class='box checkmark active'></div> &nbsp; Your vote</div><br><div><div class='box'></div>&nbsp; Other Student Votes</div><br></div></div>");
+                $("#definitions").html("<div class='row'><div class='column left'><div class='container'><img class = 'photo' src ='" + data.value[0].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[1].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[2].thumbnailUrl + " width='250' height='250'/><img class='photo' src ='" + data.value[3].thumbnailUrl + " width='250' height='250'/><img class = 'photo' src ='" + data.value[4].thumbnailUrl + " width='250' height='250'/><img class = 'photo' src ='" + data.value[5].thumbnailUrl + " width='250' height='250'/></div></div><div class='column right'><div><div class='box green'></div>&nbsp;  Teacher Vote</div><br><div><div class='box checkmark active'></div> &nbsp; Your vote</div><br><div><div class='box'></div>&nbsp; Other Student Votes</div><br></div></div><h2 class='remove-whitespace'>" + ogword.toLocaleUpperCase() + "</h2>");
                 if (defNotFound != 1)
                   $("#votingForm").html(definitions + "<br><center><input id='submit' type='submit' value='Vote'></center></form>");
               }
@@ -537,6 +537,7 @@
           sentence: localStorage.sentence,
           book_name: window.bookKaMeta.bookTitle,
           author_name: window.bookKaMeta.creator,
+          paragraph:localStorage.paragraph
         },
         success: function (data) {
           // console.log(data);
